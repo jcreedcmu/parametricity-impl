@@ -1,0 +1,13 @@
+(stdin):2:25:
+  |
+2 |   = \M. glue (\n m P p. p) with base;
+  |                         ^
+type mismatch
+
+expected type:
+
+  P m
+
+inferred type:
+
+  P n

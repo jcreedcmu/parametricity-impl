@@ -1,0 +1,5 @@
+(stdin):3:26:
+  |
+3 |   = \A B g. glue (unglue g) with g;
+  |                          ^
+weak variable 'g' (:-) cannot be used while building a wide expression

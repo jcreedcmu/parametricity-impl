@@ -1,0 +1,1 @@
+(A : U) -> Glue{x :- A}, [x in A]

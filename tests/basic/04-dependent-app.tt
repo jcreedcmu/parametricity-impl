@@ -1,0 +1,7 @@
+let Eq : (A : U) -> A -> A -> U
+  = \A x y. (P : A -> U) -> P x -> P y;
+let refl : (A : U)(x : A) -> Eq A x x
+  = \A x P px. px;
+let sym : (A : U)(x y : A) -> Eq A x y -> Eq A y x
+  = \A x y p. p (\y. Eq A y x) (refl A x);
+sym

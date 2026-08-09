@@ -1,0 +1,10 @@
+let Nat : U = (N : U) -> (N -> N) -> N -> N;
+let Eq : (A : U) -> A -> A -> U
+  = \A x y. (P : A -> U) -> P x -> P y;
+let refl : (A : U)(x : A) -> Eq A x x
+  = \A x P px. px;
+let etaR : (f : Nat -> Nat) -> Eq (Nat -> Nat) f (\x. f x)
+  = \f. refl (Nat -> Nat) f;
+let etaL : (f : Nat -> Nat) -> Eq (Nat -> Nat) (\x. f x) f
+  = \f. refl (Nat -> Nat) f;
+U

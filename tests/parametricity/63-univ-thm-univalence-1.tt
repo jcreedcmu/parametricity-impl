@@ -1,0 +1,26 @@
+-- "The Universe Parametricity Theorem"
+-- Suppose A ÷ type.
+
+--  If R a then [a in Glue{x :- A}, R x]
+let fore : Glue{t :- (A : U) (R : A → U) (a : A) → R a → [a in Glue{x :- A}, R x]}, Base
+  = glue (λA R a r. fib (let q : Glue{x :- A}, R x = glue a with r; q)) with base;
+
+--  If [a in Glue{x :- A}, R x] then R a
+let back : Glue{t :- (A : U) (R : A → U) (a : A) → [a in Glue{x :- A}, R x] → R a}, Base
+  = glue (λA R a q. unglue(unfib a with q)) with base;
+
+-- fore _ _ _ (back _ _ _ q) ≡ q
+let zig :
+  Glue{t :- (A : U) (R : A → U) (a : A)
+       (q : [a in Glue{x :- A}, R x]) (P : [a in Glue{x :- A}, R x] → U)
+    → P (fore A R a (back A R a q)) → P q}, Base
+  = glue (λA R a q P p. p) with base;
+
+-- back _ _ _ (fore _ _ _ r) ≡ r
+let zag :
+  Glue{t :- (A : U) (R : A → U) (a : A)
+       (r : R a) (P : R a → U)
+    → P (back A R a (fore A R a r)) → P r}, Base
+  = glue (λA R a r P p. p) with base;
+
+U

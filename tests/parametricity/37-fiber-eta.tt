@@ -1,0 +1,7 @@
+let Eq : (A : U) -> A -> A -> U
+  = \A x y. (P : A -> U) -> P x -> P y;
+let refl : (A : U)(x : A) -> Eq A x x
+  = \A x P px. px;
+let eta : (A : U) -> Glue{z :- Base}, (M : A) (N : [M in A]) -> Eq [M in A] N (fib (unfib M with N))
+  = \A. glue base with \M N. refl [M in A] N;
+U

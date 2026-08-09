@@ -1,0 +1,5 @@
+(stdin):4:19:
+  |
+4 |   (h : D -> [e in E]) -> (d : D) -> (P : [e in E] -> U) -> P (h d) -> P (fib (unfib base with (h d)))
+  |                   ^
+weak variable 'E' (:-) cannot be used while building a wide expression

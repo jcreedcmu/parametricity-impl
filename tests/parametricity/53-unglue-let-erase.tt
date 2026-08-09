@@ -1,0 +1,5 @@
+-- Erasure of M in the `unglue` rule must reach values already substituted
+-- into the environment.
+let g : Glue{x :- U}, (x -> x) = glue Base with (\a. a);
+let h : Glue{z :- U}, (z -> z) = glue Base with (unglue g);
+h

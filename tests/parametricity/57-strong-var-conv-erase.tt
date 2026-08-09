@@ -1,0 +1,10 @@
+-- Conversion must use a strong variable's *erased* type at a narrow judgment.
+-- `s` is bound with a Glue-domain function type; at narrow its effective type is
+-- `(z : Base) → Base`, so `s c : Base`. Checking `r : P (s c) = q` compares the
+-- type `P (s c)` against itself. If `conv` is fed `s`'s un-erased (wide) type it
+-- wrongly drives glue-η on the argument `c` and reports `P (s c) ≠ P (s c)`.
+-- This serves as a regression test for `Ctx.varTys`.
+let f : (s : (z : Glue{w :- Base}, Base) -> Base) -> (c : Base) -> (P : Base -> U)
+        -> Glue{x :- Base}, ((q : P (s c)) -> P (s c))
+  = \s c P. glue base with (\q. q);
+f

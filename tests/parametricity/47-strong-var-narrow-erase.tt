@@ -1,0 +1,7 @@
+-- check that strong variables used at narrow get their type erased
+let f : (A B : U) (a : A) (g : Glue{x :- B}, A) -> Glue{x :- A}, B
+  = \A B a g. glue a with g;
+-- also can check that we can use the unglue of g:
+let f2 : (A B : U) (a : A) (g : Glue{x :- B}, A) -> Glue{x :- A}, A
+  = \A B a g. glue a with (unglue g);
+f

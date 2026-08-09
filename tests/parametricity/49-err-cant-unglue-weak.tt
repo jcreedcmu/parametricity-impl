@@ -1,0 +1,4 @@
+-- a variation of 47-strong-var-narrow-erase.tt that tries to avoid (a : A) (but can't)
+let f : (A B : U) (g : Glue{x :- B}, A) -> Glue{x :- A}, B
+  = \A B g. glue (unglue g) with g;
+f

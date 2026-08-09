@@ -1,0 +1,3 @@
+let beta : (A : U) (M : A) -> A =
+  \A M. unfib M with (fib M);
+beta

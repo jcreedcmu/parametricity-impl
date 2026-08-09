@@ -1,0 +1,31 @@
+-- "The Nondependent Function Type" theorem
+-- Suppose A B :: U and f ÷ A → B.
+
+--  If [f ∈ A → B] then (if a ÷ A and [a ∈ A] then [f a ∈ B]).
+let fore : (A B : U)
+     → Glue{x :- Base}, ((f : A → B) → [f in (A → B)] →
+        (a : A) → [a in A] → [f a in B])
+  = λA B. glue base with (λf g a p. fib ((unfib f with g) (unfib a with p)));
+
+--  If (if a ÷ A and [a ∈ A] then [f a ∈ B]) then [f ∈ A → B].
+let back : (A : U) (B : U)
+     → Glue{x :- Base}, ((f : A → B) → (k : (a : A) → [a in A] → [f a in B]) → [f in (A → B)])
+  = λA B. glue base with (λf k. fib (let g : A → B = λx. unfib f x with (k x (fib x)); g));
+
+let zig : (A B : U) →
+  Glue{x :- Base}, (
+    (f : A → B) (x : [f in (A → B)]) (P : [f in (A → B)] → U) →
+    P ((unglue back A B) f ((unglue fore A B) f x)) → P x
+  ) =
+  \A B. glue base with \f x P p. p;
+
+let zag : (A B : U) →
+  Glue{x :- Base}, (
+    (f : A → B)
+    (x :  (a : A) → [a in A] → [f a in B])
+    (P : ((a : A) → [a in A] → [f a in B]) → U) →
+    P ((unglue fore A B) f ((unglue back A B) f x)) → P x
+  ) =
+  \A B. glue base with \f x P p. p;
+
+U

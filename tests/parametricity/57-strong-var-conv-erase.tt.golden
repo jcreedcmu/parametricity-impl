@@ -1,0 +1,3 @@
+λ s c P. glue base with λ q. q
+  :
+(s : (z : Glue{w :- Base}, Base) → Base)(c : Base)(P : Base → U) → (Glue{x :- Base}, (q : P (s c)) → P (s c))

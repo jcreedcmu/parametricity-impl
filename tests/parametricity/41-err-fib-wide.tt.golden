@@ -1,0 +1,5 @@
+(stdin):1:1:
+  |
+1 | fib base
+  | ^
+fib is a narrow-only form, but the current judgment is wide

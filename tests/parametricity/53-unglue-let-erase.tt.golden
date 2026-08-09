@@ -1,0 +1,3 @@
+glue Base with λ a. a
+  :
+Glue{z :- U}, z → z

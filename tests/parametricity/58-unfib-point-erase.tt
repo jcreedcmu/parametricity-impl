@@ -1,0 +1,5 @@
+-- The `unfib` equality check compares two basepoints at the narrow judgment,
+-- so it should erase wide strongly-assumed hypotheses.
+let f : (s : (z : Glue{w :- Base}, Base) -> Base) -> (c : Base) -> Glue{w :- Base}, Base
+  = \s c. unfib (s c) with (fib (let qq : Glue{w :- Base}, Base = glue (s c) with base; qq));
+f

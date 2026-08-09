@@ -1,0 +1,3 @@
+let beta : (A : U) (B : A -> U) (a : A) (b : B a) -> Glue{_ :- B a}, Base =
+  \A B a b. glue (unglue (let w : Glue{a :- A}, B a = glue a with b; w)) with base;
+beta

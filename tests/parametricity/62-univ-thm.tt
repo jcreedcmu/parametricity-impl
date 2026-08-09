@@ -1,0 +1,22 @@
+-- "The Universe Parametricity Theorem"
+-- Suppose A ÷ type.
+
+--  If [A ∈ type] then A → type
+let fore : Glue{t :- (A : U) → [A in U] → A → U}, Base
+  = glue (λA p a. [a in unfib A with p]) with base;
+
+--  If A → type then [A ∈ type]
+let back : Glue{t :- (A : U) → (A → U) → [A in U]}, Base
+  = glue (λA R. fib (Glue{x :- A}, R x)) with base;
+
+-- fore _ (back _ R) ≡ λa.[a in Glue{x :- A}, R x]
+let zig : Glue{t :- (A : U) (R : A → U) (P : (A → U) → U)
+    → P (fore A (back A R)) → P (λa.[a in Glue{x :- A}, R x])}, Base
+  = glue (λA R P p. p) with base;
+
+-- back _ (fore _ q) ≡ fib (Glue{x :- A}, [x in unfib A q])
+let zag : Glue{t :- (A : U) (q : [A in U]) (P : [A in U] → U)
+    → P (back A (fore A q)) → P (fib (Glue{x :- A}, [x in unfib A with q]))}, Base
+  = glue (λA q P p. p) with base;
+
+U

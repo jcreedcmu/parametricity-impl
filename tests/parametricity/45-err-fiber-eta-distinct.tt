@@ -1,0 +1,3 @@
+let g : (M : Base) -> Glue{x :- (n : [M in Base]) -> (m : [M in Base]) -> (P : [M in Base] -> U) -> P n -> P m}, Base
+  = \M. glue (\n m P p. p) with base;
+g

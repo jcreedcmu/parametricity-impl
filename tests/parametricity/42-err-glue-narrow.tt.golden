@@ -1,0 +1,5 @@
+(stdin):1:11:
+  |
+1 | Glue{x :- Glue{y :- Base}, Base}, Base
+  |           ^
+Glue is a wide-only form, but the current judgment is narrow

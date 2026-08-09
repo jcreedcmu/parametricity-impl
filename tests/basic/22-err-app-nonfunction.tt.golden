@@ -1,0 +1,7 @@
+(stdin):2:1:
+  |
+2 | x x
+  | ^
+Expected a function type, instead inferred:
+
+  Base

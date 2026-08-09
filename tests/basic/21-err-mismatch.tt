@@ -1,0 +1,2 @@
+let bad : Base -> Base = base;
+bad

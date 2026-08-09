@@ -1,0 +1,7 @@
+-- a variation of 38-fiber-eta-neutral.tt which
+-- intentionally makes an error in trying to use E
+let g : (D E : U) (e : E) -> Glue{x :-
+  (h : D -> [e in E]) -> (d : D) -> (P : [e in E] -> U) -> P (h d) -> P (fib (unfib base with (h d)))
+}, Base
+  = \D. glue (\h d P p. p) with base;
+g

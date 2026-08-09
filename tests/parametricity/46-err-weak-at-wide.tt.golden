@@ -1,0 +1,5 @@
+(stdin):1:44:
+  |
+1 | Glue{z :- (A : U) -> (f : A -> A) -> [f in A]}, Base
+  |                                            ^
+weak variable 'A' (:-) cannot be used while building a wide expression

@@ -1,0 +1,3 @@
+λ A B M P p. p
+  :
+(A : U)(B : U)(M : Glue{x :- A}, B)(P : (Glue{x :- A}, B) → U) → P M → P (glue M with unglue M)

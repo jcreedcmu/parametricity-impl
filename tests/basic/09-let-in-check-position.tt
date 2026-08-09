@@ -1,0 +1,3 @@
+let outer : Base -> Base
+  = \a. let b : Base = a; b;
+outer

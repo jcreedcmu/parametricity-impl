@@ -1,0 +1,6 @@
+-- Erasure of M in the `fib` rule must reach values already
+-- substituted into the environment. What we're really checking here
+-- is that fib g has type [base in Glue{x :- Base}, U], which happens
+-- when `glue base with Base` correctly gets erased to `base`.
+let g : Glue{x :- Base}, U = glue base with Base;
+Glue{w :- U}, (let fg : [base in Glue{x :- Base}, U] = fib g; Base)

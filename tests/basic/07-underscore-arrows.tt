@@ -1,0 +1,5 @@
+let comp : (A B C : U) -> (B -> C) -> (A -> B) -> A -> C
+  = \A B C f g a. f (g a);
+let ignore : (A : U) -> (_ : A) -> U
+  = \A _. A;
+comp

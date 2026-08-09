@@ -1,0 +1,14 @@
+-- Identity from strong assumption q
+let idfromstrong : (q : (X : U) -> X -> X) ->
+  Glue{x :- Base}, (A : U) (R : A -> U) (a : A) (ra : R a) -> R (q A a) =
+  \q. glue base with \A R a ra. unglue (q (Glue{x :- A},R x) (glue a with ra));
+
+-- Identity from combination of weak assumption q and assumption of fiber type
+let idwithfib :
+  Glue{x :- Base},
+  (q : (X : U) -> X -> X) (qf : [q in (X : U) -> X -> X])
+  (A : U) (R : A -> U) (a : A) (ra : R a) -> R (q A a) =
+  glue base with \q qf A R a ra.
+    unglue ((unfib q with qf) (Glue{x :- A},R x) (glue a with ra));
+
+U

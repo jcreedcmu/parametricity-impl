@@ -1,0 +1,1 @@
+(g : Glue{x :- Base}, Base) -> Glue{y :- Base}, [unglue g in Base]

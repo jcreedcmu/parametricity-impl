@@ -1,0 +1,3 @@
+λ A B a g. glue a with g
+  :
+(A : U)(B : U)(a : A)(g : Glue{x :- B}, A) → (Glue{x :- A}, B)

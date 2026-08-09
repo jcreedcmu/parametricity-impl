@@ -1,0 +1,13 @@
+(stdin):2:4:
+  |
+2 | id id
+  |    ^
+type mismatch
+
+expected type:
+
+  U
+
+inferred type:
+
+  (A : U) → A → A

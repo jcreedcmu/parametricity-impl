@@ -1,0 +1,13 @@
+(stdin):1:26:
+  |
+1 | let bad : Base -> Base = base;
+  |                          ^
+type mismatch
+
+expected type:
+
+  Base → Base
+
+inferred type:
+
+  Base

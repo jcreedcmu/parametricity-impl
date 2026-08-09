@@ -1,0 +1,5 @@
+let id : (A : U) -> A -> A
+  = \A x. x;
+let const : (A B : U) -> A -> B -> A
+  = \A B x y. x;
+id ((A B : U) -> A -> B -> A) const

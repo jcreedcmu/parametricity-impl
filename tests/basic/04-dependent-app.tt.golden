@@ -1,0 +1,3 @@
+λ A x y p. p (λ y'. (P : A → U) → P y' → P x) (λ P px. px)
+  :
+(A : U)(x : A)(y : A) → ((P : A → U) → P x → P y) → (P : A → U) → P y → P x

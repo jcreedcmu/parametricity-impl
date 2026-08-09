@@ -1,0 +1,5 @@
+(stdin):1:1:
+  |
+1 | \x. x
+  | ^
+Can't infer type for lambda expression

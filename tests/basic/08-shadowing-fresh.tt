@@ -1,0 +1,3 @@
+let f : Base -> Base -> Base
+  = \x x. x;
+f

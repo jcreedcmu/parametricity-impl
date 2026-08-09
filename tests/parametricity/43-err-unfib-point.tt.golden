@@ -1,0 +1,13 @@
+(stdin):1:1:
+  |
+1 | unfib U with (fib ((A : U) -> A -> A))
+  | ^
+unfib's basepoint disagrees with the fiber type
+
+fiber basepoint:
+
+  (A : U) → A → A
+
+given basepoint:
+
+  U

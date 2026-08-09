@@ -1,0 +1,3 @@
+λ A B C f g a. f (g a)
+  :
+(A : U)(B : U)(C : U) → (B → C) → (A → B) → A → C

@@ -1,0 +1,3 @@
+let t : U = U;
+let ty : U = (A : U) -> A -> A;
+ty

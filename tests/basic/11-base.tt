@@ -1,0 +1,3 @@
+let id : Base -> Base = \x. x;
+let b : Base = id base;
+b

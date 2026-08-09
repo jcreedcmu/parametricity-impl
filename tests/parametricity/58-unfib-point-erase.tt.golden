@@ -1,0 +1,3 @@
+λ s c. glue s c with base
+  :
+(s : (z : Glue{w :- Base}, Base) → Base)(c : Base) → (Glue{w :- Base}, Base)

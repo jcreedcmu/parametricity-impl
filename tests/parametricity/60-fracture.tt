@@ -1,0 +1,14 @@
+let fore : (A : U) (a : A) -> Glue{x :- A}, [x in A] =
+ \A a. glue a with fib a;
+let back : (A : U) (g : Glue{x :- A}, [x in A]) -> A =
+ \A g. unfib g with unglue g;
+
+let zig : (A : U) (a : A) (P : A -> U)
+    -> P (back A (fore A a)) -> P a =
+ \A g P p. p;
+
+let zag : (A : U) (g : Glue{x :- A}, [x in A]) (P : (Glue{x :- A}, [x in A]) -> U)
+    -> P (fore A (back A g)) -> P g =
+ \A g P p. p;
+
+U

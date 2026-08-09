@@ -1,0 +1,3 @@
+let g : (A : U) (B : A -> U) (a : A) (b : B a) -> Glue{x :- A}, B x
+  = \A B a b. glue a with b;
+g

@@ -1,0 +1,5 @@
+(stdin):1:16:
+  |
+1 | let g : Base = glue base with base;
+  |                ^
+Can't infer type for glue; annotate it or check it against a Glue type

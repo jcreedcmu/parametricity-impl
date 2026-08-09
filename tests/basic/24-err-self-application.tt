@@ -1,0 +1,2 @@
+let id : (A : U) -> A -> A = \A x. x;
+id id

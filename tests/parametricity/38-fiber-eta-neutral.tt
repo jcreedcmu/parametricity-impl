@@ -1,0 +1,5 @@
+let g : (D : U) -> Glue{x :-
+  (h : D -> [base in Base]) -> (d : D) -> (P : [base in Base] -> U) -> P (h d) -> P (fib (unfib base with (h d)))
+}, Base
+  = \D. glue (\h d P p. p) with base;
+g

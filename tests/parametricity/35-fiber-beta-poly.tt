@@ -1,0 +1,3 @@
+let p : (A : U) -> A -> A
+  = \A x. x;
+unfib p with (fib p)
