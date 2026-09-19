@@ -1,0 +1,2730 @@
+\documentclass{article}
+\usepackage[tmargin=0.15in, bmargin=0.15in]{geometry}
+\usepackage{enumitem}
+\input{theorem}
+\input{prooftree}
+\usepackage{hyperref}
+% https://tex.stackexchange.com/a/847
+\hypersetup{
+    colorlinks,
+    urlcolor={blue},
+}
+
+\usepackage{makecell}
+\usepackage{relsize}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{calc,arrows,cd,decorations.pathreplacing}
+\usetikzlibrary{hobby}
+\usepackage{tcolorbox}
+\usepackage{stackengine}
+\newcommand\oast{\stackMath\mathbin{\stackinset{c}{0ex}{c}{0ex}{\ast}{\bigcirc}}}
+
+\tcbuselibrary{breakable}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true}
+
+\def\gets{\leftarrow}
+\def\dia{\Diamond}
+\def\all{\forall}
+
+\def\spec{\mathsf{Spec}}
+\def\breturn{\mathop{\mathbf{return}}\nolimits}
+\def\bthunk{\mathop{\mathbf{thunk}}\nolimits}
+\def\brun{\mathop{\mathbf{run}}\nolimits}
+\def\bget{\mathop{\mathbf{get}}\nolimits}
+\def\bGlue{\mathop{\mathbf{Glue}}\nolimits}
+\def\bglue{\mathop{\mathbf{glue}}\nolimits}
+\def\bgbound{\mathop{\mathbf{gbound}}\nolimits}
+\def\bgpath{\mathop{\mathbf{gpath}}\nolimits}
+\def\bunglue{\mathop{\mathbf{unglue}}\nolimits}
+\def\bGet{\mathop\mathbf{Get}}
+\def\dapt#1#2{#1[\![#2]\!]}
+\def\dap#1#2{#1\{#2\}}
+\def\ll{\langle\!\langle}
+\def\rr{\rangle\!\rangle}
+\def\rshape{\ {\mathsf{shape}}}
+\def\rrefl{{\mathsf{refl}}}
+\def\bd{\mathsf{Bd}}
+\def\bdd{\mathsf{Bdd}}
+\def\rset{\mathsf{Type}}
+\def\rid{\mathsf{id}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\prequiv{\dashv\vdash}
+\def\sq{\square}
+
+\definecolor{blu}{rgb}{0.1,0.5,1}
+\definecolor{orng}{rgb}{1,0.5,0.3}
+
+\def\nar#1{{\textcolor{blu}{#1}}}
+\def\wid#1{{\textcolor{orng}{#1}}}
+\def\nprov{\prov_{\nar{\!\!\!\bullet}}}
+\def\wprov{\prov_{\wid{\!\!\!\bullet}}}
+
+\def\nameof#1{\ulcorner{#1}\urcorner}
+\def\U{\mathsf{U}}
+\def\uu{\mathsf{u}}
+\def\uni{\U}
+
+
+
+\definecolor{lred}{rgb}{0.95,0.8,0.8}
+\definecolor{cyan}{rgb}{0.80,0.95,0.95}
+\definecolor{lorange}{rgb}{0.95,0.90,0.80}
+\definecolor{bluegray}{rgb}{0.6,0.6,0.85}
+\definecolor{lgray}{gray}{0.8}
+\newtcolorbox{declbox}{colframe=lred,colback=lred,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable}
+\newtcolorbox{thmbox}{colframe=cyan,colback=cyan,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable}
+\newtcolorbox{defnbox}{colframe=lorange,colback=lorange,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable}
+\newtcolorbox{tangentbox}{colframe=lgray,colback=lgray,grow to right by=-10mm,grow to left by=-10mm,
+boxrule=0pt,boxsep=0pt,breakable}
+
+\input{linear}
+\def\parr{\mathbin{\rotatebox[origin=c]{180}{\&}}}
+\def\iff{\ \Longleftrightarrow\ }
+\def\bu{\bullet}
+\def\J{\mathbb{J}}
+\def\R{\mathbb{R}}
+\def\rpath#1{[#1]}
+\def\rfst{\mathsf{fst}\,}
+\def\rsnd{\mathsf{snd}\,}
+\def\bunfold{\mathbf{unfold}}
+\def\bfold{\mathbf{fold}}
+\def\susp#1{\langle {#1} \rangle}
+\def\ssusp#1{\langle\!\langle {#1} \rangle\!\rangle}
+\def\dto{\mathrel{\dot\to}}
+\def\dns{{\downarrow}}
+\def\ups{{\uparrow}}
+\def\sprov{\Vdash}
+\def\signat{{\color{red}\Sigma}}
+\def\ep#1{\underline{#1}}
+\def\wat{{@}}
+\def\wwat{\mathbin{\underline\wat}}
+\def\cn{{:}}
+\def\cprov{\mathrel\#}
+\def\dv{{\div}}
+\def\ww{{\mathsf w}}
+\def\base{{\textfrak b}}
+
+\def\N{{\mathbb N}}
+\def\Z{{\mathbb Z}}
+\def\munit{I}
+\def\tt{{\mathsf t}}
+\def\ii{{\mathbb I}}
+\def\T{\mathbb{T}}
+\def\tw{\mathop\triangleright\nolimits}
+\def\tb{\mathop\blacktriangleleft}
+\def\sw#1{^{#1}_{#1}}
+\def\TP{\mathbf{TPre}}
+\def\pp{\textsf{\textbf p}}
+\def\nn{{\mathsf n}}
+\def\PP{\textsf{\textbf P}}
+\def\NN{\textsf{\textbf N}}
+\def\zz{{\mathsf z}}
+\def\sem#1{[\![#1]\!]}
+\def\tsem#1#2{[\![#1;#2]\!]}
+\def\usem#1{\lceil\!\!\lceil{#1}\rceil\!\!\rceil}
+\def\zem#1{\langle\!\langle#1\rangle\!\rangle}
+\def\col#1{{\mathsf{C}}_{#1}}
+\def\lax{\bigcirc}
+\def\rjust{\mathsf{just}}
+\def\rcvt{\mathsf{cvt}}
+\def\rtype{\mathsf{type}}
+\def\rdtype{\mathsf{disc}}
+\def\rkind{\mathsf{kind}}
+\def\rmode{\mathsf{mode}}
+\def\rprel{\mathbf{Prel}}
+\def\rrfam{\mathbf{Rfam}}
+%\def\rset{\mathbf{Set}}
+\def\rfinset{\mathbf{FinSet}}
+\def\rrel{\mathbf{Rel}}
+\def\rcat{\mathbf{Cat}}
+\def\rfam{\mathbf{Fam}}
+\def\binj{\mathbf{inj}}
+\def\rtrue{\ \mathsf{true}}
+\def\rfalse{\ \mathsf{false}}
+\def\pbck{\ar[dr, phantom, pos=0, "\lrcorner"]}
+\def\bpbck{\ar[ddrr, phantom, pos=0, "\lrcorner"]}
+\def\erule#1#2{\begin{prooftree}#1\justifies #2\end{prooftree}}
+\def\lpar{\bindnasrepma}
+\def\lamp{\binampersand}
+\def\btwo{\mathbf{2}}
+\def\bone{\mathbf{1}}
+
+\def\FinSet{\mathbf{FinSet}}
+\def\x{\times}
+\def\maps{\ar[dd,mapsto,shorten <=2em, shorten >=2em]}
+\def\mapt{\ar[ddd,mapsto,shorten <=2em, shorten >=2em]}
+\def\A{\mathbf{A}}
+\def\B{\mathbb{B}}
+\def\C{\mathbb{C}}
+\def\O{\mathcal{O}}
+\def\W{\mathbb{W}}
+\def\G{\mathbf{G}}
+\def\D{\mathbb{D}}
+\def\E{\mathbb{E}}
+\def\M{\mathbf{M}}
+\def\pair#1#2{\langle#1,#2\rangle}
+\def\mpair#1#2{\langle\!\langle#1,#2\rangle\!\rangle}
+\def\epair#1#2{#1 \triangleright #2}
+\def\ltri{{\lhd}}
+\def\rtri{{\rhd}}
+\def\tri{\rhd}
+\def\cc{\mathsf{c}}
+\def\dd{\mathsf{d}}
+\def\o{\circ}
+\def\rctx{\,\mathsf{ctx}}
+\def\rdctx{\,\mathsf{dctx}}
+\def\del{\partial}
+\def\also#1{\ \textcolor{blue}{\celse #1}}
+\newcounter{nodemaker}
+\setcounter{nodemaker}{0}
+\def\twocell#1#2{%
+  \global\edef\mynodeone{twocell\arabic{nodemaker}}%
+  \stepcounter{nodemaker}%
+  \global\edef\mynodetwo{twocell\arabic{nodemaker}}%
+  \stepcounter{nodemaker}%
+  \ar[#1,phantom,shift left=3,""{name=\mynodeone}]%
+  \ar[#1,phantom,shift right=3,""'{name=\mynodetwo}]%
+  \ar[Rightarrow,#2,from=\mynodeone,to=\mynodetwo]%
+}
+\def\twocellswap#1#2{%
+  \global\edef\mynodeone{twocell\arabic{nodemaker}}%
+  \stepcounter{nodemaker}%
+  \global\edef\mynodetwo{twocell\arabic{nodemaker}}%
+  \stepcounter{nodemaker}%
+  \ar[#1,phantom,shift right=3,""{name=\mynodeone}]%
+  \ar[#1,phantom,shift left=3,""'{name=\mynodetwo}]%
+  \ar[Rightarrow,#2,from=\mynodeone,to=\mynodetwo]%
+}
+\def\maps{\ar[dd,mapsto,shorten <=2em, shorten >=2em]}
+\author{Jason Reed}
+\definecolor{fib}{HTML}{ff7f00}
+\definecolor{green}{HTML}{007f00}
+\definecolor{red}{HTML}{df3f3f}
+\definecolor{opfib}{HTML}{007fff}
+
+% For lightening colors I used
+% http://trycolors.com/ 6 parts white to 1 part color
+\definecolor{opfibl}{HTML}{DBEDFF}
+\definecolor{greenl}{HTML}{DBEDDB}
+\definecolor{redl}{HTML}{FAE4E4}
+
+% https://tex.stackexchange.com/questions/716631/curved-arrows-from-tikz-cd-do-not-work
+\tikzset{
+  curve/.style={
+    settings={#1},
+    to path={
+      (\tikztostart)
+      .. controls ($(\tikztostart)!\pv{pos}!(\tikztotarget)!\pv{height}!270:(\tikztotarget)$)
+      and ($(\tikztostart)!1-\pv{pos}!(\tikztotarget)!\pv{height}!270:(\tikztotarget)$)
+      .. (\tikztotarget)\tikztonodes
+    },
+  },
+  settings/.code={%
+    \tikzset{quiver/.cd,#1}%
+    \def\pv##1{\pgfkeysvalueof{/tikz/quiver/##1}}%
+  },
+  quiver/.cd,
+  pos/.initial=0.35,
+  height/.initial=0,
+}
+\usepackage{fontawesome}
+\NewDocumentCommand{\lock}{}{\text{\faLock}}
+\NewDocumentCommand{\unlock}{}{\text{\faicon{unlock}}}
+\NewDocumentCommand{\key}{}{\text{\faicon{key}}}
+
+
+\def\erase#1{|#1|}
+\def\wipe#1{\lax #1}
+\def\demote#1{{#1}^{\nar\ominus}}
+\def\promote#1{{#1}^{\nar\oplus}}
+\def\rdemote#1{{#1}^{\wid\ominus}}
+\def\rpromote#1{{#1}^{\wid\oplus}}
+
+
+\def\thead{^\oplus}
+\def\tsub{^\star}
+\def\simp{_\circ}
+\def\blat{\text{\faicon{circle}}}
+\def\locking{^\lock}
+\def\hyd#1#2{[#1 \star #2]}
+
+%% ---- a few new macros: add to preamble ----
+
+\def\wU{\wid{\U}}
+\def\nU{\nar{\U}}
+\def\El{\mathsf{El}\,}
+\def\Set{\mathbf{Set}}
+
+\title{A Modal Type Theory with Internal Parametricity }
+\begin{document}
+
+\def\
+\tikzset{
+   commutative diagrams/.cd,
+   arrow style=tikz,
+   diagrams={>=stealth}}
+\tikzset{shorten <>/.style={shorten >=#1,shorten <=#1}}
+
+\maketitle
+
+\def\eblat{\mathcal{E}_\blat}
+\def\iblat{\mathcal{I}_\blat}
+\def\esurd{\mathcal{E}_\surd}
+\def\isurd{\mathcal{I}_\surd}
+\def\elax{\mathcal{E}_\bigcirc}
+\def\ilax{\mathcal{I}_\bigcirc}
+\def\dia{\Delta}
+\def\idia{\mathcal{I}_\Delta}
+\def\edia{\mathcal{E}_\Delta}
+\def\berase{\mathbf{erase}}
+\def\bmake{\mathbf{make}}
+\def\buse{\mathbf{use}}
+
+\def\pp#1#2{[#1 \in #2]}
+\def\gg{\wid{\textbf{\textsf{G}}}}
+\section{Introduction}
+The purpose of this note is to describe a small modal type theory with internalized parametricity.
+Internalized parametricity means we should have {\em internal} witnesses of ``free theorems''. For example,
+if we have a polymorphic function
+\[ q : (X : \rtype) \to X \to X \]
+then there should be a proof, in the type theory itself, that $q$ is the identity function.
+
+There are lots of other type theories for internalized parametricity. This might even be a special case of one of the existing ones.
+Some considerations that intentionally constrain this one:
+\begin{itemize}
+\item It avoids an explicit interval type.
+\item It does not require complex composition principles for computation.
+\item It does not handle iterated internalized parametricity.
+\item It does not definitionally `bake in' the meaning of parametricity for each type former.
+Parametricity properties are instead {\em derivable}. For example,
+there will be a derivation in the type theory that says, in effect,
+a function is `in the relation' if it always maps related inputs to related outputs.
+\item The syntax is split into two {\em levels}, called $\wid{\hbox{wide}}$ and $\nar{\hbox{narrow}}$.
+Wide things are things `equipped with parametricity data', and narrow things are those without.
+In other words, if the category of narrow expressions is $\C$, the category
+of wide expressions is the arrow category $\C^{\bullet \to \bullet}$
+\item The theory is modal; Hypotheses in the context may exist at various modes.
+\item There are two novel type constructors compared to normal dependent type theory, `glue types' and `fiber types'.
+\end{itemize}
+
+
+\section{Language}
+
+
+%% The type theory is modal and has two levels, called $\wid{\hbox{wide}}$ and $\nar{\hbox{narrow}}$.
+
+%% One pervasive intuition that is helpful to lean on is that we are, in this theory,
+%% ``programming in the presheaf category $\rtype^{\bf 2}$'', where $\bf 2$ is the category
+%% with two objects and one trivial morphism.
+
+
+In both levels, we have several sorts of variables in the context.
+Variables may be ordinary $x : \wid A$, strong $x :: \wid A$, or weak $x \div \nar A$.
+
+
+
+\[\begin{tabular}{rccl}
+ Wide Contexts&$\wid \Gamma$&$::=$&$\cdot  \celse \wid\Gamma, x :: \wid A \celse \wid\Gamma, x \div \nar A  \celse \wid \Gamma, x : \wid A$\\
+  Narrow Contexts&$\nar\Gamma$&$::=$&$\cdot \celse \nar \Gamma, x :: \wid A\celse \nar \Gamma, x \div \nar A  $\\
+  Wide Types&$\wid A$&$::=$&$\cdots
+ \celse \gg (x : \nar A) . \nar B
+$\\
+  Narrow Types&$\nar A$&$::=$&$\cdots
+  \celse \pp {\nar M} {\wid A}
+$\\
+Wide  Terms&$\wid M$&$::=$&$\cdots
+\celse \epair{\nar M }{\nar N}
+\celse \bglue(\nar M, \nar P)
+$\\
+Narrow  Terms&$\nar M$&$::=$&$\cdots
+\celse \{ \wid M \}
+\celse \bunglue(\wid M)
+$\\
+\end{tabular}\]
+
+\section{Syntactic Operations}
+\subsection{Erasure}
+Erasure $|\dash|$ takes a wide type or term and turns it into a narrow type or term.
+
+\[
+\begin{tabular}{rcl@{\qquad}l}
+$\erase{(x : \wid A) \to \wid B}$&$=$&$(x : \erase{\wid A}) \to \erase{\wid B}$\\
+$\erase{(x : \wid A) \x \wid B}$&$=$&$(x : \erase{\wid A}) \x \erase{\wid B}$\\
+$\erase{\lambda x.\wid M}$&$=$&$\lambda x.\erase{\wid M}$\\
+ $\erase{\wid M\ \wid N} $&$=$&$ \erase{\wid M}\ \erase{\wid N}$\\
+$\erase x$&$=$&$x$ \\
+$\erase{\gg(x : \nar A).\nar B}$&$=$&$\nar A$\\
+$\erase{\bglue(\nar M, \nar N)}$&$=$&$\nar M$\\
+$\erase{\epair{\nar M}{\nar N}}$&$=$&$\nar M$\\
+$\erase{\wid\rtype}$&$=$&$\nar \rtype$\\
+\end{tabular}
+\]
+
+
+\subsection{Inclusion}
+Narrow contexts are a subset of wide contexts. We write $\ups$ for the explicit inclusion of narrow contexts into wide contexts.
+\[
+\begin{tabular}{rcl}
+ $ \ups(\nar\Gamma, x :: \wid A)$&$:=$&$(\ups\nar\Gamma, x :: \wid A)$\\
+ $ \ups(\nar\Gamma, x \div \nar A)$&$:=$&$(\ups\nar\Gamma, x \div \nar A)$\\
+ $ \ups(\cdot)$&$:=$&$\cdot$\\
+\end{tabular}\]
+
+\subsection{Promotion and Demotion}
+
+We define operations $\promote\dash$ and $\demote\dash$, both of which take a wide context to a narrow context.
+Demotion turns normal variables into weak variables and leaves other variables alone.
+Promotion turns normal variables into strong variables and leaves other variables alone.
+
+\[\begin{tabular}{rcl}
+ $ \promote{(\wid\Gamma, x : \wid A)}$&$:=$&$(\promote{\wid\Gamma}, x :: \wid A)$\\
+ $ \promote{(\wid\Gamma, x :: \wid A)}$&$:=$&$(\promote{\wid\Gamma}, x :: \wid A)$\\
+ $ \promote{(\wid\Gamma, x \div \nar A)}$&$:=$&$(\promote{\wid\Gamma}, x \div \nar A)$\\
+ $ \promote{(\cdot)}$&$:=$&$\cdot$\\
+\end{tabular}
+\qquad
+\begin{tabular}{rcl}
+ $ \demote{(\wid\Gamma, x : \wid A)}$&$:=$&$(\demote{\wid\Gamma}, x \div \erase{\wid A})$\\
+ $ \demote{(\wid\Gamma, x :: \wid A)}$&$:=$&$(\demote{\wid\Gamma}, x :: \wid A)$\\
+ $ \demote{(\wid\Gamma, x \div \nar A)}$&$:=$&$(\demote{\wid\Gamma}, x \div \nar A)$\\
+ $ \demote{(\cdot)}$&$:=$&$\cdot$\\
+\end{tabular}\]
+
+As abbreviations, we define
+\[\rdemote {\wid A} = \ups(\demote {\wid A}) \qquad \rpromote {\wid A} = \ups(\promote {\wid A})\]
+
+
+\section{Typing Rules}
+
+\subsection{Context Formation}
+
+\[
+\begin{prooftree}
+\justifies
+\wprov \cdot \rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\justifies
+\nprov \cdot \rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x : \wid A)\rctx
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+
+
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad {\nar\Gamma} \nprov \nar A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad \ups {\nar\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+
+\subsection{Variable Rules}
+
+\[
+\begin{prooftree}
+x : \wid A \in  \wid\Gamma
+\justifies
+\wid\Gamma \wprov x : \wid A
+\end{prooftree}
+\qquad
+\begin{prooftree}
+x :: \wid A \in  \wid\Gamma
+\justifies
+\wid\Gamma \wprov x : \wid A
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+x \div \nar A \in  \nar\Gamma
+\justifies
+\nar\Gamma \nprov x : \nar A
+\end{prooftree}
+\qquad
+\begin{prooftree}
+x :: \wid A \in  \nar\Gamma
+\justifies
+\nar\Gamma \nprov x :  \erase {\wid A}
+\end{prooftree}
+\]
+
+\subsection{The Fiber Type}
+\[
+\begin{prooftree}
+\ups\nar \Gamma \wprov \wid A : \wid\rtype \quad \nar \Gamma \nprov \nar M : \erase {\wid A}
+\justifies
+\nar \Gamma \nprov \pp {\nar M} {\wid A} : \nar\rtype
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\ups {\nar \Gamma} \wprov \wid M : \wid A
+\justifies
+\nar \Gamma \nprov \{\wid M\} : \pp  {\erase{\wid M}} {\wid A}
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \nar M : \erase{\wid A} \quad
+\promote{\wid\Gamma} \nprov \nar N : \pp{\nar M}{\wid A}
+\justifies
+\wid\Gamma \wprov \epair{\nar M}{\nar N} : \wid A
+\end{prooftree}
+\]
+%% In the elimination rule, $\wid A$ is a type over $\wid\Gamma$; the second premise
+%% is well-formed because we can transport $\wid A$ to $\rpromote{\wid\Gamma}$ by
+%% Lemma~\ref{promotion.weakening} and transport $\nar M$ to $\promote{\wid\Gamma}$ by Lemma~\ref{narrow.weakening}.
+
+\subsubsection{Definitional Equality}
+
+Fiber type definitional equality works like this. If $\nar \Gamma \nprov \nar N : \pp{\nar M}{\wid A}$ then
+\[
+  \nar N \equiv_\eta \{\epair{\nar M}{\nar N}\}
+\]
+and in general
+\[
+\epair{\nar M}{\{\wid N\}} \equiv_\beta \wid N
+\]
+
+
+\subsection{The Glue Type}
+\[
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \nar A : \nar\rtype \qquad
+\promote{\wid\Gamma}, x \div \nar A \nprov \nar B : \nar\rtype
+\justifies
+\wid\Gamma \wprov \gg(x : \nar A).\nar B : \wid\rtype
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \nar M : \nar A \qquad
+\promote{\wid\Gamma} \nprov \nar N : [\nar M/_{\div}x]\nar B
+\justifies
+\wid\Gamma \wprov \bglue(\nar M, \nar N) : \gg(x : \nar A).\nar B
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\ups\nar\Gamma \wprov \wid M : \gg(x : \nar A).\nar B
+\justifies
+\nar\Gamma \nprov \bunglue \wid M : [\erase{\wid M}/_{\div}x]\nar B
+\end{prooftree}
+\]
+
+\subsubsection{Definitional Equality}
+Definitional equality works like this. If $\wid \Gamma \wprov \wid M : \gg(x : \nar A) . \nar B$ then
+\[
+ \wid M \equiv_\eta \bglue(\erase{\wid M}, \bunglue \wid M)
+\]
+and in general
+\[
+\bunglue(\bglue(\nar M,\nar N)) \equiv_\beta \nar N
+\]
+
+\section{Better Substitution}
+\def\wsub#1{[#1]_{\wid \bullet}}
+\def\nsub#1{[#1]_{\nar \bullet}}
+
+We make definitions like
+\[\nsub{\wid P/x} \pp{\nar M}{\wid A} = \pp{\wsub{\wid P/x}\nar M} {\wsub{\wid P/x}\wid A}\]
+\[\wsub{\wid P/x} (\epair{\nar M}{\nar N}) = \epair{\nsub{\erase{\wid P}/x}\nar M}{\nsub{\wid P/x}\nar N}\]
+
+\begin{lemma}
+\[\nsub{\erase{\wid P}/x}\erase{\wid A}  = \erase{\wsub{\wid P/x}\wid A} \]
+\end{lemma}
+
+
+
+\begin{theorem}[Substitution Theorem]\ %
+  \begin{enumerate}
+  \item $\wid \Gamma \wprov \wid M : \wid A$ and $\wid \Gamma, x : \wid A \wprov  \wid J$, then $\wid \Gamma \wprov \wsub{\wid M/x}\wid J$.
+  \item $\demote{\wid \Gamma} \nprov \nar M : \nar A$ and $\wid \Gamma, x \div \nar A \wprov  \wid J$,
+then $\wid \Gamma \wprov \wsub{\nar M/x}\wid J$.
+  \item $\rdemote{\wid \Gamma} \wprov \wid M : \wid A$ and $\wid \Gamma, x :: \wid A \wprov  \wid J$,
+then $\wid \Gamma \wprov \wsub{\wid M/x}\wid J$.
+  \item ${\nar \Gamma} \nprov \nar M : \nar A$ and $\nar \Gamma, x \div \nar A \nprov  \nar J$,
+then $\nar \Gamma \nprov \nsub{\nar M/x}\nar J$.
+  \item $\ups{\nar \Gamma} \wprov \wid M : \wid A$ and $\nar \Gamma, x :: \wid A \nprov  \nar J$,
+then $\nar \Gamma \nprov \nsub{\wid M/x}\nar J$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}\ %
+  \begin{itemize}
+  \item
+\[\begin{prooftree}
+\ups\nar \Gamma, x :: \wid B \wprov \wid A : \wid\rtype \quad \nar \Gamma, x :: \wid B \nprov \nar M : \erase {\wid A}
+\justifies
+\nar \Gamma, x :: \wid B \nprov \pp {\nar M} {\wid A} : \nar\rtype
+\end{prooftree}\]
+I.h. gives us
+\[\ups\nar \Gamma \wprov \wsub{\wid P/x} \wid A : \wid\rtype \quad \nar \Gamma \nprov \nsub{\wid P/x}\nar M : \nsub{\wid P/x}\erase {\wid A}\]
+so we derive (using previous lemma)
+\[\begin{prooftree}
+\ups\nar \Gamma \wprov \wsub{\wid P/x} \wid A : \wid\rtype \quad \nar \Gamma \nprov \nsub{\wid P/x}\nar M : \erase {\wsub{\wid P/x} \wid A}
+\justifies
+\nar \Gamma \nprov \pp {\nsub{\wid P/x}\nar M} {\wsub{\wid P/x} \wid A} : \nar\rtype
+\end{prooftree}\]
+
+
+\item
+\[\begin{prooftree}
+\demote{\wid\Gamma}, x \div \erase{\wid B} \nprov \nar M : \erase{\wid A} \quad
+\promote{\wid\Gamma}, x :: \wid B \nprov \nar N : \pp{\nar M}{\wid A}
+\justifies
+\wid\Gamma, x : \wid B \wprov \epair{\nar M}{\nar N} : \wid A
+\end{prooftree}\]
+We suppose $\wid \Gamma \prov \wid P : \wid B$. Therefore
+We suppose $\demote{\wid \Gamma} \prov \erase{\wid P} : \erase{\wid B}$ by some lemma,
+and $\promote{\wid \Gamma} \prov \wid P : \wid B$ by weakening. Therefore
+By i.h. we have
+\[\demote{\wid\Gamma} \nprov  \nsub{\erase{\wid P}/x}\nar M :  \nsub{\erase{\wid P}/x}\erase{\wid A} \qquad
+\promote{\wid\Gamma} \nprov \nsub{\wid P/x} \nar N : \nsub{\wid P/x} \pp{\nar M}{\wid A}\]
+
+Now we want to derive
+\[\begin{prooftree}
+\demote{\wid\Gamma} \nprov \nsub{\erase{\wid P}/x}\nar M : \erase{\wsub{\wid P/x}\wid A} \quad
+\promote{\wid\Gamma} \nprov \nsub{\wid P/x}\nar  N : \pp{\nsub{\erase{\wid P}/x}\nar M}{\wsub{\wid P/x}\wid A}
+\justifies
+\wid\Gamma \wprov \epair{\nsub{\erase{\wid P}/x}\nar M}{\nsub{\wid P/x}\nar N} : \wsub{\wid P/x}\wid A
+\end{prooftree}\]
+But to do this we must see
+\[\nsub{\wid P/x} \pp{\nar M}{\wid A} = \pp{\nsub{\erase{\wid P}/x}\nar M}{\wsub{\wid P/x}\wid A}\]
+We \textcolor{red}{XXX NEED SOME KIND OF LEMMA} to show us that since
+\[\demote{\wid\Gamma}, x \div \erase{\wid B} \nprov \nar M : \erase{\wid A} \]
+we can infer
+\[\nsub{\erase{\wid P}/x}\nar M \equiv \nsub{\wid P/x}\nar M\]
+
+  \end{itemize}
+\end{proof}
+
+
+
+
+\section{Substitution}
+\subsection{Typing of Substitutions}
+
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov [\wid M/ x] : (\wid \Gamma, x : \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\demote{\wid \Gamma} \nprov \nar M : \nar A
+\justifies
+\wid \Gamma \wprov [\nar M/_{\div} x] : (\wid \Gamma, x \div \nar A)
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\rdemote{\wid \Gamma} \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov [\wid M/_{::} x] : (\wid \Gamma, x :: \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar \Gamma \nprov \nar M : \nar A
+\justifies
+\nar \Gamma \nprov [\nar M/_{\div} x] : (\nar \Gamma, x \div \nar A)
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\ups \nar \Gamma \wprov \wid M : \wid A
+\justifies
+\nar \Gamma \nprov [\wid M/_{::} x] : (\nar \Gamma, x :: \wid A)
+\end{prooftree}
+\]
+\subsection{Promotion, Demotion, Inclusion on Substitutions}
+\[\begin{array}{rcl}
+  \demote{[\wid M/x]} &=& [\erase{\wid M}/_{\div} x]\\
+  \demote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
+  \demote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+  \promote{[\wid M/x]} &=& [{\wid M}/_{::} x]\\
+  \promote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
+  \promote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+  \ups{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
+  \ups{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
+\end{array}
+\]
+\subsection{Substitution on Contexts}
+
+\[
+\begin{array}{rcl}
+  \wid\theta (\wid \Gamma, x : \wid A) &=&   (\wid\theta\wid \Gamma, x : \wid\theta\wid A)\\
+  \wid\theta (\wid \Gamma, x \div \nar A) &=&   (\wid\theta\wid \Gamma, x : \demote{\wid\theta}\nar A)\\
+  \wid\theta (\wid \Gamma, x :: \wid A) &=&   (\wid\theta\wid \Gamma, x :: \rdemote{\wid\theta}\wid A)\\
+  \nar\theta (\nar \Gamma, x \div \nar A) &=&   (\nar\theta\nar \Gamma, x : {\nar\theta}\nar A)\\
+  \nar\theta (\nar \Gamma, x :: \wid A) &=&   (\nar\theta\nar \Gamma, x :: (\ups{\nar\theta})\wid A)\\
+
+\end{array}
+\]
+
+
+
+\section{Metatheory}
+\begin{lemma}
+\label{erase.type}
+If $\wid \Gamma \wprov \wid A : \rtype$, then
+ $\demote{\wid \Gamma} \nprov \erase{\wid A} : \rtype$.
+\end{lemma}
+
+\begin{lemma}
+\label{erase.term}
+If $\wid \Gamma \wprov \wid M : \wid A$, then
+ $\demote{\wid \Gamma} \nprov \erase{\wid M} : \erase{\wid A} $.
+\end{lemma}
+
+
+
+
+\begin{lemma}
+\label{include.pres}
+If $\nprov \nar \Gamma \rctx$, then
+$\wprov \ups{\nar \Gamma} \rctx$.
+\end{lemma}
+
+\begin{proof}\ %
+  \begin{itemize}
+  \item
+If we have
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad {\nar\Gamma} \nprov \nar A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+then we construct (using Lemma~\ref{include.demote.eq.orig})
+\[
+\begin{prooftree}
+\wprov {\ups\nar\Gamma} \rctx \qquad \demote {(\ups\nar\Gamma)} \nprov \nar A : \rtype
+\justifies
+\wprov ({\ups\nar\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+  \item
+If we have
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad \ups {\nar\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+then we construct (using Lemma~\ref{include.demote.eq.orig})
+\[
+\begin{prooftree}
+\wprov {\ups\nar\Gamma} \rctx \qquad \rdemote{(\ups\nar\Gamma)} \wprov \wid A : \rtype
+\justifies
+\wprov ({\ups\nar\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+  \end{itemize}
+\cqed
+\end{proof}
+
+
+\begin{lemma}[Demotion Weakening]
+\label{demotion.weakening}
+If $\rdemote{\wid\Gamma} \wprov J$, then $\wid \Gamma \wprov J$.
+\end{lemma}
+
+\begin{lemma}[Promotion Weakening]
+\label{promotion.weakening}
+If $\wid\Gamma \wprov J$, then $\rpromote{\wid\Gamma} \wprov J$.
+\end{lemma}
+
+\begin{lemma}[Narrow Weakening]
+\label{narrow.weakening}
+If $\demote{\wid\Gamma} \nprov J$, then $\promote{\wid\Gamma} \nprov J$.
+\end{lemma}
+
+\begin{lemma}
+\label{include.demote.eq.orig}
+$\demote{(\ups\nar\Gamma)} = \nar\Gamma$ and
+$\demote{(\ups\nar\theta)} = \nar\theta$.
+\end{lemma}
+
+\begin{lemma}
+\label{include.promote.eq.orig}
+$\promote{(\ups\nar\Gamma)} = \nar\Gamma$ and
+$\promote{(\ups\nar\theta)} = \nar\theta$.
+\end{lemma}
+
+
+\begin{lemma}
+\label{demote.pres}
+If $\wprov \wid \Gamma \rctx$, then
+$\nprov \demote{\wid \Gamma} \rctx$.
+\end{lemma}
+\begin{proof}\ %
+  \begin{itemize}
+  \item If we have
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x : \wid A)\rctx
+\end{prooftree}
+\]
+then we construct (using Lemma~\ref{erase.type})
+\[
+\begin{prooftree}
+\nprov {\demote{\wid\Gamma}} \rctx \qquad {\demote{\wid\Gamma}} \nprov \erase{\wid A} : \rtype
+\justifies
+\nprov ({\demote{\wid\Gamma}}, x \div \erase{\wid A})\rctx
+\end{prooftree}
+\]
+  \item If we have
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+then we construct
+\[
+\begin{prooftree}
+\nprov {\demote{\wid\Gamma}} \rctx \qquad {\demote{\wid\Gamma}} \nprov \nar A : \rtype
+\justifies
+\nprov ({\demote{\wid\Gamma}}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+  \item If we have
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+then we construct
+\[
+\begin{prooftree}
+\nprov {\demote{\wid\Gamma}} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\demote{\wid\Gamma}}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+  \end{itemize}
+  \cqed
+\end{proof}
+
+\begin{lemma}
+\label{promote.pres}
+If $\wprov \wid \Gamma \rctx$, then
+$\nprov \promote{\wid \Gamma} \rctx$.
+\end{lemma}
+\begin{proof}\ %
+  \begin{itemize}
+  \item If we have
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x : \wid A)\rctx
+\end{prooftree}
+\]
+then we construct (using Lemma~\ref{promotion.weakening})
+\[
+\begin{prooftree}
+\nprov {\promote{\wid\Gamma}} \rctx \qquad \rpromote{\wid \Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\promote{\wid\Gamma}}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+  \item If we have
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+then we construct (using Lemma~\ref{narrow.weakening})
+\[
+\begin{prooftree}
+\nprov {\promote{\wid\Gamma}} \rctx \qquad {\promote{\wid\Gamma}} \nprov \nar A : \rtype
+\justifies
+\nprov ({\promote{\wid\Gamma}}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+  \item If we have
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+then we construct (using Lemmas~\ref{demotion.weakening} and~\ref{promotion.weakening})
+\[
+\begin{prooftree}
+\nprov {\promote{\wid\Gamma}} \rctx \qquad \rpromote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\promote{\wid\Gamma}}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+  \end{itemize}
+  \cqed
+\end{proof}
+
+
+
+
+
+
+
+
+%% \subsubsection{The Diagonal Modality}
+%% \[
+%% \begin{prooftree}
+%% \demote{\wid \Gamma} \nprov  \nar A : \rtype
+%% \justifies
+%% \wid\Gamma \wprov  \dia \nar A : \rtype
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%%  \demote{\wid\Gamma}\nprov \nar M : \nar A
+%% \justifies
+%% \wid \Gamma \wprov \idia \nar M  : \dia \nar A
+%% \end{prooftree}
+%% \]
+%% Semantics:
+%% \[\begin{array}{rcl}
+%% {(\dia \nar A)}^* &=&  \nar A^*\\
+%% (\idia \nar M)^* &=& \nar M^*\\
+%% \end{array}
+%% \qquad
+%% \begin{array}{rcl}
+%% \tsem{\dia \nar A}\_ &=& 1\\
+%% \sem{\idia \nar M} &=& \langle\rangle\\
+%% \end{array}\]
+
+%% \subsubsection{The Open Modality}
+%% \[
+%% \begin{prooftree}
+%% \demote{\wid \Gamma} \nprov  \nar A : \rtype
+%% \justifies
+%% \wid\Gamma \wprov  \lax \nar A : \rtype
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%%  \Gamma, \star \prov M : A
+%% \justifies
+%% \Gamma \prov \ilax M  : \lax A
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%%  \Gamma \prov M : \lax A\qquad \star \in \Gamma
+%% \justifies
+%% \Gamma \prov \elax M  : A
+%% \end{prooftree}
+%% \]
+%% Semantics:
+%% \[\begin{array}{rcl}
+%% {(\lax \nar A)}^* &=&  \nar A^*\\
+%% (\ilax M)^* &=& M^*\\
+%% (\elax M)^* &=& M^*\\
+%% \end{array}
+%% \qquad
+%% \begin{array}{rcl}
+%% \tsem{\lax \nar A}\_ &=& 1\\
+%% \sem{\ilax M} &=& \langle\rangle\\
+%% \sem{\elax M} &=& \babort(\alpha)\\
+%% \end{array}\]
+
+%% \subsubsection{The Square Root Modality}
+%% The modality $\surd$ can be thought of as the functor from $\rtype^{\bf 2}$ to itself that takes
+%% any function $f : A \to B$ and returns the identity $A \to A$. To apply $\surd$ is to `retreat to the past world'
+%% or `go upstairs', i.e. replace the data `downstairs' with the points that were formerly available upstairs.
+%% \[
+%% \begin{prooftree}
+%% \ups \nar \Gamma \wprov \wid A : \rtype
+%% \justifies
+%% \nar \Gamma \nprov \surd \wid A : \rtype
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%%  \ups\nar \Gamma \wprov \wid M : \wid A
+%% \justifies
+%% \nar \Gamma \nprov \isurd \wid M  : \surd \wid A
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%% \demote{\wid \Gamma} \nprov \nar M : \surd \wid A
+%% \justifies
+%% \wid\Gamma \wprov \esurd \nar M  : \wid A
+%% \end{prooftree}
+%% \]
+%% Semantics:
+%% \[\begin{array}{rcl@{\qquad}rcl}
+%% {(\surd \wid A)}^* &=&  (x : \wid A^*) \x \tsem {\wid A} x\\
+%% (\isurd \wid M)^* &=& \pair {\wid M^*} {\sem {\wid M}}\\
+%% (\esurd \nar M)^* &=& (\nar M^*).1 & \sem{\esurd \nar M} &=& (\nar M^*).2\\\\
+%% \end{array}
+%% \]
+%% Let's check Lemmas~\ref{semantic.soundness.type}
+%% and~\ref{semantic.soundness.term}.
+%% If we've derived $\nar \Gamma \nprov \surd \wid A : \rtype$ then we're supposed to show
+%% \[\nar \Gamma^* \prov (\surd \wid A)^* : \rtype\]
+%% which is
+%% \[\nar \Gamma^* \prov (x : \wid A^*) \x \tsem {\wid A} x : \rtype\]
+%% so we need
+%% \[\nar \Gamma^* \prov (x : \wid A^*) : \rtype\]
+%% \[\nar \Gamma^*, x : \wid A^* \prov \tsem {\wid A} x : \rtype\]
+%% and we get these from the premise, using Lemmas~\ref{include.brackets.eq.star} and~\ref{include.star.eq.star}.
+
+%% Likewise if we've derived $\nar \Gamma \nprov \isurd \wid M  : \surd \wid A$, then we're supposed to show
+%% \[\nar \Gamma^* \prov (\isurd \wid M)^*  : (\surd \wid A)^*\]
+%% which is
+%% \[\nar \Gamma^* \prov \pair {\wid M^*} {\sem {\wid M}}  : (x : \wid A^*) \x \tsem {\wid A} x\]
+%% which requires
+%% \[\nar \Gamma^* \prov  {\wid M^*}   : \wid A^*\]
+%% \[\nar \Gamma^* \prov  {\sem {\wid M}}  :  \tsem {\wid A} {\wid M^*}\]
+%% which again is just what the premise delivers, via Lemmas~\ref{include.brackets.eq.star} and~\ref{include.star.eq.star}.
+
+%% Finally, if we've derived $\wid\Gamma \wprov \esurd \nar M  : \wid A$ then we need to show
+%% \[\wid\Gamma^* \prov (\esurd \nar M)^*  : \wid A^*\]
+%% \[\sem{\wid\Gamma} \prov \sem{\esurd \nar M}  : \tsem{\wid A}{ (\esurd \nar M)^*}\]
+%% in other words
+%% \[\wid\Gamma^* \prov ( \nar M^*).1  : \wid A^*\]
+%% \[\sem{\wid\Gamma} \prov (\nar M^*).2  : \tsem{\wid A}{ ( \nar M^*).1}\]
+%% The premise gives us
+%% \[(\demote{\wid \Gamma})^* \prov \nar M^* :  (x : \wid A^*) \x \tsem {\wid A} x\]
+%% which is just what we need (using Lemma~\ref{semantic.weakening}, Lemma~\ref{demote.star.eq.star})
+%% \subsubsection{The Closed Modality}
+%% The modality $\blat$ can be thought of as the functor from $\rtype^{\bf 2}$ to itself that takes
+%% any function $f : A \to B$ and returns the unique map $A \to 1$. To apply $\blat$ is to destroy all distinctions
+%% we formerly made `downstairs', while retaining all `upstairs' data.
+%% \[
+%% \begin{prooftree}
+%%  \Gamma^\oplus \prov  A : \rtype
+%% \justifies
+%% \Gamma \prov  \blat A : \rtype
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%%  \Gamma^\oplus \prov M : A
+%% \justifies
+%% \Gamma \prov \iblat M  : \blat A
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%%  \Gamma^\ominus \prov M : \blat A
+%% \justifies
+%% \Gamma \prov \eblat M  : A
+%% \end{prooftree}
+%% \]
+%% Semantics:
+%% \[\begin{array}{rcl}
+%% {(\blat A)}^* &=& 1\\
+%% (\iblat M)^* &=& \langle\rangle\\
+%% (\eblat M)^* &=& \sem M.1\\
+%% \end{array}
+%% \qquad
+%% \begin{array}{rcl}
+%% \tsem{\blat A}\_ &=&  (x : \wid A^*) \x \tsem A x\\
+%% \sem{\iblat M} &=& \pair {M^*} {\sem M}\\
+%% \sem{\eblat M} &=& \sem M.2\\
+%% \end{array}\]
+
+\subsection{The Erasure Type}
+
+
+\[
+\begin{prooftree}
+\ups{\nar\Gamma} \wprov \wid A : \wid \rtype
+\justifies
+\nar\Gamma \nprov \wipe \wid A : \nar\rtype
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\ups{\nar\Gamma} \wprov \wid M : \wid A
+\justifies
+\nar\Gamma \nprov \berase(\wid M) : \wipe \wid A
+\end{prooftree}
+\qquad
+\begin{prooftree}
+{\nar\Gamma} \nprov \nar M : \erase{\wid A}
+\justifies
+\nar\Gamma \nprov \bmake(\nar M) : \wipe \wid A
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar\Gamma \nprov \nar M : \wipe \wid A
+\justifies
+\nar\Gamma \nprov \buse(\nar M) : |\wid A|
+\end{prooftree}
+\]
+Definitional equality works like this. If $\nar\Gamma \nprov \nar M : \wipe \wid A$, then
+\[
+ \nar M \equiv_\eta \bmake(\buse(\nar M))
+\]
+and in general
+\[
+\buse(\bmake(\nar M)) \equiv_\beta \nar M\]
+\[
+\buse(\berase(\wid M)) \equiv_\beta \erase{\wid  M}
+\]
+Semantics:
+\[\begin{array}{rcl}
+{(\wipe \wid A)}^* &=& {\wid A}^*\\
+(\berase(\wid M))^* &=& {\wid M}^*\\
+(\bmake(\nar M))^* &=& {\nar M}^*\\
+(\buse(\nar M))^* &=& {\nar M}^*\\
+\end{array}
+\]
+
+
+%% \subsection{Simultaneous Substitutions}
+%% \textcolor{red}{XXX I'm not sure how to make this section work}
+
+%% \[
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta \wid A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\wid M / x] : (\wid \Delta, x : \wid A)
+%% \end{prooftree}
+%% \]
+%% \[
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\wid M /_{::} x] : (\wid \Delta, x :: \wid A)
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\nar M /_{\div} x] : (\wid \Delta, x \div \nar A)
+%% \end{prooftree}
+%% \]
+
+%% \[
+%% \begin{prooftree}
+%% \nar \Gamma \nprov \nar\theta : \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+%% \justifies
+%% \nar \Gamma \nprov \nar\theta[\wid M /_{::} x] : (\nar \Delta, x :: \wid A)
+%% \end{prooftree}
+%% \qquad
+%% \begin{prooftree}
+%% \nar \Gamma \nprov \nar\theta : \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta} \nar A
+%% \justifies
+%% \nar \Gamma \nprov \nar\theta[\nar M /_{\div} x] : (\nar \Delta, x \div \nar A)
+%% \end{prooftree}
+%% \]
+
+%% Definition of demotion, promotion, and inclusion on substitutions:
+%% \[
+%% \begin{array}{rcl}
+%% \demote{(\wid\theta[\wid M/x])}&=&(\demote{\wid\theta} [|\wid M| /_{\div} x])\\
+%% \demote{(\wid\theta[\wid M/_{::}x])}&=&(\demote{\wid\theta} [\wid M /_{::} x])\\
+%% \demote{(\wid\theta[\nar M/_{\div}x])}&=&(\demote{\wid\theta} [\nar M /_{\div} x])\\
+%% \promote{(\wid\theta[\wid M/x])}&=&(\promote{\wid\theta} [\wid M /_{::} x])\\
+%% \promote{(\wid\theta[\wid M/_{::}x])}&=&(\promote{\wid\theta} [\wid M /_{::} x])\\
+%% \promote{(\wid\theta[\nar M/_{\div}x])}&=&(\promote{\wid\theta} [\nar M /_{\div} x])\\
+%% \ups{(\nar\theta[\wid M/_{::}x])}&=&(\ups{\nar\theta} [\wid M /_{::} x])\\
+%% \ups{(\nar\theta[\nar M/_{\div}x])}&=&(\ups{\nar\theta} [\nar M /_{\div} x])\\
+%% \end{array}
+%% \]
+
+%% \begin{lemma}[Substitution Demotion Compatibility]
+%% \label{include.demote.subst.eq.orig}
+%% $\demote{(\ups\nar\theta)} = \nar\theta$
+%% \end{lemma}
+
+%% \begin{lemma}[Substitution Erasure Compatibility]
+%% \label{substitution.erasure.compat}
+%% \[ \erase{\wid \theta \wid A} =  \demote{\wid \theta} \erase{ \wid A}\]
+%% \end{lemma}
+
+%% \begin{proof}
+%% \textcolor{red}{CHECK ME}
+%% \cqed
+%% \end{proof}
+
+%% \begin{lemma}[Substitution Pre-Weakening]
+%% Suppose $\wid \Gamma \wprov \wid \theta : \wid \Delta$.
+%% \label{substitution.weakening}
+%% \begin{enumerate}
+%% \item If $\wid \Delta \wprov \wid A : \rtype$ then $ \wid\theta \wid A = \rpromote{\wid\theta} \wid A$.
+%% \item If $\wid \Delta \wprov \wid M : \wid A : \rtype$ then $ \wid\theta \wid M = \rpromote{\wid\theta} \wid M$.
+%% \item If  $\rdemote{\wid \Delta} \wprov \wid A : \rtype$ then  $ \rdemote{\wid\theta} \wid A = \rpromote{\wid\theta} \wid A$.
+%% \item If  $\rdemote{\wid \Delta} \wprov \wid M : \wid A $ then  $ \rdemote{\wid\theta} \wid M = \rpromote{\wid\theta} \wid M$.
+%% \item If $\demote{\wid \Delta} \nprov \nar A : \rtype$  then $ \demote{\wid\theta} \nar A = {\promote{\wid\theta}} \nar A$.
+%% \item If $\demote{\wid \Delta} \nprov \nar M : \nar A$  then $ \demote{\wid\theta} \nar M = {\promote{\wid\theta}} \nar M$.
+%% \end{enumerate}
+%% \end{lemma}
+%% \begin{proof}
+%% Let's check case 6. Suppose $\wid \Gamma \wprov \wid N : \wid C$, so that
+%% $\wid \Gamma \wprov [\wid N/y] : (y : \wid C)$. Then observe
+%% \[y \div |\wid C| \nprov y : |\wid C|\]
+%% and also
+%% \[y :: \wid C \nprov y : |\wid C|\]
+%% We have $\demote{\wid \theta} = [|\wid N|/_{\div} y]$ and  $\promote{\wid \theta} = [\wid N/_{::} y]$. We should find
+%% \[ \demote{\wid \Gamma} \prov [|\wid N|/_{\div} y] : (y \div |\wid C|)\]
+%% \[ \promote{\wid \Gamma} \prov [\wid N/_{::} y] : (y :: \wid C)\]
+%% Hmm, I guess a thing I could say here to make this work is:
+%% When applying a simultaneous substitution, if I come to a variable occurrence $x$ in the narrow judgment, and $[\wid M/_{::} x] \in \nar \theta$,
+%% then I actually replace $x$ with $\erase{\wid M}$.
+
+%% But what about case 4? Ah! The main problem I'd worry about wouldn't occur because I can't use $\div$ variables directly.
+
+%%   \cqed
+%% \end{proof}
+
+%% \begin{lemma}[Substitution Weakening]
+%% Suppose $\wid \Gamma \wprov \wid \theta : \wid \Delta$.
+%% \label{substitution.weakening}
+%% \begin{enumerate}
+%% \item If $\wid \Delta \wprov \wid A : \rtype$ and $\wid \Gamma \wprov \wid M :  \wid\theta \wid A$, then $\rpromote{\wid \Gamma} \wprov \wid M : \rpromote{\wid\theta} \wid A$.
+%% \item If  $\rdemote{\wid \Delta} \wprov \wid A : \rtype$ and  $\rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A$, then $\rpromote{\wid \Gamma} \wprov \wid M : \rpromote{\wid\theta} \wid A$.
+%% \item If $\demote{\wid \Delta} \nprov \nar A : \rtype$  and $\demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A$, then ${\promote{\wid \Gamma}} \nprov \nar M : {\promote{\wid\theta}} \nar A$.
+%% \end{enumerate}
+%% \end{lemma}
+
+%% \begin{proof}
+%% Let's check if this is plausible by semantics at least.
+
+%% For 1, we weaken from
+%% %\[\wid \Delta^* \prov \wid A^* : \rtype\]
+%% \[\wid \Gamma^* \prov \wid M^* : \wid \theta^* \wid A^* \qquad \sem{\wid \Gamma} \prov \sem{\wid M} : \sem{\wid \theta} \tsem{ \wid A}{ \wid M^*} \]
+%% %\[\sem{\wid \Gamma}, x : \wid A^* \prov \tsem{\wid A}{x^*} : \rtype\]
+%% to
+%% \[\sem{\wid\Gamma} \prov \wid M^* : \sem{\wid \theta} \wid A^*\qquad
+%% \sem{\wid \Gamma} \prov \sem{\wid M} : \sem{\wid \theta}\tsem{ \wid A}{\wid M^*}\]
+
+%% For 2, we weaken from
+%% \[\wid \Gamma^* \prov \wid M^* : \wid \theta^* \wid A^* \qquad \wid \Gamma^* \prov \sem{\wid M} : \wid \theta^* \tsem{ \wid A}{ \wid M^*} \]
+%% to
+%% \[\sem{\wid\Gamma} \prov \wid M^* : \sem{\wid \theta} \wid A^*\qquad
+%% \sem{\wid \Gamma} \prov \sem{\wid M} : \sem{\wid \theta}\tsem{ \wid A}{\wid M^*}\]
+
+%% For 3, we weaken from
+%% \[\wid \Gamma^* \prov \nar M^* : \wid \theta^* \nar A^* \]
+%% to
+%% \[\sem {\wid \Gamma} \prov \nar M^* : \sem{\wid \theta} \nar A^* \]
+%% \cqed
+%% \end{proof}
+
+%% \begin{lemma}\ %
+%%   \begin{enumerate}
+%%   \item If $\wid \Gamma \wprov \wid \theta : \wid \Delta$, then $\demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta}$.
+%%   \item If $\wid \Gamma \wprov \wid \theta : \wid \Delta$, then $\promote{\wid \Gamma} \nprov \promote{\wid \theta} : \promote{\wid \Delta}$.
+%%   \item If $\nar \Gamma \nprov \nar \theta : \nar \Delta$, then $\ups{\nar \Gamma} \wprov \ups{\nar \theta} : \ups{\nar \Delta}$.
+%%   \end{enumerate}
+%% \end{lemma}
+%% \begin{proof}\ %
+%%   \begin{itemize}
+%%   \item Demotion of normal variable. Consider the case where we have
+%% \[\begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta \wid A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\wid M / x] : (\wid \Delta, x : \wid A)
+%% \end{prooftree}\]
+%% By i.h. we have
+%% \[\demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta}\]
+%% and by Lemma~\ref{erase.term} and Lemma~\ref{substitution.erasure.compat} we have
+%% \[\demote{\wid \Gamma} \nprov \erase{\wid M} : \demote{\wid \theta} \erase{ \wid A} \]
+%% So we construct
+%% \[\begin{prooftree}
+%% \demote{\wid \Gamma} \nprov \demote{\wid\theta} : \demote{\wid \Delta} \qquad {\demote{\wid \Gamma}} \nprov \erase{\wid M} : {\demote{\wid\theta}} \erase{\wid A}
+%% \justifies
+%% \demote{\wid \Gamma} \nprov \demote{\wid\theta}[\erase{\wid M} /_{\div} x] : (\demote{\wid \Delta}, x \div \erase{\wid A})
+%% \end{prooftree}\]
+
+%% \item Demotion of strong variable. Consider the case where we have
+%% \[
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\wid M /_{::} x] : (\wid \Delta, x :: \wid A)
+%% \end{prooftree}
+%% \]
+%% By i.h. we have
+%% \[\demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta}\]
+%% So we construct
+%% \[
+%% \begin{prooftree}
+%% \demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta} \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid \theta} \wid A
+%% \justifies
+%% \demote{\wid \Gamma} \nprov \demote{\wid \theta}[\wid M /_{::} x] : (\demote{\wid \Delta}, x :: \wid A)
+%% \end{prooftree}
+%% \]
+
+
+%% \item Demotion of weak variable. Consider the case where we have
+%% \[
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\nar M /_{\div} x] : (\wid \Delta, x \div \nar A)
+%% \end{prooftree}
+%% \]
+%% By i.h. we have
+%% \[\demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta}\]
+%% So we construct
+%% \[
+%% \begin{prooftree}
+%% \demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta} \qquad {\demote{\wid \Gamma}} \nprov \nar M : {\demote{\wid \theta}} \nar A
+%% \justifies
+%% \demote{\wid \Gamma} \nprov \demote{\wid \theta}[\nar M /_{\div} x] : (\demote{\wid \Delta}, x \div \nar A)
+%% \end{prooftree}
+%% \]
+
+%%   \item Promotion of normal variable. Consider the case where we have
+%% \[\begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta \wid A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\wid M / x] : (\wid \Delta, x : \wid A)
+%% \end{prooftree}\]
+%% By i.h. we have
+%% \[\promote{\wid \Gamma} \nprov \promote{\wid \theta} : \promote{\wid \Delta}\]
+
+%% So we construct
+%% \[
+%% \begin{prooftree}
+%% \promote{\wid \Gamma} \nprov \promote{\wid\theta} : \promote{\wid \Delta} \qquad \rpromote{\wid \Gamma} \wprov \wid M : \rpromote{\wid\theta} \wid A
+%% \justifies
+%% \promote{\wid \Gamma} \nprov \promote{\wid\theta}[\wid M /_{::} x] : (\promote{\wid \Delta}, x :: \wid A)
+%% \end{prooftree}
+%% \]
+
+%% \item Promotion of strong variable. Consider the case where we have
+%% \[
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\wid M /_{::} x] : (\wid \Delta, x :: \wid A)
+%% \end{prooftree}
+%% \]
+%% By i.h. we have
+%% \[\promote{\wid \Gamma} \nprov \promote{\wid \theta} : \promote{\wid \Delta}\]
+%% So we construct
+%% \[
+%% \begin{prooftree}
+%% \promote{\wid \Gamma} \nprov \promote{\wid\theta} : \promote{\wid \Delta} \qquad \rpromote{\wid \Gamma} \wprov \wid M : \rpromote{\wid\theta} \wid A
+%% \justifies
+%% \promote{\wid \Gamma} \nprov \promote{\wid\theta}[\wid M /_{::} x] : (\promote{\wid \Delta}, x :: \wid A)
+%% \end{prooftree}
+%% \]
+
+
+%% \item Promotion of weak variable. Consider the case where we have
+%% \[
+%% \begin{prooftree}
+%% \wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A
+%% \justifies
+%% \wid \Gamma \wprov \wid\theta[\nar M /_{\div} x] : (\wid \Delta, x \div \nar A)
+%% \end{prooftree}
+%% \]
+%% By i.h. we have
+%% \[\promote{\wid \Gamma} \nprov \promote{\wid \theta} : \promote{\wid \Delta}\]
+%% So we construct
+%% \[
+%% \begin{prooftree}
+%% \promote{\wid \Gamma} \nprov \promote{\wid\theta} : \promote{\wid \Delta} \qquad {\promote{\wid \Gamma}} \nprov \nar M : {\promote{\wid\theta}} \nar A
+%% \justifies
+%% \promote{\wid \Gamma} \nprov \promote{\wid\theta}[\nar M /_{\div} x] : (\promote{\wid \Delta}, x \div \nar A)
+%% \end{prooftree}
+%% \]
+
+
+%% \item Inclusion of strong variable. Consider the case where we have
+%% \[
+%% \begin{prooftree}
+%% \nar \Gamma \nprov \nar\theta : \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+%% \justifies
+%% \nar \Gamma \nprov \nar\theta[\wid M /_{::} x] : (\nar \Delta, x :: \wid A)
+%% \end{prooftree}
+%% \]
+%% By i.h. we have
+%% \[\ups{\nar \Gamma} \wprov \ups{\nar \theta} : \ups{\nar \Delta}\]
+%% So we construct (using Lemmas~\ref{include.demote.eq.orig} and~\ref{include.demote.subst.eq.orig})
+%% \[
+%% \begin{prooftree}
+%% \ups{\nar \Gamma} \wprov \ups{\nar\theta} : \ups{\nar \Delta} \qquad \rdemote{(\ups{\nar \Gamma})} \wprov \wid M : \rdemote{(\ups{\nar\theta})} \wid A
+%% \justifies
+%% \ups{\nar \Gamma} \wprov \ups{\nar\theta}[\wid M /_{::} x] : (\ups{\nar \Delta}, x :: \wid A)
+%% \end{prooftree}
+%% \]
+
+%% \item Inclusion of weak variable. Consider the case where we have
+%% \[
+%% \begin{prooftree}
+%% \nar \Gamma \nprov \nar\theta : \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta} \nar A
+%% \justifies
+%% \nar \Gamma \nprov \nar\theta[\nar M /_{\div} x] : (\nar \Delta, x \div \nar A)
+%% \end{prooftree}
+%% \]
+%% By i.h. we have
+%% \[\ups{\nar \Gamma} \wprov \ups{\nar \theta} : \ups{\nar \Delta}\]
+%% So we construct (using Lemmas~\ref{include.demote.eq.orig} and~\ref{include.demote.subst.eq.orig})
+%% \[
+%% \begin{prooftree}
+%% \ups{\nar \Gamma} \wprov \ups{\nar\theta} : \ups{\nar \Delta} \qquad \demote{(\ups{\nar \Gamma})} \nprov \nar M : \demote{(\ups{\nar\theta})} \nar A
+%% \justifies
+%% \ups{\nar \Gamma} \wprov \ups{\nar\theta}[\nar M /_{\div} x] : (\ups{\nar \Delta}, x \div \nar A)
+%% \end{prooftree}
+%% \]
+
+
+
+%%   \end{itemize}
+%%   \cqed
+%% \end{proof}
+
+
+
+
+
+
+
+%% Semantic plausibility:
+%%   \begin{enumerate}
+%%   \item If $\wid \Gamma \wprov \wid M : \wid A$ and $\wid \Gamma, x : \wid A \wprov  \wid J$, then
+%% $\wid \Gamma\wprov [\wid M/x] \wid J$.\\
+%% We have $\wid \Gamma^* \prov \wid M^* : \wid A^*$
+%% and $\sem {\wid \Gamma} \prov \sem {\wid M} : \tsem {\wid A^*} {\wid M^*}$. \\
+%% If $\wid \Gamma^*, x^* : \wid A^* \prov  \wid J^*$, then
+%% $\wid \Gamma^* \prov [\wid M^* /x^*]\wid J^*$.\\
+%% If  $\sem {\wid \Gamma}, x^* : \wid A^*, \sem x : \tsem{\wid A^*}{x^*} \prov  \sem {\wid J}$, then
+%% $\sem {\wid \Gamma} \prov [\sem{\wid M} /\sem x][\wid M^* /x^*]\sem{\wid J}$.\\
+
+%%   \item If $\rdemote{\wid \Gamma}\wprov \wid M : \wid A$ and $\wid \Gamma, x :: \wid A \wprov  \wid J$, then
+%% $\wid \Gamma\wprov [\wid M/_{::} x] \wid J$.\\
+%% We have $\wid \Gamma^* \prov \wid M^* : \wid A^*$
+%% and $\wid \Gamma^* \prov \sem {\wid M} : \tsem {\wid A^*} {\wid M^*}$. \\
+%% If $\wid \Gamma^*, x^* : \wid A^*, \sem x : \tsem{\wid A^*}{x^*} \prov  \wid J^*$, then
+%% $\wid \Gamma^* \prov [\sem{\wid M} /\sem x][\wid M^* /x^*]\wid J^*$.\\
+%% If  $\sem {\wid \Gamma}, x^* : \wid A^*, \sem x : \tsem{\wid A^*}{x^*} \prov  \sem{\wid J}$, then
+%% $\sem {\wid \Gamma} \prov [\sem{\wid M} /\sem x][\wid M^* /x^*]\sem{\wid J}$.\\
+
+%%   \item If $\demote{\wid \Gamma} \nprov \nar M : \nar A$ and $\wid \Gamma, x \div \nar A \wprov  \wid J$, then
+%% $\wid \Gamma\wprov [\nar M/_\div x] \wid J$.\\
+%% We have $\wid \Gamma^* \prov \nar M^* : \nar A^*$.\\
+%% If $\wid \Gamma^*, x^* : \nar A^* \prov  \wid J^*$, then
+%% $\wid \Gamma^* \prov [\nar M^* /x^*]\wid J^*$.\\
+%% If  $\sem {\wid \Gamma}, x^* : \nar A^* \prov  \sem{\wid J}$, then
+%% $\sem {\wid \Gamma} \prov [\nar M^* /x^*]\sem{\wid J}$.\\
+
+%%   \item If $\ups \nar \Gamma \wprov \wid M : \wid A$ and $\nar \Gamma, x :: \wid A \nprov  \nar J$, then
+%% $\nar \Gamma\nprov [\wid M/_{::} x] \nar J$.\\
+%% We have $\nar \Gamma^* \prov \wid M^* : \wid A^*$
+%% and $\nar \Gamma^* \prov \sem {\wid M} : \tsem {\wid A^*} {\wid M^*}$. \\
+%% If  $\nar \Gamma^*, x^* : \wid A^*, \sem x : \tsem{\wid A^*}{x^*} \prov  \nar J^*$, then
+%% $\nar \Gamma^* \prov [\sem{\wid M} /\sem x][\wid M^* /x^*] \nar J^*$.\\
+
+%%   \item If $\nar \Gamma \nprov \nar M : \nar A$ and $\nar \Gamma, x \div \nar A \nprov  \nar J$, then
+%% $\nar \Gamma\nprov [\nar M/_\div x] \nar J$.\\
+%% We have $\nar \Gamma^* \prov \nar M^* : \nar A^*$.\\
+%% If  $\nar \Gamma^*, x^* : \nar A^* \prov  \nar J^*$, then
+%% $\nar \Gamma^* \prov [\nar M^* /x^*] \nar J^*$.\\
+%%   \end{enumerate}
+
+
+
+\subsection{Substitution}
+
+
+\begin{lemma}\ %
+\label{substitution.modification}
+  \begin{enumerate}
+  \item If $\wid \Gamma \wprov \wid \theta : \wid \Delta$, then $\demote{\wid \Gamma} \nprov \demote{\wid \theta} : \demote{\wid \Delta}$.
+  \item If $\wid \Gamma \wprov \wid \theta : \wid \Delta$, then $\promote{\wid \Gamma} \nprov \promote{\wid \theta} : \promote{\wid \Delta}$.
+  \item If $\nar \Gamma \nprov \nar \theta : \nar \Delta$, then $\ups{\nar \Gamma} \wprov \ups{\nar \theta} : \ups{\nar \Delta}$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}\ %
+  \begin{itemize}
+  \item Case of demotion of ordinary variable. Use
+Lemma~\ref{erase.term} to do
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov [\wid M/ x] : (\wid \Gamma, x : \wid A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\demote{\wid \Gamma} \wprov \erase{\wid M} : \erase{\wid A}
+\justifies
+\demote{\wid \Gamma} \nprov [|\wid M|/_{\div} x] : (\demote{\wid \Gamma}, x \div |\wid A|)
+\end{prooftree}
+\]
+  \item Case of promotion of ordinary variable. Use
+Lemma~\ref{promotion.weakening} to do
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov [\wid M/ x] : (\wid \Gamma, x : \wid A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\ups (\promote{\wid \Gamma}) \wprov \wid M : \wid A
+\justifies
+\promote{\wid \Gamma} \nprov [\wid M/_{::} x] : (\promote{\wid \Gamma}, x :: \wid A)
+\end{prooftree}
+\]
+  \item Case of demotion of weak variable. Simply do
+\[
+\begin{prooftree}
+\demote{\wid \Gamma} \nprov \nar M : \nar A
+\justifies
+\wid \Gamma \wprov [\nar M/_{\div} x] : (\wid \Gamma, x \div \nar A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\demote{\wid \Gamma} \nprov \nar M : \nar A
+\justifies
+\demote{\wid \Gamma} \nprov [\nar M/_{\div} x] : (\demote{\wid \Gamma}, x \div \nar A)
+\end{prooftree}
+\]
+  \item Case of promotion of weak variable. Use
+Lemma~\ref{narrow.weakening} to do
+\[
+\begin{prooftree}
+\demote{\wid \Gamma} \nprov \nar M : \nar A
+\justifies
+\wid \Gamma \wprov [\nar M/_{\div} x] : (\wid \Gamma, x \div \nar A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\promote{\wid \Gamma} \nprov \nar M : \nar A
+\justifies
+\promote{\wid \Gamma} \nprov [\nar M/_{\div} x] : (\promote{\wid \Gamma}, x \div \nar A)
+\end{prooftree}
+\]
+  \item Case of demotion of strong variable. Simply do
+\[
+\begin{prooftree}
+\rdemote{\wid \Gamma} \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov [\wid M/_{::} x] : (\wid \Gamma, x :: \wid A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\ups (\demote{\wid \Gamma}) \wprov \wid M : \wid A
+\justifies
+\demote{\wid \Gamma} \nprov [\wid M/_{::} x] : (\demote{\wid \Gamma}, x :: \wid A)
+\end{prooftree}
+\]
+  \item Case of promotion of strong variable. Use
+Lemma~\ref{demotion.weakening} and Lemma~\ref{promotion.weakening} to do
+\[
+\begin{prooftree}
+\rdemote{\wid \Gamma} \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov [\wid M/_{::} x] : (\wid \Gamma, x :: \wid A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\ups (\promote{\wid \Gamma}) \wprov \wid M : \wid A
+\justifies
+\promote{\wid \Gamma} \nprov [\wid M/_{::} x] : (\promote{\wid \Gamma}, x :: \wid A)
+\end{prooftree}
+\]
+  \item Case of inclusion of weak variable. Use Lemma~\ref{include.demote.eq.orig} to do
+\[
+\begin{prooftree}
+\nar \Gamma \nprov \nar M : \nar A
+\justifies
+\nar \Gamma \nprov [\nar M/_{\div} x] : (\nar \Gamma, x \div \nar A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\demote{(\ups \nar \Gamma)} \nprov \nar M : \nar A
+\justifies
+\ups \nar \Gamma \wprov [\nar M/_{\div} x] : (\ups \nar \Gamma, x \div \nar A)
+\end{prooftree}
+\]
+  \item Case of inclusion of strong variable. Use Lemma~\ref{include.demote.eq.orig} to do
+\[
+\begin{prooftree}
+\ups \nar \Gamma \wprov \wid M : \wid A
+\justifies
+\nar \Gamma \nprov [\wid M/_{::} x] : (\nar \Gamma, x :: \wid A)
+\end{prooftree}
+\quad\mapsto\quad
+\begin{prooftree}
+\rdemote{(\ups \nar \Gamma)} \wprov \wid M : \wid A
+\justifies
+\ups \nar \Gamma \wprov [\wid M/_{::} x] : (\ups \nar \Gamma, x :: \wid A)
+\end{prooftree}
+\]
+  \end{itemize}
+\cqed
+\end{proof}
+
+
+\begin{lemma}
+\label{demotion.erase.compat}
+$ \demote{\wid\theta}|\wid A| = \erase{\wid\theta\wid A}$ and $ \demote{\wid\theta}|\wid M| = \erase{\wid\theta\wid M}$.
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+\begin{lemma}\ %
+\label{operation.substitution.commute}
+\begin{itemize}
+\item $\demote{\wid\theta}\demote{\wid\Gamma} = \demote{(\wid\theta \wid\Gamma)}$
+\item $(\ups {\nar\theta})(\ups {\nar\Gamma}) = \ups{(\nar\theta \nar\Gamma)}$
+\end{itemize}
+
+\end{lemma}
+
+\begin{proof}
+\textcolor{red}{XXX THIS PROOF NO LONGER VALID}
+Case split by how we construct the context.
+  \begin{itemize}
+  \item $ ({\wid\Gamma}, x : \wid A)$.
+Our goal is to show
+\[\rdemote{\wid\theta}\rdemote{({\wid\Gamma}, x : \wid A)} = \rdemote{(\wid\theta ({\wid\Gamma}, x : \wid A))}\]
+which by definitions and Lemma~\ref{include.demote.eq.orig} is
+\[(\rdemote{\wid\theta}\rdemote{\wid\Gamma}, x  \div \demote{\wid\theta}|\wid A|) = (\rdemote{(\wid\theta {\wid\Gamma})}, x \div \erase{\wid\theta\wid A})\]
+By induction hypothesis and Lemma~\ref{demotion.erase.compat}, this is so.
+\item
+$ ({\wid\Gamma}, x \div \nar A)$.
+Our goal is to show
+\[\rdemote{\wid\theta}\rdemote{({\wid\Gamma}, x \div \nar A)} = \rdemote{(\wid\theta ({\wid\Gamma}, x \div \nar A))}\]
+which by definitions and Lemma~\ref{include.demote.eq.orig} is
+\[ (\rdemote{\wid\theta}\rdemote{\wid\Gamma}, x \div \demote{\wid\theta}\nar A) = (\rdemote{(\wid \theta {\wid\Gamma})}, x \div \demote{\wid\theta}\nar A)\]
+By the induction hypothesis, this is so.
+\item $({\wid\Gamma}, x :: \wid A)$.
+Our goal is to show
+\[\rdemote{\wid\theta}\rdemote{({\wid\Gamma}, x :: \wid A)} = \rdemote{(\wid\theta ({\wid\Gamma}, x :: \wid A))}\]
+which by definitions and Lemma~\ref{include.demote.eq.orig} is
+\[(\rdemote{\wid\theta}\rdemote{\wid\Gamma}, x :: \rdemote{\wid\theta}\wid A) =  (\rdemote{(\wid\theta{\wid\Gamma})}, x :: \rdemote{\wid\theta}\wid A)\]
+By the induction hypothesis, this is so.
+  \end{itemize}
+\cqed
+\end{proof}
+
+\begin{theorem}[Substitution Theorem]\ %
+  \begin{enumerate}
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and $\wid \Gamma \wprov  \wid J$, then
+$\wid \Delta\wprov \wid \theta \wid J$.
+  \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$ and $\nar \Gamma \nprov  \nar J$, then
+$\nar \Delta\nprov \nar \theta \nar J$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}\ %
+  \begin{itemize}
+\item Consider the case of
+\[
+\begin{prooftree}
+\ups\nar \Gamma \wprov \wid A : \wid\rtype \quad \nar \Gamma \nprov \nar M : \erase {\wid A}
+\justifies
+\nar \Gamma \nprov \pp {\nar M} {\wid A} : \nar\rtype
+\end{prooftree}
+\]
+We suppose $\nar \Delta \nprov \nar \theta : \nar \Gamma$.
+By
+Lemma~\ref{substitution.modification} we have
+\[\ups{\nar\Delta}  \wprov \ups{\nar\theta} : \ups{\nar\Gamma}\]
+Now apply the induction hypothesis to get
+\[\ups\nar \Delta \wprov (\ups{\nar\theta})  \wid A : \wid\rtype \qquad \nar \Delta \nprov {\nar\theta} \nar M : \nar \theta \erase {\wid A}\]
+
+Now thanks to Lemmas~\ref{demotion.erase.compat} and~\ref{include.demote.eq.orig}, we can derive
+\[
+\begin{prooftree}
+\ups\nar \Gamma \wprov (\ups\nar\theta)\wid A : \wid\rtype \quad \nar \Gamma \nprov \nar\theta\nar M : \erase {(\ups\nar\theta)\wid A}
+\justifies
+\nar \Gamma \nprov \pp {\nar\theta\nar M} {(\ups\nar\theta)\wid A} : \nar\rtype
+\end{prooftree}
+\]
+\item Consider the case of
+\[\begin{prooftree}
+\demote{\wid\Gamma} \nprov \nar M : \erase{\wid A} \quad
+\promote{\wid\Gamma} \nprov \nar N : \pp{\nar M}{\wid A}
+\justifies
+\wid\Gamma \wprov \epair{\nar M}{\nar N} : \wid A
+\end{prooftree}\]
+We suppose $\wid \Delta \wprov \wid \theta : \wid \Gamma$. By
+Lemma~\ref{substitution.modification} we have
+\[\demote{\wid\Delta}  \nprov \demote{\wid\theta} : \demote{\wid\Gamma}\qquad
+\promote{\wid\Delta}  \nprov \promote{\wid\theta} : \promote{\wid\Gamma}\]
+Now apply the induction hypothesis to get
+\[\demote{\wid\Delta} \nprov  \demote{\wid\theta}\nar M :  \demote{\wid\theta}\erase{\wid A} \qquad
+\promote{\wid\Delta} \nprov \promote{\wid\theta} \nar N :\promote{\wid\theta} \pp{\nar M}{\wid A}\]
+
+Now we can derive
+\[\begin{prooftree}
+\demote{\wid\Delta} \nprov \demote{\wid\theta}\nar M : \erase{\wid \theta\wid A} \quad
+\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \pp{\demote{\wid\theta}\nar M}{\wid \theta\wid A}
+\justifies
+\wid\Delta \wprov \epair{ \demote{\wid\theta}\nar M}{\promote{\wid\theta}\nar N} : {\wid\theta}\wid A
+\end{prooftree}\]
+\textcolor{red}{CONFUSED HERE}
+  \item
+\textcolor{red}{XXX this is structurally correct but I need to account for contextual context validity,
+and swap $\Gamma$ and $\Delta$}
+Consider the case of
+\[  \wid\theta (\wid \Gamma, x \div \nar A) =   (\wid\theta\wid \Gamma, x \div \demote{\wid\theta}\nar A)\]
+We have
+\[\wid \Delta \wprov \wid \theta : \wid \Delta'\]
+\[\begin{prooftree}
+\wid \Delta'\wprov {\wid\Gamma} \rctx \qquad \wid \Delta',\demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wid \Delta' \wprov ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}\]
+and we want to show
+\[\wid \Delta \wprov (\wid\theta\wid \Gamma, x \div \demote{\wid\theta}\nar A) \rctx\]
+We apply Lemma~\ref{substitution.modification} to get
+\[\demote{\wid\Delta}  \nprov \demote{\wid\theta} : \demote{\wid\Delta'}\]
+and then apply the induction hypothesis to get
+\[  \demote{\wid\Delta} , \demote{\wid\theta}\demote{\wid\Gamma} \nprov \demote{\wid\theta} \nar A : \rtype\]
+and by Lemma~\ref{operation.substitution.commute} we have
+\[
+\begin{prooftree}
+\wid \Delta \wprov {\wid \theta\wid \Gamma} \rctx \qquad \demote{\wid \Delta}, \demote {(\wid \theta\wid \Gamma)} \nprov \demote{\wid\theta} \nar A : \rtype
+\justifies
+\wid \Delta \wprov ({\wid \theta\wid \Gamma}, x \div \demote{\wid\theta} \nar A)\rctx
+\end{prooftree}
+\]
+  \item Consider the case of
+\[  \wid\theta (\wid \Gamma, x :: \wid A) =   (\wid\theta\wid \Gamma, x :: \rdemote{\wid\theta}\wid A)\]
+We have
+\[\wid \Delta \wprov \wid \theta : \wid \Delta'\]
+\[
+\begin{prooftree}
+\wid \Delta' \wprov {\wid\Gamma} \rctx \qquad \rdemote{\wid\Delta'} ,\rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wid \Delta' \wprov ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+and we want to show
+\[\wid \Delta \wprov (\wid \theta {\wid\Gamma}, x :: \rdemote{\wid \theta}\wid A)\rctx\]
+We apply Lemma~\ref{substitution.modification} to get
+\[\rdemote{\wid\Delta}  \nprov \rdemote{\wid\theta} : \rdemote{\wid\Delta'}\]
+and then apply the induction hypothesis to get
+\[  \rdemote{\wid\Delta} , \rdemote{\wid\theta}\rdemote{\wid\Gamma} \nprov \rdemote{\wid\theta} \wid A : \rtype\]
+and by Lemma~\ref{operation.substitution.commute} we have
+\[
+\begin{prooftree}
+\wid \Delta \wprov {\wid \theta \wid\Gamma} \rctx \qquad \rdemote{\wid \Delta} , \rdemote{(\wid \theta \wid\Gamma)} \wprov \rdemote{\wid \theta}\wid A : \rtype
+\justifies
+\wid \Delta  \wprov ({\wid \theta \wid\Gamma}, x :: \rdemote{\wid \theta}\wid A)\rctx
+\end{prooftree}
+\]
+
+  \end{itemize}
+\cqed
+\end{proof}
+
+
+\section{Interesting Theorems}
+
+\subsection{Fracture}
+If $\wid \Gamma\wprov \wid A : \wid\rtype$ then we have an isomorphism
+\[\wid \Gamma\wprov \wid A \cong \gg(x \div \erase{\wid A}) . \pp {x} {\wid A}\]
+\[\wid \Gamma\wprov \mathsf{fore} : \wid A \to \gg(x \div \erase{\wid A}) . \pp {x} {\wid A}\]
+\[ \mathsf{fore} = \lambda a. \bglue(a, \{ a\})\]
+\[\wid \Gamma\wprov \mathsf{back} :  \gg(x \div \erase{\wid A}) . \pp {x} {\wid A} \to \wid A\]
+\[ \mathsf{back} = \lambda g. \epair{g}{ \bunglue(g)}\]
+
+\subsection{Fracture With Internalized Erasure}
+If $\wid \Gamma\wprov \wid A : \wid\rtype$ then we have an isomorphism
+\[\wid \Gamma\wprov \wid A \cong \gg(x \div \wipe \wid A) . \pp {\buse(x)} {\wid A}\]
+This is sort of the ``$e^{\pi i} = -1$'' of this type system, in the sense that it nicely ties together the three type constructors
+$\gg$ and $\wipe$ and $\pp {\dash}{\dash}$.
+\[\wid \Gamma\wprov \mathsf{fore} : \wid A \to \gg(x \div \wipe \wid A) . \pp {\buse(x)} {\wid A}\]
+\[ \mathsf{fore} = \lambda a. \bglue(\bmake(a), \{ a\})\]
+\[\wid \Gamma\wprov \mathsf{back} :  \gg(x \div \wipe \wid A) . \pp {\buse(x)} {\wid A} \to \wid A\]
+\[ \mathsf{back} = \lambda g. \epair{\buse(g)}{ \bunglue(g)}\]
+\subsection{The Nondependent Function Type}
+If
+\[ \nprov \nar \Gamma \rctx \qquad \ups \nar\Gamma \wprov \wid A : \rtype \qquad \ups \nar\Gamma \wprov \wid B : \rtype \qquad
+\nar \Gamma \nprov \nar f : \erase{\wid A \to \wid B}\]
+then there exists an isomorphism
+\[\nar \Gamma \nprov \pp {\nar f} {\wid A \to \wid B}  \cong ( a :  \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\  a} {\wid B} \]
+Here is the construction:
+\[ \nar \Gamma \prov \mathsf{fore} : (f' : \pp {\nar f} {\wid A \to \wid B}) (a : \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\ a} {\wid B} \]
+\[\mathsf{fore} = \lambda f'.\lambda a.\lambda a'.  \{(\epair {\nar f} {f'})\ (\epair { a} {a'})\}\]
+\[\nar \Gamma \prov \mathsf{back} : (k : (a : \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\ a} {\wid B}) \to \pp {\nar f} {\wid A \to \wid B} \]
+\[\mathsf{back} = \lambda k. \{\lambda x . (\epair {{\nar f}\ x} {k\ x\ \{x\}})\}\]
+Let's typecheck these. Make some abbreviations
+\[\nar \Gamma_1 = (\nar \Gamma, f' \div \pp {\nar f} {\wid A \to \wid B}, a \div \erase{\wid A}, a' \div \pp {  a} {\wid A})\]
+\[\nar \Gamma_2 = (\nar\Gamma, k \div (a : \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\ a} {\wid B})\]
+\[\nar \Gamma_3 = (\nar\Gamma_2, x :: \wid A)\]
+For $\mathsf{fore}$, we can just prove
+\[
+\begin{prooftree}
+\[
+\[
+\[
+\justifies
+\nar\Gamma_1 \nprov {\nar f}  : \erase{\wid A \to \wid B}
+\]
+\[
+\justifies
+\nar\Gamma_1 \nprov f' :  \pp {\nar f} {\wid A \to \wid B}
+\]
+\justifies
+\ups \nar\Gamma_1 \wprov \epair {\nar f} {f'} :  {\wid A \to \wid B}
+\]
+\[
+\[
+\justifies
+\nar\Gamma_1 \nprov { a}  :  \erase{\wid A}
+\]
+\[
+\justifies
+\nar\Gamma_1 \nprov a' :  \pp { a} {\wid A}
+\]
+\justifies
+\ups \nar\Gamma_1 \wprov \epair { a} {a'} :  \wid A
+\]
+\justifies
+\ups \nar\Gamma_1 \wprov (\epair {\nar f} {f'})\ (\epair { a} {a'}) :  \wid B
+\]
+\justifies
+\nar \Gamma, f' \div \pp {\nar f} {\wid A \to \wid B}, a \div \erase{\wid A}, a' \div \pp {  a} {\wid A} \nprov \{(\epair {\nar f} {f'})\ (\epair { a} {a'})\} : \pp {\nar f\ a} {\wid B}
+\end{prooftree}
+\]
+For $\mathsf{back}$, we can take
+\[
+\begin{prooftree}
+\[
+\[
+\justifies
+\nar\Gamma_3 \nprov  k : (a : \erase{\wid A}) (a' : \pp { a}{\wid A}) \to \pp {\nar f\ a}{\wid B}
+\]
+\[
+\justifies
+\nar\Gamma_3 \nprov  x : \erase{\wid A}
+\]
+\justifies
+\nar\Gamma_3 \nprov  {k\ x} : \pp x{\wid A} \to  \pp {\nar f\ x}{\wid B}
+\]
+\[
+\[
+\justifies
+\ups \nar\Gamma_3 \wprov  x : {\wid A}
+\]
+\justifies
+\nar\Gamma_3 \nprov  {\{x\}} : \pp x{\wid A}
+\]
+\justifies
+\nar\Gamma_3 \nprov  {k\ x\ \{x\}} : \pp {\nar f\ x}{\wid B}
+\end{prooftree}
+\]
+and insert it into
+\[
+\begin{prooftree}
+\[
+\[
+\[
+\[
+\justifies
+\nar\Gamma_2 \nprov f : \erase{\wid A \to \wid B}
+\]
+\[
+\justifies
+\nar\Gamma_2, x \div \erase{\wid A} \nprov x : \erase{\wid A}
+\]
+\justifies
+\nar\Gamma_2, x \div \erase{\wid A} \nprov \nar f\ x : \erase{\wid B}
+\]
+\qquad
+\[\vdots \justifies \nar\Gamma_2, x :: \wid A \nprov  {k\ x\ \{x\}} : \pp {\nar f\ x} {\wid B}\]
+\justifies
+\ups \nar\Gamma_2, x : \wid A \wprov \epair {\nar f\ x} {k\ x\ \{x\}} : \wid B
+\]
+\justifies
+\ups \nar\Gamma_2 \wprov \lambda x . (\epair {\nar f\ x} {k\ x\ \{x\}}) : \wid A \to \wid B
+\]
+\justifies
+\nar\Gamma, k \div (a : \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\ a} {\wid B} \nprov \{\lambda x . (\epair {\nar f\ x} {k\ x\ \{x\}})\} : \pp {\nar f} {\wid A \to \wid B}
+\end{prooftree}
+\]
+
+
+\subsection{The Dependent Function Type}
+This is very similar to the non-dependent case. The difference is we must substitute into $B$.
+If
+\[ \nprov \nar \Gamma \rctx \qquad \ups \nar\Gamma \wprov \wid A : \rtype \qquad \ups \nar\Gamma, x : \wid A \wprov \wid B : \rtype \qquad
+\nar \Gamma \nprov \nar f : \erase{(x : \wid A) \to \wid B}\]
+then there exists an isomorphism
+\[\nar \Gamma \nprov \pp {\nar f} {(x : \wid A) \to \wid B}  \cong ( a :  \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\  a} {[(\epair a {a'})/x]\wid B} \]
+Here is the construction:
+\[ \nar \Gamma \prov \mathsf{fore} : (f' : \pp {\nar f} {(x : \wid A) \to \wid B}) (a : \erase{\wid A}) (a' : \pp {  a} {\wid A}) \to \pp {\nar f\ a} {\wid B} \]
+\[\mathsf{fore} = \lambda f'.\lambda a.\lambda a'.  \{(\epair {\nar f} {f'})\ (\epair { a} {a'})\}\]
+
+\subsection{The Universe}
+For any type
+\[\nar \Gamma \nprov \nar A : \nar\rtype \]
+we aim to show
+\[\nar\Gamma \nprov \pp {\nar A} {\wid \rtype} \cong (\nar A \to \nar \rtype)\]
+The maps are
+\[\begin{array}{l}
+ \mathsf{fore} : (p : \pp {\nar A} {\wid \rtype}) \to (\nar A \to \nar \rtype)\\
+ \mathsf{fore} = \lambda p . \lambda a . \pp {a} {\epair {\nar A} p}\\
+ \mathsf{back} : (R : \nar A \to \nar\rtype) \to  \pp {\nar A} {\wid \rtype}\\
+ \mathsf{back} = \lambda R . \{ \gg (x : \nar A). R\ x\}
+\end{array}\]
+Let's check that these are well-typed.
+Let's abbreviate
+\[\nar\Gamma_1 = (\nar \Gamma, p \div \pp {\nar A} {\wid \rtype}, a \div \nar A)\]
+\[\nar\Gamma_2 = (\nar \Gamma, R \div \nar A \to \nar \rtype)\]
+Then we can prove $\mathsf{fore}$:
+\[
+\begin{prooftree}
+\[
+\[
+\justifies
+ \nar \Gamma_1\nprov {\nar A}  : \nar \rtype
+\]
+\[
+\justifies
+ \nar \Gamma_1\nprov  p : \pp {\nar A} {\wid \rtype}
+\]
+\justifies
+\ups \nar \Gamma_1\wprov \epair{\nar A} p : \wid \rtype
+\]
+\[
+\justifies
+\nar \Gamma_1\nprov a : \nar A
+\]
+\justifies
+\nar \Gamma_1\nprov \pp {a} {\epair {\nar A} p} : \nar \rtype
+\end{prooftree}
+\]
+and $\mathsf{back}$:
+\[
+\begin{prooftree}
+\[
+\[
+\justifies
+\nar\Gamma_2 \nprov \nar A : \nar\rtype
+\]
+\[
+\justifies
+\nar\Gamma_2, x \div \nar A \nprov R\ x : \nar\rtype
+\]
+\justifies
+\ups \nar\Gamma_2 \wprov   \gg (x : \nar A). R\ x :  \wid \rtype
+\]
+\justifies
+\nar\Gamma_2 \nprov  \{ \gg (x : \nar A). R\ x\} :  \pp {\nar A} {\wid \rtype}
+\end{prooftree}
+\]
+
+Now we want to check they're identities in both directions.
+\subsubsection{First Zigzag}
+We want to check that $\mathsf{fore} \o \mathsf{back}$ is the identity.
+\[\begin{array}{rcl}
+\mathsf{fore}\ (\mathsf{back}\ R) &=& \mathsf{fore} (\{ \gg (x : \nar A). R\ x\})\\
+ &=&  \lambda a . \pp {a} {\epair {\nar A} \{ \gg (x : \nar A). R\ x\}} \\
+ &\equiv_\beta&  \lambda a . \pp {a} {  \gg (x : \nar A). R\ x} \\
+\end{array}\]
+If this is to be equal to $R$, by extensionality we can check whether for all $a : \nar A$ we have
+\[ R\ a = \pp {a} {  \gg (x : \nar A). R\ x} \]
+Let's use univalence and demonstrate these are isomorphic. In the context $\nar \Gamma_2, a \div \nar A$, we define
+\[\begin{array}{l}
+ \mathsf{fore_1} : R\ a \to \pp {a} {  \gg (x : \nar A). R\ x}\\
+ \mathsf{fore_1} = \lambda z . \{ \bglue(a, z)\} \\
+ \mathsf{back_1} :  \pp {a} {  \gg (x : \nar A). R\ x} \to R\ a\\
+ \mathsf{back_1} = \lambda w . \bunglue(\epair a w)\\
+\end{array}\]
+\subsubsection{Second Zigzag}
+We want to check that $\mathsf{back} \o \mathsf{fore}$ is the identity.
+\[\begin{array}{rcl}
+\mathsf{back}\ (\mathsf{fore}\ p) &=&  \mathsf{back}\ (\lambda a . \pp {a} {\epair {\nar A} p})\\
+&=&   \{ \gg (x : \nar A). (\lambda a . \pp {a} {\epair {\nar A} p})\ x\}\\
+&=&   \{ \gg (x : \nar A).  \pp {x} {\epair {\nar A} p}\}\\
+\end{array}\]
+
+Now we want to show
+\[p = \{ \gg (x : \nar A).  \pp {x} {\epair {\nar A} p}\}\]
+at type $\pp {\nar A} {\wid \rtype}$ so $\eta$-expand both sides to
+\[\epair {\nar A} p = \epair {\nar A} {\{ \gg (x : \nar A).  \pp {x} {\epair {\nar A} p}\}}\]
+but the right-hand side $\beta$-reduces, so we get the equivalent equation
+\[ \epair {\nar A} p = \gg(x : \nar A). \pp {x} {\epair {\nar A} p}\]
+
+Let's use univalence and demonstrate these are isomorphic.
+Let's abbreviate
+
+\[\nar\Gamma_3 = (\nar \Gamma, p \div \pp {\nar A} {\wid \rtype})\]
+\[\nar\Gamma_4 = (\nar \Gamma_3,  w ::  \gg(x : \nar A). \pp {x} {\epair {\nar A} p})\]
+
+In the context $\nar \Gamma_3$, we define
+\[\begin{array}{l}
+ \mathsf{fore_2} :\epair {\nar A} p \to \gg(x : \nar A). \pp {x} {\epair {\nar A} p} \\
+ \mathsf{fore_2} = \lambda z . \bglue(z, \{z\}) \\
+ \mathsf{back_2} : ( \gg(x : \nar A). \pp {x} {\epair {\nar A} p} )\to \epair {\nar A} p\\
+ \mathsf{back_2} = \lambda w . (\epair w {\bunglue(w)})\\
+\end{array}\]
+
+Let's typecheck these.
+
+$\mathsf{fore_2}$:
+\[
+\begin{prooftree}
+\[
+\justifies
+ \nar \Gamma_3, z \div  {\nar A}  \nprov  z :  \nar A
+\]
+\[
+\[
+\justifies
+ \ups \nar \Gamma_3, z :: \epair {\nar A} p \wprov   z :  \epair {\nar A} p
+\]
+\justifies
+ \nar \Gamma_3, z :: \epair {\nar A} p \nprov   \{z\} :  \pp {z} {\epair {\nar A} p}
+\]
+\justifies
+\ups \nar \Gamma_3, z : \epair {\nar A} p \wprov  \bglue(z, \{z\}) : \gg(x : \nar A). \pp {x} {\epair {\nar A} p}
+\end{prooftree}
+\]
+
+$\mathsf{back_2}$:
+\[
+\begin{prooftree}
+\[
+\justifies
+ \nar \Gamma_3, w \div  \nar A \nprov w  :  \nar A
+\]
+\[
+\[
+\justifies
+ \ups \nar \Gamma_4 \wprov w : \gg(x : \nar A). \pp {x} {\epair {\nar A} p}
+\]
+\justifies
+ \nar \Gamma_4 \nprov \bunglue(w) :  \pp {w} {\epair {\nar A} p}
+\]
+\justifies
+\ups \nar \Gamma_3, w : \gg(x : \nar A). \pp {x} {\epair {\nar A} p} \wprov \epair w {\bunglue(w)} :  \epair {\nar A} p
+\end{prooftree}
+\]
+
+Let's check that these compose to the identity.
+The composite $\mathsf{fore}_2 \o \mathsf{back}_2$ is
+\[ (\lambda z . \bglue(z, \{z\})) \o ( \lambda w . (\epair w {\bunglue(w)}))\]
+\[\equiv_\beta  \lambda w . \bglue(w, \{\epair w {\bunglue(w)}\}) \]
+\[\equiv_\eta  \lambda w . \bglue(w,  {\bunglue(w)}) \]
+\[\equiv_\eta  \lambda w . w \]
+
+Something we need to be very careful about here is the substitution theorem: otherwise we would be substituting wide terms for narrow terms. The expression $\epair w {\bunglue(w)}$ must be erased when it's substituted for the first $z$.
+
+The composite $\mathsf{back}_2 \o \mathsf{fore}_2$ is
+\[ ( \lambda w . (\epair w {\bunglue(w)})) \o (\lambda z . \bglue(z, \{z\})) \]
+\[= \lambda z . \epair {\textcolor{red}{\bglue(z, \{z\})}} {\bunglue(\bglue(z, \{z\}))}  \]
+\[\equiv_\beta \lambda z . \epair {\textcolor{red}{\bglue(z, \{z\})}} { \{z\}}  \]
+\[\equiv_\beta \lambda z . z  \]
+
+Oops, that's wrong! I need to be careful in the same way. What should happen actually is:
+
+\[ ( \lambda w . (\epair w {\bunglue(w)})) \o (\lambda z . \bglue(z, \{z\})) \]
+\[= \lambda z . \epair z {\bunglue(\bglue(z, \{z\}))}  \]
+\[\equiv_\beta \lambda z . \epair z { \{z\}}  \]
+\[\equiv_\beta \lambda z . z  \]
+
+\subsection{Parametricity for the Identity}
+
+Let's define
+
+\[\nar \Gamma =  (q \div ( X : \nar \rtype) \to  X \to  X, { q'} \div \pp { q} {( X : \wid\rtype) \to  X \to  X},\]
+\[ \nar A \div \nar \rtype, \nar R \div \nar A \to \nar \rtype, \nar a : \nar A, \nar a' : \nar R\ \nar a )\]
+
+
+and typecheck
+
+\[
+\begin{prooftree}
+\[
+\justifies
+ \nar \Gamma \nprov   {q} : ( X : \nar\rtype) \to  X \to  X
+\]
+\[
+\justifies
+ \nar \Gamma \nprov   {q'} : \pp q {( X : \wid\rtype) \to  X \to  X}
+\]
+\justifies
+\ups \nar \Gamma \wprov  \epair {q} {q'} : ( X : \wid\rtype) \to  X \to  X
+\end{prooftree}
+\]
+
+\[
+\begin{prooftree}
+\[
+\justifies
+ \nar \Gamma \nprov  \nar a : \nar A
+\]
+\[
+\justifies
+ \nar \Gamma \nprov   \nar a' : \nar R\ \nar a
+\]
+\justifies
+ \ups\nar \Gamma \wprov  \bglue(\nar a, \nar a') : \gg(x: \nar A).\nar R\ x
+\end{prooftree}
+\]
+
+So we can construct
+\[
+\begin{prooftree}
+\[
+\[
+\vdots
+\justifies
+ \ups \nar \Gamma \wprov  \epair {q} {q'} : ( X : \wid\rtype) \to  X \to  X
+\]
+\[
+\justifies
+ \ups\nar \Gamma \wprov  \gg(x: \nar A).\nar R\ x : \wid \rtype
+\]
+\[
+\vdots
+\justifies
+ \ups\nar \Gamma \wprov  \bglue(\nar a, \nar a') : \gg(x: \nar A).\nar R\ x
+\]
+\justifies
+\ups \nar \Gamma \wprov   (\epair {q} {q'})\ (\gg(x: \nar A).\nar R\ x)\ (\bglue(\nar a, \nar a')) : \gg(x: \nar A).\nar R\ x
+\]
+\justifies
+\nar \Gamma \nprov  \bunglue((\epair {q} {q'})\ (\gg(x: \nar A).\nar R\ x)\ (\bglue(\nar a, \nar a'))) : \nar R\ (q\ \nar A\ \nar a)
+\end{prooftree}
+\]
+
+So in particular we can substitute $\nar R := (\lambda \nar b . \nar b \equiv \nar a  )$ and $\nar a' = \mathsf{refl}$ to get
+
+\[\nar \Gamma \nprov  \bunglue((\epair {q} {q'})\ (\gg(x: \nar A).x \equiv \nar a)\ (\bglue(\nar a, \mathsf{refl}))) : q\ \nar A\ \nar a \equiv \nar a\]
+
+\subsection{Parametricity for Natural Numbers}
+
+\textcolor{red}{remember to prove compatibility of substitution with $\tsem{A}{x}$}
+
+
+
+\section{Semantics}
+We imagine the target language of our `semantics' to be ordinary dependent type theory
+with no exotic contexts or types or terms.
+We define operations $\dash^*$ and $\sem\dash$ and $\tsem\dash\dash$ so that syntactically:
+
+\begin{tabular}{l}
+If $\wid \Gamma$ is a wide context, then ${\wid \Gamma}^*$ is a context.\\
+If $\wid A$ is a wide type, then ${\wid A}^*$ is a type.\\
+If $\wid M$ is a wide term, then ${\wid M}^*$ is a term.
+If $\wid \Gamma$ is a wide context, then $\sem{\wid \Gamma}$ is a context.\\
+If $\wid A$ is a wide type and $M$ is a term, then $\tsem {\wid A} {M}$ is a type.\\
+If $\wid M$ is a wide term, then $\sem{\wid M}$ is a term.\\
+If $\nar \Gamma$ is a narrow context, then ${\nar \Gamma}^*$ is a context.\\
+If $\nar A$ is a narrow type, then ${\nar A}^*$ is a type.\\
+If $\nar M$ is a narrow term, then ${\nar M}^*$ is a term.
+\end{tabular}
+
+\noindent Furthermore we wish to prove that these operations preserve typing:
+
+\begin{lemma}[Type Semantic Soundness]\ %
+\label{semantic.soundness.type}
+  \begin{enumerate}[noitemsep]
+\item If ${\wid\Gamma} \wprov {\wid A} : \rtype$, then ${\wid\Gamma}^* \prov {\wid A}^* : \rtype$.
+\item If ${\wid\Gamma} \wprov {\wid A} : \rtype$, then $\sem {\wid\Gamma}, x : \wid {\wid A}^* \prov \tsem {\wid A} x : \rtype$.
+\item If ${\nar\Gamma} \nprov {\nar A} : \rtype$, then ${\nar\Gamma}^* \prov {\nar A}^* : \rtype$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{lemma}[Term Semantic Soundness]\ %
+\label{semantic.soundness.term}
+  \begin{enumerate}[noitemsep]
+\item If ${\wid\Gamma} \wprov {\wid M} : {\wid A}$, then ${\wid\Gamma}^* \prov {\wid M}^* : {{\wid A}}^*$.
+\label{semantic.soundness.wide.term.star}
+\item If ${\wid\Gamma} \wprov {\wid M} : {\wid A}$, then $\sem{\wid\Gamma} \prov \sem {\wid M} : \tsem {\wid A} {\wid M^*}$.
+\label{semantic.soundness.wide.term.brackets}
+\item If ${\nar\Gamma} \nprov {\nar M} : {\nar A}$, then ${\nar\Gamma}^* \prov {\nar M}^* : {{\nar A}}^*$.
+\label{semantic.soundness.narrow.term.star}
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Distributed throughout various sections.
+\cqed
+\end{proof}
+
+\begin{lemma}
+\label{erase.star.eq.star}
+$\erase{\wid A}^* = \wid A^*$
+\end{lemma}
+
+
+
+Context Semantics:
+\[
+\begin{array}{rcl}
+({\wid\Gamma}, x : \wid A)^* &=& ({\wid\Gamma}^*, x^* : {\wid A}^*)\\
+({\wid\Gamma}, x :: \wid A)^* &=& ({\wid\Gamma}^*, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*})\\
+({\wid\Gamma}, x \div \nar A)^* &=& ({\wid\Gamma}^*, x^* : {\nar A}^*)\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+\sem{{\wid\Gamma}, x : \wid A} &=& (\sem{\wid\Gamma}, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*})\\
+\sem{{\wid\Gamma}, x :: \wid A} &=& (\sem{\wid\Gamma}, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*})\\
+\sem{{\wid\Gamma}, x \div \nar A} &=& (\sem{\wid\Gamma}, x^* : {\nar A}^*)\\
+\end{array}
+\]
+\[
+\begin{array}{rcl}
+({\nar\Gamma}, x :: \wid A)^* &=& ({\nar\Gamma}^*, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*})\\
+({\nar\Gamma}, x \div \nar A)^* &=& ({\nar\Gamma}^*, x^* : {\nar A}^*)\\
+\end{array}
+\]
+
+
+
+
+\begin{lemma}
+\label{semantic.weakening}
+For any $\wid \Gamma$, the context ${\wid \Gamma}^*$ is a subset of $\sem{\wid \Gamma}$.
+Therefore any judgment that holds in context in ${\wid \Gamma}^*$ also holds in
+$\sem{\wid \Gamma}$.
+\end{lemma}
+
+\begin{lemma}
+\label{include.brackets.eq.star}
+$\sem{\ups \nar \Gamma} = \nar \Gamma^*$
+\end{lemma}
+
+\begin{lemma}
+\label{include.star.eq.star}
+$(\ups \nar \Gamma)^* = \nar \Gamma^*$
+\end{lemma}
+
+
+\begin{lemma}
+\label{demote.star.eq.star}
+$(\demote{\wid \Gamma})^* = \wid \Gamma^*$
+\end{lemma}
+
+\begin{lemma}
+\label{promote.star.eq.brackets}
+$(\promote{\wid \Gamma})^* = \sem{ \wid \Gamma}$
+\end{lemma}
+
+\begin{proof}
+By induction on $\wid \Gamma$, using Lemma~\ref{erase.star.eq.star}.
+\cqed
+\end{proof}
+
+
+\begin{lemma}[Context Semantic Soundness]\ %
+\label{semantic.soundness.context}
+  \begin{enumerate}[noitemsep]
+\item If $\wprov {\wid\Gamma}\rctx$, then $\prov {{\wid\Gamma}}^*\rctx$.
+\item If $\wprov {\wid\Gamma}\rctx$, then $\prov \sem{{\wid\Gamma}}\rctx$.
+\item If $\nprov {\nar\Gamma}\rctx$, then $\prov {{\nar\Gamma}}^*\rctx$.
+  \end{enumerate}
+\end{lemma}
+
+
+\begin{proof}\ %
+\begin{itemize}
+\item
+We know
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x : \wid A)\rctx
+\end{prooftree}
+\]
+and therefore
+\[\prov \wid\Gamma^* \rctx \qquad \prov \sem{\wid\Gamma} \rctx\]
+\[\wid\Gamma^* \prov \wid A^*:\rtype \qquad \sem{\wid\Gamma}, x^* : \wid A^* \prov \tsem{\wid A}{x^*} \]
+which is enough to show
+\[\prov ({\wid\Gamma}^*, x^* : {\wid A}^*) \rctx\qquad
+\prov(\sem{\wid\Gamma}, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*}) \rctx\]
+\item
+We know
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+and therefore
+\[\prov \wid\Gamma^* \rctx \qquad \prov \sem{\wid\Gamma} \rctx\]
+\[(\demote{\wid\Gamma})^* \prov \nar A^*:\rtype \]
+which is enough to show (using Lemma~\ref{semantic.weakening} and Lemma~\ref{demote.star.eq.star})
+\[\prov ({\wid\Gamma}^*, x^* : {\nar A}^*) \rctx\qquad
+\prov(\sem{\wid\Gamma}, x^* : {\nar A}^*) \rctx\]
+\item
+We know
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+and therefore
+\[\prov \wid\Gamma^* \rctx \qquad \prov \sem{\wid\Gamma} \rctx\]
+\[(\rdemote{\wid\Gamma})^* \prov \wid A^*:\rtype \qquad \sem{\rdemote{\wid\Gamma}}, x^* : \wid A^* \prov \tsem{\wid A}{x^*} \]
+using Lemmas \ref{include.brackets.eq.star}, \ref{include.star.eq.star}, and~\ref{demote.star.eq.star} this is the same as
+\[\wid\Gamma^* \prov \wid A^*:\rtype \qquad \wid\Gamma^*, x^* : \wid A^* \prov \tsem{\wid A}{x^*} \]
+which is enough to show (also using Lemma~\ref{semantic.weakening})
+\[\prov ({\wid\Gamma}^*, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*}) \rctx\qquad
+\prov(\sem{\wid\Gamma}, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*}) \rctx\]
+\item
+We know
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad {\nar\Gamma} \nprov \nar A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+and therefore
+\[\prov \nar\Gamma^* \rctx \qquad \nar\Gamma^* \prov \nar A^*:\rtype \]
+which is enough to show
+\[\prov ({\nar\Gamma}^*, x^* : {\nar A}^*) \rctx\]
+\item
+We know
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad \ups {\nar\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+and therefore
+\[\prov \nar\Gamma^* \rctx \]
+\[ (\ups\nar\Gamma)^* \prov \wid A^*:\rtype \qquad \sem{\ups\nar\Gamma}, x^* : \wid A^* \prov \tsem{\wid A}{x^*} \]
+Using Lemmas~\ref{include.brackets.eq.star} and~\ref{include.star.eq.star} we get
+\[ \nar\Gamma^* \prov \wid A^*:\rtype \qquad \nar\Gamma^*, x^* : \wid A^* \prov \tsem{\wid A}{x^*} \]
+which is enough to show
+\[\prov ({\nar\Gamma}^*, x^* : {\wid A}^*, \sem x : \tsem {\wid A} {x^*}) \rctx\]
+\end{itemize}
+\cqed
+\end{proof}
+
+\subsection{Variable Semantics}
+For the semantics we must check cases of \ref{semantic.soundness.term}. This is mostly straightforward, though
+we need to invoke Lemma~\ref{erase.star.eq.star}.
+
+
+\subsubsection{Fiber Type Semantics}
+\[\begin{array}{rcl}
+{\pp {\nar M} {\wid A}}^* &=& \tsem {\wid A} {\nar M^*}\\
+\{\wid M\}^* &=& \sem {\wid M}\\
+(\epair {\nar M} {\nar N})^* &=& {\nar M}^*\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+\\
+\\
+\sem{\epair {\nar M}{\nar N}} &=& {\nar N}^*\\
+\end{array}\]
+
+Let's check that these are semantically sound.
+In the formation rule, we know
+\[\sem{\ups\nar\Gamma}, x : \wid A^* \prov \tsem{\wid A}{x} : \rtype\]
+\[\nar\Gamma^* \prov \nar M^* : \erase{\wid A}^*\]
+Lemma~\ref{erase.star.eq.star} and Lemma~\ref{include.brackets.eq.star} says these are
+\[\nar\Gamma^*, x : \wid A^* \prov \tsem{\wid A}{x} : \rtype\]
+\[\nar\Gamma^* \prov \nar M^* : \wid A^*\]
+So substitute:
+\[\nar\Gamma^* \prov \tsem{\wid A}{\nar M^*} : \rtype\]
+
+For introduction, we must show
+\[\nar \Gamma^* \prov \{\wid M\}^* : {\pp  {\erase{\wid M}} {\wid A}}^*\]
+so
+\[\nar \Gamma^* \prov \sem{\wid M} : \tsem{\wid A}{\wid M^*}\]
+but this is exactly what we get out of the premise.
+
+For elimination, we get from the premises (by Lemmas~\ref{demote.star.eq.star} and~\ref{promote.star.eq.brackets})
+that
+\[\wid\Gamma^* \prov \nar M^* : \wid A^* \]
+\[\sem{\wid\Gamma} \prov \nar N^* : \tsem{\wid A}{\nar M^*}\]
+and this is exactly what we need.
+
+
+
+\subsubsection{Glue Type Semantics}
+\[\begin{array}{rcl}
+(\gg(x : \nar A).\nar B)^* &=& \nar A^*\\
+\bglue(\nar M,\nar N)^* &=& \nar M^*\\
+(\bunglue \wid M)^* &=& \sem{\wid M}\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+\tsem{\gg(x : \nar A).\nar B}{M} &=& [M/x^*]\nar B^*\\
+\sem{\bglue(\nar M,\nar N)} &=& \nar N^*\\
+\\
+\end{array}\]
+
+Let's check that these are semantically sound.
+In the formation rule, we know
+\[ \wid\Gamma^* \prov \nar A^* : \rtype \]
+\[ \sem{\wid\Gamma}, x^* : \nar A^* \prov \nar B^* : \rtype \]
+which is exactly what we need to show.
+
+For introduction, we know
+\[ \wid\Gamma^* \prov \nar M^* : \nar A^*  \]
+\[ \sem{\wid\Gamma} \prov \nar N^* : [\nar M^*/x^*]\nar B^* \]
+which is exactly what we need to show.
+
+For elimination, we know
+\[\nar\Gamma^* \prov \sem{\wid M} : [\wid M^*/x^*]\nar B^*\]
+which is exactly what we need to show.
+
+
+
+
+\begin{lemma}[Semantics of Substitution]\ %
+ \begin{enumerate}
+  \item $([\wid M/x]\wid J)^* = [\wid M^* /x^*]\wid J^*$.
+  \item $\sem {[\wid M/x]\wid J} =  [\sem{\wid M} /\sem x][\wid M^* /x^*]\sem{\wid J}$.
+  \item $([\wid M/_{::}x]\wid J)^* = [\sem{\wid M} /\sem x][\wid M^* /x^*]\wid J^*$.
+  \item $\sem {[\wid M/_{::}x]\wid J} =  [\sem{\wid M} /\sem x][\wid M^* /x^*]\sem{\wid J}$.
+  \item $([\nar M/_{\div}x]\wid J)^* = [\nar M^* /x^*]\wid J^*$.
+  \item $\sem {[\nar M/_{\div}x]\wid J} =  [\nar M^* /x^*]\sem{\wid J}$.
+  \item $([\wid M/_{::}x]\nar J)^* = [\sem{\wid M} /\sem x][\wid M^* /x^*]\nar J^*$.
+  \item $([\nar M/_{\div}x]\nar J)^* = [\nar M^* /x^*]\nar J^*$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+\subsection{The Amazing Right Adjoint}
+\subsubsection{Definitions}
+\def\TT{\mathbb{T}}
+Define
+\[\T = \gg(x\div 1).0\]
+\[\surd \wid A = \gg(x\div ((\nar a\div \erase {\wid A}) \x \pp {\nar a} {\wid A})).1\]
+\[\isurd \wid M = \bglue(\langle \erase{\wid M}, \{\wid M\}\rangle, \langle\rangle)\]
+\[\esurd (t.\wid M) = \epair{[\langle\rangle/t] |\wid M|.1}{[\langle\rangle/t]|\wid M|.2}\]
+We can justify some derived rules
+\[
+\begin{prooftree}
+\rdemote{\wid\Gamma} \wprov \wid A : \wid\rtype
+\justifies
+\wid\Gamma \wprov \surd \wid A : \wid\rtype
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\rdemote{\wid\Gamma} \wprov \wid M : \wid A
+\justifies
+\wid\Gamma \wprov \isurd \wid M : \surd \wid A
+\end{prooftree}
+\qquad
+\begin{prooftree}
+{\wid\Gamma}, t : \TT \wprov \wid M : \surd \wid A
+\justifies
+\wid\Gamma \wprov \esurd(t. \wid M) : \wid A
+\end{prooftree}
+\]
+via
+\[
+\begin{prooftree}
+\[
+\[
+\justifies
+\demote{\wid\Gamma} \nprov  \erase {\wid A} : \nar\rtype
+\]
+\[
+\rdemote{\wid\Gamma} \wprov \wid A : \wid\rtype
+\qquad
+\[
+\justifies
+\demote{\wid\Gamma}, \nar a \div \erase{\wid A} \nprov  \nar a : \erase{\wid A}
+\]
+\justifies
+\demote{\wid\Gamma}, \nar a \div \erase{\wid A} \nprov \pp {\nar a} {\wid A} : \nar\rtype
+\]
+\justifies
+\demote{\wid\Gamma} \nprov ((\nar a\div \erase {\wid A}) \x \pp {\nar a} {\wid A}) : \nar\rtype
+\]
+\[\justifies \promote{\wid\Gamma} \nprov  1 : \nar\rtype\]
+\justifies
+\wid\Gamma \wprov \gg(x\div ((\nar a\div \erase {\wid A}) \x \pp {\nar a} {\wid A})).1 : \wid\rtype
+\end{prooftree}
+\]
+and
+\[
+\begin{prooftree}
+\[
+\[
+\justifies
+\demote{\wid\Gamma} \nprov \erase{\wid M} : \erase {\wid A}
+\]
+\[
+\rdemote{\wid\Gamma} \wprov \wid M : \wid A
+\justifies
+\demote{\wid\Gamma} \nprov  \{\wid M\} : \pp {\erase {\wid M}} {\wid A}
+\]
+\justifies
+\demote{\wid\Gamma} \nprov \langle \erase{\wid M}, \{\wid M\}\rangle : ((\nar a\div \erase {\wid A}) \x \pp {\nar a} {\wid A})
+\]
+\[
+\justifies
+\promote{\wid\Gamma} \nprov \langle\rangle : 1
+\]
+\justifies
+\wid\Gamma \wprov \bglue(\langle \erase{\wid M}, \{\wid M\}\rangle, \langle\rangle) : \gg(x\div ((\nar a\div \erase {\wid A}) \x \pp {\nar a} {\wid A})).1
+\end{prooftree}
+\]
+and
+\[
+\begin{prooftree}
+\[
+\justifies
+\demote{\wid\Gamma} \nprov [\langle\rangle/t] |\wid M|.1 : \erase{\wid A}
+\]
+\[
+\justifies
+\promote{\wid\Gamma} \nprov [\langle\rangle/t]|\wid M|.2 : \pp{ [\langle\rangle/t]|\wid M|.1}{\wid A}
+\]
+\justifies
+\wid\Gamma \wprov \epair{[\langle\rangle/t] |\wid M|.1}{[\langle\rangle/t]|\wid M|.2} : \wid A
+\end{prooftree}
+\]
+\subsubsection{Adjunction}
+Observe that
+\[
+\begin{prooftree}
+\[
+\justifies
+y \div \erase{\wid A}, t \div 1 \nprov y : \erase{\wid A}
+\]
+\[
+\[
+\[
+\justifies
+y \div \erase{\wid A}, t :: \T \wprov t : \gg(x\div 1).0
+\]
+\justifies
+y \div \erase{\wid A}, t :: \T \nprov \bunglue(t) : 0
+\]
+\justifies
+y \div \erase{\wid A}, t :: \T \nprov \babort(\bunglue(t)) : \pp y {\wid A}
+\]
+\justifies
+y \div \erase{\wid A}, t : \T \wprov \epair {y} {\babort(\bunglue(t))} : \wid A
+\end{prooftree}
+\]
+So let's define $\key^t(y) = \epair {y} {\babort(\bunglue(t))}$ so that we have
+\[
+\begin{prooftree}
+\justifies
+y \div \erase{\wid A}, t : \T \wprov \key^t(y) : \wid A
+\end{prooftree}
+\]
+
+Suppose we have
+\[ x : \T \to \wid A \prov \wid M : \wid B\]
+we can then construct
+\[
+\begin{prooftree}
+\[
+\justifies
+ y \div  \erase{\wid A} \prov [\lambda t . \key^t(y)/x]\wid M : \wid B
+\]
+\justifies
+ y :  \wid A \prov \isurd ( [\lambda t . \key^t(y)/x]\wid M): \surd \wid B
+\end{prooftree}
+\]
+
+and conversely if we have a
+\[ y :  \wid A \prov \wid N : \surd \wid B\]
+then we can construct
+\[
+\begin{prooftree}
+\[
+\justifies
+ x : \T \to \wid A, t : \T \prov [x\ t/y]\wid N : \surd \wid B
+\]
+\justifies
+ x : \T \to \wid A \prov \esurd(t. [x\ t/y]\wid N) : \wid B
+\end{prooftree}
+\]
+
+Let's try round trips. Let's first expand out
+\[\wid M  :=  \esurd(t. [x\ t/y]\wid N)\]
+\[\wid N  :=   \isurd ( [\lambda t . \key^t(y)/x]\wid M)\]
+to
+\[\wid M  :=  \epair{ |[x\ \langle\rangle/y]\wid N|.1}{|[x\ \langle\rangle/y]\wid N|.2}   \]
+\[\wid N  :=   \bglue(\langle  [\lambda t . y/x]\erase{\wid M}, \{ [\lambda t . \epair{y}{\babort(\bunglue(t))}/x]\wid M\}\rangle, \langle\rangle) \]
+
+Here's the round trip for $\wid M$:
+\[\wid M  :=  \epair{ |[x\ \langle\rangle/y]\wid N|.1}{|[x\ \langle\rangle/y]\wid N|.2}   \]
+\[=  \epair{ |[x\ \langle\rangle/y]\wid N|.1}{|[x\ \langle\rangle/y](\bglue(\langle  [\lambda t . y/x]\erase{\wid M}, \{ [\lambda t . \epair{y}{\babort(\bunglue(t))}/x]\wid M\}\rangle, \langle\rangle))|.2}   \]
+\[=  \epair{ |[x\ \langle\rangle/y]\wid N|.1}{|(\bglue(\langle  [\lambda t . (x\ \langle\rangle)/x]\erase{\wid M}, \{ [\lambda t . \epair{x\ \langle\rangle}{\babort(\bunglue(t))}/x]\wid M\}\rangle, \langle\rangle))|.2}   \]
+\[=  \epair{ |[x\ \langle\rangle/y]\wid N|.1}{(\langle  [\lambda t . (x\ \langle\rangle)/x]\erase{\wid M}, \{ [\lambda t . \epair{x\ \langle\rangle}{\babort(\bunglue(t))}/x]\wid M\}\rangle).2}   \]
+\[=  \epair{ |[x\ \langle\rangle/y]\wid N|.1}{ \{ [\lambda t . \epair{x\ \langle\rangle}{\babort(\bunglue(t))}/x]\wid M\}}   \]
+\[\equiv_{\eta}    [\lambda t . \epair{x\ \langle\rangle}{\babort(\bunglue(t))}/x]\wid M  \]
+\[\equiv_{\eta}^0   [\lambda t . \epair{x\ \langle\rangle}{\{x\ t\}}/x]\wid M  \]
+\[\equiv_{\beta}^{\pp{x\ t}{\wid A}}   [\lambda t . x\ t/x]\wid M  \]
+\[\equiv_{\eta}^{\T \to \wid A}    [x/x]\wid M   \]
+
+Here's the round trip for $\wid N$:
+\[\wid N  :=   \bglue(\langle  [\lambda t . y/x]\erase{\wid M}, \{ [\lambda t . \epair{y}{\babort(\bunglue(t))}/x]\wid M\}\rangle, \langle\rangle) \]
+\[ = \bglue(\langle  [\lambda t . y/x]\erase{\wid M}, \{ [\lambda t . \epair{y}{\babort(\bunglue(t))}/x](\epair{ |[x\ \langle\rangle/y]\wid N|.1}{|[x\ \langle\rangle/y]\wid N|.2})\}\rangle, \langle\rangle) \]
+\[ = \bglue(\langle  [\lambda t . y/x]\erase{\wid M}, \{ (\epair{ |[y/y]\wid N|.1}{|[y/y]\wid N|.2})\}\rangle, \langle\rangle) \]
+\[ = \bglue(\langle  [\lambda t . y/x]\erase{\wid M}, \{ \epair{ |\wid N|.1}{|\wid N|.2}\}\rangle, \langle\rangle) \]
+\[ = \bglue(\langle  [\lambda t . y/x]\erase{\wid M},  {|\wid N|.2}\rangle, \langle\rangle) \]
+\[ = \bglue(\langle  \erase{\wid N}.1,  {|\wid N|.2}\rangle, \langle\rangle) \]
+\[ = \bglue(\erase{\wid N}, \langle\rangle) \]
+\[ = \bglue(|\wid N|, \bunglue (\wid N)) \]
+\[ = \wid N \]
+
+%% \[\T = \gg(x\div 1).0\]
+%% \[\surd \wid A = \gg(x\div ((\nar a\div \erase {\wid A}) \x \pp {\nar a} {\wid A})).1\]
+%% \[\isurd \wid M = \bglue(\langle \erase{\wid M}, \{\wid M\}\rangle, \langle\rangle)\]
+%% \[\esurd (t.\wid M) = \epair{[\langle\rangle/t] |\wid M|.1}{[\langle\rangle/t]|\wid M|.2}\]
+
+\section{Chain of Adjoints}
+\[\begin{array}{rcl@{\qquad}l}
+\wid \T &:=& \gg(x \div 1) . 0\\
+\wid Z \nar B &:=& \gg(x \div \nar B) . 0\\
+\nar R \wid A &:=& | \wid  A|\\
+\wid D \nar B &:=& \gg(x \div \nar B) . 1\\
+\nar L \wid A &:=& (\nar a : | \wid  A|) \x \pp {\nar a} {\wid A}\\
+\wid U \nar B &:=& \gg(x \div 1) . \nar B\\
+\end{array}
+\begin{array}{rcl@{\qquad}l}
+\wid \T \x \dash &=& \wid Z \o \nar R \\
+ \wid \T \to \dash = \lax &=& \wid D \o \nar R \\
+\surd &=& \wid D \o \nar L \\
+ \blat &=& \wid U \o \nar L
+\end{array}
+\]
+\[\wid Z \dashv \nar R \dashv \wid D \dashv \nar L \dashv \wid U\]
+\[\wid \T \x \dash\dashv \lax \dashv \surd \dashv \blat\]
+If $x : \wid Z \nar B \prov \wid M : \wid A$ then $y \div \nar B \prov [y/x]|\wid M| : \nar R \wid A$.\\
+If $y \div \nar B \prov \nar N : \nar R \wid A$ then $x : \wid Z \nar B \prov \epair{[x/y]\nar N}{\babort(\bunglue(x))} : \wid A$.\\
+If $y \div \nar R \wid A \prov \nar N : \nar B$ then $x : \wid A \prov \bglue([x/y]\nar N, \langle\rangle) : \wid D \nar B$.\\
+If $x : \wid A \prov \wid M : \wid D \nar B$ then $y \div \nar R \wid A \prov [y/x]\erase{\wid M} : \nar B$.\\
+If $x : \wid D \nar B \prov \wid M : \wid A$ then $y \div \nar B \prov \pair{[y/x]\erase{\wid M}}{\{[\bglue(y,\langle\rangle)/x]\wid M\}} : \nar L \wid A$.\\
+If $y \div \nar B \prov \nar N : \nar L \wid A$ then $x : \wid D \nar B \prov \epair{([x/y]\nar N).1}{([x/y]\nar N).2} : \wid A$.\\
+If $y \div \nar L \wid A \prov \nar N : \nar B$ then $x : \wid A \prov \bglue(\langle\rangle, [\pair{x}{\{x\}}/y] \nar N) : \wid U \nar B$.\\
+If $x : \wid A \prov \wid M : \wid U \nar B$ then $y \div \nar L \wid A \prov \bunglue ([\epair{y.1}{y.2}/x]\wid M) : \nar B$.\\
+
+
+\vfil\eject
+\section{$n$-ary Parametricity}
+It seems at first like I can almost get binary parametricity from unary but it doesn't seem to work out.
+Let's say I have $\wid f :: (\wid X : \wid \rtype) \to \wid X \to \wid X$ and I want the binary parametricity
+property that
+\[(\nar X_1\ \nar X_2 : \nar \rtype) (\nar X_* : \nar X_1 \x \nar X_2 \to \nar \rtype)\]
+\[(\nar x_1 : \nar X_1) (\nar x_2 : \nar X_2) (\nar x_* : \nar X_*( \nar x_1, \nar x_2))\]
+\[\to \nar X_* (\wid f\ \nar X_1\ \nar x_1, \wid f\ \nar X_2\ \nar x_2)\]
+We could try to define
+\[\wid Y = \gg(x: \nar X_1 \x \nar X_2).\nar  X_*(x)\]
+and observe
+\[\wid f\ \wid Y : \wid Y \to \wid Y\]
+and
+\[\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* )) : \wid Y \]
+and
+\[\bunglue(\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* ))) :  \]
+\[\nar X_*( \erase{\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* ))}) \]
+so
+\[\bunglue(\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* ))) :  \]
+\[\nar X_*( \wid f\ (\nar X_1 \x \nar X_2)\ (\nar x_1, \nar x_2)) \]
+but this isn't what we asked for!
+
+...but it {\em would} be if we could show
+\[ \pi_1 (\wid f\ (\nar X_1 \x \nar X_2)\ (\nar x_1, \nar x_2)) = \wid f\ \nar X_1\ \nar x_1\]
+\[ \pi_2 (\wid f\ (\nar X_1 \x \nar X_2)\ (\nar x_1, \nar x_2)) = \wid f\ \nar X_2\ \nar x_2\]
+Can we get that with unary parametricity? With
+\[(\nar X : \nar \rtype) (\nar R : \nar X \to \nar \rtype)\]
+\[(\nar x : \nar X) (\nar x' : \nar R\ \nar x)\]
+\[\to \nar R (\wid f\ \nar X\ \nar x)\]
+\subsection{Glue and Fiber}
+\[
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \vec{\nar A} : \nar\rtype \qquad
+\promote{\wid\Gamma}, \vec x \div \vec{\nar A} \nprov \nar B : \nar\rtype
+\justifies
+\wid\Gamma \wprov \gg(\vec x \div \vec{\nar A}).\nar B : \wid\rtype
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \vec{\nar M} : \vec{\nar A} \qquad
+\promote{\wid\Gamma} \nprov \nar N : [\vec{\nar M}/\vec x]\nar B
+\justifies
+\wid\Gamma \wprov \bglue(\vec{\nar M}, \nar N) : \gg(\vec x : \vec{\nar A}).\nar B
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\ups\nar\Gamma \wprov \wid M : \gg(\vec x : \vec{\nar A}).\nar B
+\justifies
+\nar\Gamma \nprov \bunglue \wid M : [\overrightarrow{\erase{\wid M}}/\vec x]\nar B
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\ups\nar \Gamma \wprov \wid A : \wid\rtype \quad \nar \Gamma \nprov \vec{\nar M} : \vec{\erase {\wid A}}
+\justifies
+\nar \Gamma \nprov \pp {\vec{\nar M}} {\wid A} : \nar\rtype
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\ups {\nar \Gamma} \wprov \wid M : \wid A
+\justifies
+\nar \Gamma \nprov \{\wid M\} : \pp  {\vec{\erase{\wid M}}} {\wid A}
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \vec{\nar M} : \vec{\erase{\wid A}} \quad
+\promote{\wid\Gamma} \nprov \nar N : \pp{\vec{\nar M}}{\wid A}
+\justifies
+\wid\Gamma \wprov \epair{\vec{\nar M}}{\nar N} : \wid A
+\end{prooftree}
+\]
+
+\end{document}
