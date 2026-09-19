@@ -449,25 +449,26 @@ C; \Gamma \prov x :  A'
 
 
 \subsection{The Fiber Type}
+Generally assume $f : C \to C'$.
 \[
 \begin{prooftree}
-f : C \to C' \qquad C' ; \ups_f \Gamma \prov  A : \rtype
+ C' ; [\star_f] \Gamma \prov  A : \rtype
 \quad C; \Gamma \prov  M : \erase { A}_f
 \justifies
 C ;  \Gamma \prov \pp { M} { A}_f : \rtype
 \end{prooftree}
 \qquad
 \begin{prooftree}
-\ups {\nar \Gamma} \wprov \wid M : \wid A
+C' ; [\star_f] \Gamma \prov  M :  A
 \justifies
-\nar \Gamma \nprov \{\wid M\} : \pp  {\erase{\wid M}} {\wid A}
+C ; \Gamma \prov \{ M\}_f : \pp  {\erase{ M}_f} { A}
 \end{prooftree}
 \qquad
 \begin{prooftree}
 \demote{\wid\Gamma} \nprov \nar M : \erase{\wid A} \quad
 \promote{\wid\Gamma} \nprov \nar N : \pp{\nar M}{\wid A}
 \justifies
-\wid\Gamma \wprov \epair{\nar M}{\nar N} : \wid A
+C' ; \Gamma \prov \epairz{f}{ M}{ N} :  A
 \end{prooftree}
 \]
 %% In the elimination rule, $\wid A$ is a type over $\wid\Gamma$; the second premise
