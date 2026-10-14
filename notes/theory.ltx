@@ -298,21 +298,24 @@ if we have a polymorphic function
 then there should be a proof, in the type theory itself, that $q$ is the identity function.
 
 There are lots of other type theories for internalized parametricity. This might even be a special case of one of the existing ones.
-Some considerations that intentionally constrain this one:
+Some constraints that I am intentionally putting on this one:
 \begin{itemize}
 \item It avoids an explicit interval type.
 \item It does not require complex composition principles for computation.
 \item It does not handle iterated internalized parametricity.
-\item It does not definitionally `bake in' the meaning of parametricity for each type former.
-Parametricity properties are instead {\em derivable}. For example,
-there will be a derivation in the type theory that says, in effect,
-a function is `in the relation' if it always maps related inputs to related outputs.
+\item It does not definitionally {\em impose} the meaning of parametricity for each type former.
+Parametricity properties are instead derivable. For example,
+there will turn out to be a derivation in the type theory that says, in effect,
+``a function is `in the relation' if it always maps related inputs to related outputs''.
 \item The syntax is split into two {\em levels}, called $\wid{\hbox{wide}}$ and $\nar{\hbox{narrow}}$.
 Wide things are things `equipped with parametricity data', and narrow things are those without.
-In other words, if the category of narrow expressions is $\C$, the category
-of wide expressions is the arrow category $\C^{\bullet \to \bullet}$
-\item The theory is modal; Hypotheses in the context may exist at various modes.
-\item There are two novel type constructors compared to normal dependent type theory, `glue types' and `fiber types'.
+From a category theoretic point of view, if the category of narrow expressions is $\C$, the category
+of wide expressions is the arrow category $\C^{\bullet \to \bullet}$. More prosaically, a ``wide type'' is nothing more
+than a pair of narrow types equipped with a function from one to the other.
+\item The theory is modal. Hypotheses in the context may exist at various modes.
+\item There are two novel type constructors compared to normal
+  dependent type theory, named (drawing clear inspiration from other type
+  systems) `glue types' and `fiber types'.
 \end{itemize}
 
 
@@ -328,7 +331,8 @@ of wide expressions is the arrow category $\C^{\bullet \to \bullet}$
 
 In both levels, we have several sorts of variables in the context.
 Variables may be ordinary $x : \wid A$, strong $x :: \wid A$, or weak $x \div \nar A$.
-
+Ordinary variables may only appear in wide contexts. In some sense, weak variables play the same role for narrow
+contexts that ordinary variables do for wide contexts.
 
 
 \[\begin{tabular}{rccl}
@@ -349,6 +353,37 @@ Narrow  Terms&$\nar M$&$::=$&$\cdots
 \celse \bunglue(\wid M)
 $\\
 \end{tabular}\]
+
+Glue types $ \gg (x : \nar A) . \nar B$ are a way of building a wide
+type out of two narrow types $\nar A$ and $\nar B$. The variable $x$
+is bound in $\nar B$. Fiber types $ \pp {\nar M} {\wid A}$ are a way
+of `extracting the fiber above $\nar M$` from the wide type $\wid A$.
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % total space
+  \draw[draw=green, fill=green!10] plot[smooth cycle, tension=0.7]
+    coordinates {(0.1,4.1) (1.3,5.2) (3.6,5.4) (6.0,5.3) (7.5,4.1) (8,2.7) (6.8,1.9) (3.9,1.75) (1.4,2.0)};
+  \node[left] at (-0.1,3.3) {$\Sigma x{:}\nar A.\nar B(x)$};
+  % base space
+  \draw[draw=blue, fill=blue!10] plot[smooth cycle, tension=0.7]
+    coordinates {(0.3,0.5) (1.6,1.0) (3.8,1.05) (5.9,0.85) (7.3,0.55) (7,-0.1) (5.6,-0.45) (3.0,-0.5) (1.0,-0.3)};
+  \node[left] at (-0.1,0.3) {$\nar A$};
+  % whole-diagram brace
+  \draw[decorate, decoration={brace, amplitude=10pt}] (-2.7,-0.7) -- (-2.7,5.5)
+    node[midway, left=12pt] {$\gg(x{:}\nar A).\nar B(x)$};
+  \foreach \i/\px/\py in {1/1.5/0.35, 2/3.6/0.6, 3/5.8/0.2} {
+    % cone from the fiber down to the point it lies over
+    \draw[gray!75] (\px-0.3,3.4+\py) -- (\px,\py) -- (\px+0.3,3.4+\py);
+    % fiber over a_\i
+    \draw[draw=green, fill=green!20] (\px,3.4+\py) ellipse (0.3 and 0.5);
+    \node[above] at (\px,3.9+\py) {$\nar B(a_\i)$};
+    % the point it lies over
+    \fill (\px,\py) circle (1.6pt);
+    \node[below] at (\px,\py-0.15) {$a_\i$};
+  }
+\end{tikzpicture}
+\end{center}
 
 \section{Syntactic Operations}
 \subsection{Erasure}
@@ -2653,78 +2688,6 @@ If $y \div \nar L \wid A \prov \nar N : \nar B$ then $x : \wid A \prov \bglue(\l
 If $x : \wid A \prov \wid M : \wid U \nar B$ then $y \div \nar L \wid A \prov \bunglue ([\epair{y.1}{y.2}/x]\wid M) : \nar B$.\\
 
 
-\vfil\eject
-\section{$n$-ary Parametricity}
-It seems at first like I can almost get binary parametricity from unary but it doesn't seem to work out.
-Let's say I have $\wid f :: (\wid X : \wid \rtype) \to \wid X \to \wid X$ and I want the binary parametricity
-property that
-\[(\nar X_1\ \nar X_2 : \nar \rtype) (\nar X_* : \nar X_1 \x \nar X_2 \to \nar \rtype)\]
-\[(\nar x_1 : \nar X_1) (\nar x_2 : \nar X_2) (\nar x_* : \nar X_*( \nar x_1, \nar x_2))\]
-\[\to \nar X_* (\wid f\ \nar X_1\ \nar x_1, \wid f\ \nar X_2\ \nar x_2)\]
-We could try to define
-\[\wid Y = \gg(x: \nar X_1 \x \nar X_2).\nar  X_*(x)\]
-and observe
-\[\wid f\ \wid Y : \wid Y \to \wid Y\]
-and
-\[\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* )) : \wid Y \]
-and
-\[\bunglue(\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* ))) :  \]
-\[\nar X_*( \erase{\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* ))}) \]
-so
-\[\bunglue(\wid f\ \wid Y\ (\bglue((\nar x_1, \nar x_2), \nar x_* ))) :  \]
-\[\nar X_*( \wid f\ (\nar X_1 \x \nar X_2)\ (\nar x_1, \nar x_2)) \]
-but this isn't what we asked for!
 
-...but it {\em would} be if we could show
-\[ \pi_1 (\wid f\ (\nar X_1 \x \nar X_2)\ (\nar x_1, \nar x_2)) = \wid f\ \nar X_1\ \nar x_1\]
-\[ \pi_2 (\wid f\ (\nar X_1 \x \nar X_2)\ (\nar x_1, \nar x_2)) = \wid f\ \nar X_2\ \nar x_2\]
-Can we get that with unary parametricity? With
-\[(\nar X : \nar \rtype) (\nar R : \nar X \to \nar \rtype)\]
-\[(\nar x : \nar X) (\nar x' : \nar R\ \nar x)\]
-\[\to \nar R (\wid f\ \nar X\ \nar x)\]
-\subsection{Glue and Fiber}
-\[
-\begin{prooftree}
-\demote{\wid\Gamma} \nprov \vec{\nar A} : \nar\rtype \qquad
-\promote{\wid\Gamma}, \vec x \div \vec{\nar A} \nprov \nar B : \nar\rtype
-\justifies
-\wid\Gamma \wprov \gg(\vec x \div \vec{\nar A}).\nar B : \wid\rtype
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\demote{\wid\Gamma} \nprov \vec{\nar M} : \vec{\nar A} \qquad
-\promote{\wid\Gamma} \nprov \nar N : [\vec{\nar M}/\vec x]\nar B
-\justifies
-\wid\Gamma \wprov \bglue(\vec{\nar M}, \nar N) : \gg(\vec x : \vec{\nar A}).\nar B
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\ups\nar\Gamma \wprov \wid M : \gg(\vec x : \vec{\nar A}).\nar B
-\justifies
-\nar\Gamma \nprov \bunglue \wid M : [\overrightarrow{\erase{\wid M}}/\vec x]\nar B
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\ups\nar \Gamma \wprov \wid A : \wid\rtype \quad \nar \Gamma \nprov \vec{\nar M} : \vec{\erase {\wid A}}
-\justifies
-\nar \Gamma \nprov \pp {\vec{\nar M}} {\wid A} : \nar\rtype
-\end{prooftree}
-\qquad
-\begin{prooftree}
-\ups {\nar \Gamma} \wprov \wid M : \wid A
-\justifies
-\nar \Gamma \nprov \{\wid M\} : \pp  {\vec{\erase{\wid M}}} {\wid A}
-\end{prooftree}
-\qquad
-\begin{prooftree}
-\demote{\wid\Gamma} \nprov \vec{\nar M} : \vec{\erase{\wid A}} \quad
-\promote{\wid\Gamma} \nprov \nar N : \pp{\vec{\nar M}}{\wid A}
-\justifies
-\wid\Gamma \wprov \epair{\vec{\nar M}}{\nar N} : \wid A
-\end{prooftree}
-\]
 
 \end{document}
