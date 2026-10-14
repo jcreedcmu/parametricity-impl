@@ -347,7 +347,7 @@ $\\
 $\\
 Wide  Terms&$\wid M$&$::=$&$\cdots
 \celse \epair{\nar M }{\nar N}
-\celse \bglue(\nar M, \nar P)
+\celse \bglue(\nar M, \nar N)
 $\\
 Narrow  Terms&$\nar M$&$::=$&$\cdots
 \celse \{ \wid M \}
@@ -357,37 +357,46 @@ $\\
 
 Glue types $ \gg (x : \nar A) . \nar B$ are a way of building a wide
 type out of two narrow types $\nar A$ and $\nar B$. The variable $x$
-is bound in $\nar B$.
-\begin{center}
+is bound in $\nar B$. See Figure~\ref{fig:glue}. The introduction and elimination forms
+for glue types are $\bglue(\nar M, \nar N)$ and $\bunglue(\wid M)$.
+
+Fiber types $ \pp {\nar M} {\wid A}$ are a way
+of extracting the `fiber above $\nar M$' from the wide type $\wid A$. See Figure~\ref{fig:fiber}.
+The introduction and elimination forms
+for glue types are $\{\wid M\}$ and $\epair{\nar M }{\nar N}$.
+
+
+\begin{figure}[htb]
+\centering
 \begin{tikzpicture}[x=1cm,y=1cm]
   % total space
   \draw[draw=green, fill=green!10] plot[smooth cycle, tension=0.7]
     coordinates {(0.1,4.1) (1.3,5.2) (3.6,5.4) (6.0,5.3) (7.5,4.1) (8,2.7) (6.8,1.9) (3.9,1.75) (1.4,2.0)};
-  \node[left] at (-0.1,3.3) {$\Sigma x{:}\nar A.\nar B(x)$};
   % base space
   \draw[draw=blue, fill=blue!10] plot[smooth cycle, tension=0.7]
     coordinates {(0.3,0.5) (1.6,1.0) (3.8,1.05) (5.9,0.85) (7.3,0.55) (7,-0.1) (5.6,-0.45) (3.0,-0.5) (1.0,-0.3)};
   \node[left] at (-0.1,0.3) {$\nar A$};
   % whole-diagram brace
-  \draw[decorate, decoration={brace, amplitude=10pt}] (-2.7,-0.7) -- (-2.7,5.5)
-    node[midway, left=12pt] {$\gg(x{:}\nar A).\nar B(x)$};
+  \draw[decorate, decoration={brace, amplitude=10pt}] (-1,-0.7) -- (-1,5.5)
+    node[midway, left=12pt] {$\gg(x{:}\nar A).\nar B$};
   \foreach \i/\px/\py in {1/1.5/0.35, 2/3.6/0.6, 3/5.8/0.2} {
     % cone from the fiber down to the point it lies over
     \draw[gray!75] (\px-0.3,3.4+\py) -- (\px,\py) -- (\px+0.3,3.4+\py);
     % fiber over a_\i
     \draw[draw=green, fill=green!20] (\px,3.4+\py) ellipse (0.3 and 0.5);
-    \node[above] at (\px,3.9+\py) {$\nar B(a_\i)$};
+    \node[above] at (\px,3.9+\py) {$\nar [a_\i/x]\nar B$};
     % the point it lies over
     \fill (\px,\py) circle (1.6pt);
     \node[below] at (\px,\py-0.15) {$a_\i$};
   }
 \end{tikzpicture}
-\end{center}
+\caption{A glue type $\gg(x{:}\nar A).\nar B(x)$: the narrow type $\nar A$ with, above each point, the fiber given by $\nar B$.}
+\label{fig:glue}
+\end{figure}
 
-Fiber types $ \pp {\nar M} {\wid A}$ are a way
-of `extracting the fiber above $\nar M$` from the wide type $\wid A$.
 
-\begin{center}
+\begin{figure}[htb]
+\centering
 \begin{tikzpicture}[x=1cm,y=1cm]
   % total space
   \draw[draw=green, fill=green!10] plot[smooth cycle, tension=0.7]
@@ -398,7 +407,7 @@ of `extracting the fiber above $\nar M$` from the wide type $\wid A$.
     coordinates {(0.3,0.5) (1.6,1.0) (3.8,1.05) (5.9,0.85) (7.3,0.55) (7,-0.1) (5.6,-0.45) (3.0,-0.5) (1.0,-0.3)};
   \node[left] at (-0.1,0.3) {$|\wid A|$};
   % whole-diagram brace
-  \draw[decorate, decoration={brace, amplitude=10pt}] (-2.7,-0.7) -- (-2.7,5.5)
+  \draw[decorate, decoration={brace, amplitude=10pt}] (-1,-0.7) -- (-1,5.5)
     node[midway, left=12pt] {$\wid A$};
   \foreach \i/\px/\py/\col in {1/1.5/0.35/green, 2/3.6/0.6/gray, 3/5.8/0.2/gray} {
     % cone from the fiber down to the point it lies over
@@ -412,7 +421,9 @@ of `extracting the fiber above $\nar M$` from the wide type $\wid A$.
     \fi
   }
 \end{tikzpicture}
-\end{center}
+\caption{A fiber type $\pp{\nar M}{\wid A}$: the part of $\wid A$ lying above the narrow term $\nar M$.}
+\label{fig:fiber}
+\end{figure}
 
 \section{Syntactic Operations}
 \subsection{Erasure}
