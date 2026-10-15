@@ -297,8 +297,9 @@ if we have a polymorphic function
 \[ q : (X : \rtype) \to X \to X \]
 then there should be a proof, in the type theory itself, that $q$ is the identity function.
 
-There are lots of other type theories for internalized parametricity. This might even be a special case of one of the existing ones.
-Some constraints that I am intentionally putting on this one:
+There are lots of other type theories for internalized parametricity.
+This might even be a special case of one of the existing ones; I'm not
+sure. Some constraints that I am intentionally putting on this one:
 \begin{itemize}
 \item It avoids an explicit interval type.
 \item It does not require complex composition principles for computation.
@@ -332,28 +333,34 @@ but the ``fibered picture'' is a useful perspective.
 
 In both levels, we have several sorts of variables in the context.
 Variables may be ordinary $x : \wid A$, strong $x :: \wid A$, or weak $x \div \nar A$.
-Ordinary variables may only appear in wide contexts. In some sense, weak variables play the same role for narrow
-contexts that ordinary variables do for wide contexts.
+Ordinary variables may only appear in wide contexts.
 
 
 \[\begin{tabular}{rccl}
  Wide Contexts&$\wid \Gamma$&$::=$&$\cdot  \celse \wid\Gamma, x :: \wid A \celse \wid\Gamma, x \div \nar A  \celse \wid \Gamma, x : \wid A$\\
   Narrow Contexts&$\nar\Gamma$&$::=$&$\cdot \celse \nar \Gamma, x :: \wid A\celse \nar \Gamma, x \div \nar A  $\\
   Wide Types&$\wid A$&$::=$&$\cdots
+ \celse  (x : \wid A) \to \wid B
  \celse \gg (x : \nar A) . \nar B
 $\\
   Narrow Types&$\nar A$&$::=$&$\cdots
+ \celse  (x : \nar A) \to \nar B
   \celse \pp {\nar M} {\wid A}
 $\\
 Wide  Terms&$\wid M$&$::=$&$\cdots
+\celse \lambda x . \wid M \celse \wid M\ \wid N
 \celse \epair{\nar M }{\nar N}
 \celse \bglue(\nar M, \nar N)
 $\\
 Narrow  Terms&$\nar M$&$::=$&$\cdots
+\celse \lambda x . \nar M \celse \nar M\ \nar N
 \celse \{ \wid M \}
 \celse \bunglue(\wid M)
 $\\
 \end{tabular}\]
+
+Every type constructor that we'd expect to exist in ordinary dependent type theory will exist
+in both narrow and wide types. For example, I've included $\Pi$ types above.
 
 Glue types $ \gg (x : \nar A) . \nar B$ are a way of building a wide
 type out of two narrow types $\nar A$ and $\nar B$. The variable $x$
@@ -390,7 +397,7 @@ for glue types are $\{\wid M\}$ and $\epair{\nar M }{\nar N}$.
     \node[below] at (\px,\py-0.15) {$a_\i$};
   }
 \end{tikzpicture}
-\caption{A glue type $\gg(x{:}\nar A).\nar B(x)$: the narrow type $\nar A$ with, above each point, the fiber given by $\nar B$.}
+\caption{The glue type $\gg(x{:}\nar A).\nar B$}
 \label{fig:glue}
 \end{figure}
 
@@ -421,19 +428,23 @@ for glue types are $\{\wid M\}$ and $\epair{\nar M }{\nar N}$.
     \fi
   }
 \end{tikzpicture}
-\caption{A fiber type $\pp{\nar M}{\wid A}$: the part of $\wid A$ lying above the narrow term $\nar M$.}
+\caption{The fiber type $\pp{\nar M}{\wid A}$}
 \label{fig:fiber}
 \end{figure}
+
+To obtain the base type of a wide type $\wid A$, we use {\em erasure} to obtain the narrow type $|\wid A|$, which is
+described immediately below.
 
 \section{Syntactic Operations}
 \subsection{Erasure}
 Erasure $|\dash|$ takes a wide type or term and turns it into a narrow type or term, by
-discarding ``all the upstairs information''.
+discarding ``all the upstairs information''. This is a simple homomorphism on the usual dependent type theory syntax.
+On glue types, glue introduction, fiber elimination, we have two pieces of information and we keep the first (`downstairs')
+and throw away the second (`upstairs').
 
 \[
 \begin{tabular}{rcl@{\qquad}l}
 $\erase{(x : \wid A) \to \wid B}$&$=$&$(x : \erase{\wid A}) \to \erase{\wid B}$\\
-$\erase{(x : \wid A) \x \wid B}$&$=$&$(x : \erase{\wid A}) \x \erase{\wid B}$\\
 $\erase{\lambda x.\wid M}$&$=$&$\lambda x.\erase{\wid M}$\\
  $\erase{\wid M\ \wid N} $&$=$&$ \erase{\wid M}\ \erase{\wid N}$\\
 $\erase x$&$=$&$x$ \\
@@ -445,17 +456,11 @@ $\erase{\wid\rtype}$&$=$&$\nar \rtype$\\
 \]
 
 
-\subsection{Inclusion}
-Narrow contexts are a subset of wide contexts. We write $\ups$ for the explicit inclusion of narrow contexts into wide contexts.
-\[
-\begin{tabular}{rcl}
- $ \ups(\nar\Gamma, x :: \wid A)$&$:=$&$(\ups\nar\Gamma, x :: \wid A)$\\
- $ \ups(\nar\Gamma, x \div \nar A)$&$:=$&$(\ups\nar\Gamma, x \div \nar A)$\\
- $ \ups(\cdot)$&$:=$&$\cdot$\\
-\end{tabular}\]
+
 
 \subsection{Promotion and Demotion}
 
+The typing rules will require some operations on contexts.
 We define operations $\promote\dash$ and $\demote\dash$, both of which take a wide context to a narrow context.
 Demotion turns normal variables into weak variables and leaves other variables alone.
 Promotion turns normal variables into strong variables and leaves other variables alone.
@@ -474,14 +479,26 @@ Promotion turns normal variables into strong variables and leaves other variable
  $ \demote{(\cdot)}$&$:=$&$\cdot$\\
 \end{tabular}\]
 
+
+\subsection{Inclusion}
+Narrow contexts are a subset of wide contexts. We write $\ups$ for the explicit inclusion of narrow contexts into wide contexts.
+\[
+\begin{tabular}{rcl}
+ $ \ups(\nar\Gamma, x :: \wid A)$&$:=$&$(\ups\nar\Gamma, x :: \wid A)$\\
+ $ \ups(\nar\Gamma, x \div \nar A)$&$:=$&$(\ups\nar\Gamma, x \div \nar A)$\\
+ $ \ups(\cdot)$&$:=$&$\cdot$\\
+\end{tabular}\]
+
 As abbreviations, we define
 \[\rdemote {\wid A} = \ups(\demote {\wid A}) \qquad \rpromote {\wid A} = \ups(\promote {\wid A})\]
 
-
 \section{Typing Rules}
 
+Now we have all the tools we need to give typing rules for the system.
 \subsection{Context Formation}
-
+Each type of variable goes with some operation on the context in which its type must be well-formed.
+At this point in the narrative it admittedly seems unclear why these operations are the right ones.
+We give some intuition below in Section~\ref{todo}.
 \[
 \begin{prooftree}
 \justifies
@@ -529,7 +546,15 @@ As abbreviations, we define
 \]
 
 \subsection{Variable Rules}
+Most variables can be immediately used, with the exception of weak variables in wide contexts.
+This is the sense in which weak variables are weak.
+By constrast, it appears from these rules alone that there is relatively little difference between ordinary
+variables and strong variables: a strong variable at type $\wid A$ can be used, to produce a term of type $\wid A$,
+and so can an ordinary variable. The difference between them as hypotheses comes from how they interact with demotion.
+An ordinary variable becomes weak under demotion, whereas a strong variable is resilient to demotion and stays strong.
 
+The one remaining phenomenon of note is that when a strong variable is used in a weak context, then the type must be
+erased down to a narrow type.
 \[
 \begin{prooftree}
 x : \wid A \in  \wid\Gamma
@@ -558,6 +583,8 @@ x :: \wid A \in  \nar\Gamma
 \]
 
 \subsection{The Fiber Type}
+Here are the formation, introduction, and elimination rules for the fiber type.
+
 \[
 \begin{prooftree}
 \ups\nar \Gamma \wprov \wid A : \wid\rtype \quad \nar \Gamma \nprov \nar M : \erase {\wid A}
@@ -578,23 +605,24 @@ x :: \wid A \in  \nar\Gamma
 \wid\Gamma \wprov \epair{\nar M}{\nar N} : \wid A
 \end{prooftree}
 \]
-%% In the elimination rule, $\wid A$ is a type over $\wid\Gamma$; the second premise
-%% is well-formed because we can transport $\wid A$ to $\rpromote{\wid\Gamma}$ by
-%% Lemma~\ref{promotion.weakening} and transport $\nar M$ to $\promote{\wid\Gamma}$ by Lemma~\ref{narrow.weakening}.
+In the elimination rule, $\wid A$ is a type over $\wid\Gamma$; the second premise
+is well-formed because we can transport $\wid A$ to $\rpromote{\wid\Gamma}$ by
+Lemma~\ref{promotion.weakening} and transport $\nar M$ to $\promote{\wid\Gamma}$ by Lemma~\ref{narrow.weakening}.
 
-\subsubsection{Definitional Equality}
-
-Fiber type definitional equality works like this. If $\nar \Gamma \nprov \nar N : \pp{\nar M}{\wid A}$ then
-\[
-  \nar N \equiv_\eta \{\epair{\nar M}{\nar N}\}
-\]
-and in general
+We have a $\beta$ principle for definitional equality
 \[
 \epair{\nar M}{\{\wid N\}} \equiv_\beta \wid N
 \]
+If $\nar \Gamma \nprov \nar N : \pp{\nar M}{\wid A}$ then we have an $\eta$ definitional equality
+\[
+  \nar N \equiv_\eta \{\epair{\nar M}{\nar N}\}
+\]
+
 
 
 \subsection{The Glue Type}
+Here are the formation, introduction, and elimination rules for the glue type.
+
 \[
 \begin{prooftree}
 \demote{\wid\Gamma} \nprov \nar A : \nar\rtype \qquad
@@ -618,14 +646,61 @@ and in general
 \end{prooftree}
 \]
 
-\subsubsection{Definitional Equality}
-Definitional equality works like this. If $\wid \Gamma \wprov \wid M : \gg(x : \nar A) . \nar B$ then
+We have a $\beta$ principle for definitional equality
+\[
+\bunglue(\bglue(\nar M,\nar N)) \equiv_\beta \nar N
+\]
+If $\wid \Gamma \wprov \wid M : \gg(x : \nar A) . \nar B$
+ then we have an $\eta$ definitional equality
 \[
  \wid M \equiv_\eta \bglue(\erase{\wid M}, \bunglue \wid M)
 \]
-and in general
+
+\subsection{Other Type Constructors}
+Other type constructors work `as you would expect' but we must take note of what happens to binders.
+The rule is that at wide types, we introduce ordinary hypotheses, and at narrow types, we introduce weak hypotheses.
+For example, here are the introduction and elimination rules for $\Pi$ types.
+
 \[
-\bunglue(\bglue(\nar M,\nar N)) \equiv_\beta \nar N
+\begin{prooftree}
+\nar\Gamma, x \div \nar A \nprov \nar B
+\justifies
+\nar\Gamma \nprov (x : \nar A) \to \nar B
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wid\Gamma, x : \wid A \wprov \wid B
+\justifies
+\wid\Gamma \wprov (x : \wid A) \to \wid B
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar\Gamma, x \div \nar A\nprov \nar M : \nar B
+\justifies
+\nar\Gamma \nprov \lambda x . \nar M : (x : \nar A) \to \nar B
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wid\Gamma, x : \wid A\wprov \wid M : \wid B
+\justifies
+\wid\Gamma \wprov \lambda x . \wid M : (x : \wid A) \to \wid B
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar\Gamma \nprov \nar M : (x : \nar A) \to \nar B \qquad
+\nar\Gamma \nprov \nar N : \nar A
+\justifies
+\nar\Gamma \nprov \nar M\ \nar N : [\nar N/x]\nar B
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wid\Gamma \wprov \wid M : (x : \wid A) \to \wid B \qquad
+\wid\Gamma \wprov \wid N : \wid A
+\justifies
+\wid\Gamma \wprov \wid M\ \wid N : [\wid N/x]\wid B
+\end{prooftree}
 \]
 
 \section{Better Substitution}
