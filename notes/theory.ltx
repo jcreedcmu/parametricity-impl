@@ -915,7 +915,36 @@ For the purposes of this theorem, we treat $\wid\Gamma \wprov \wid M : \wid A$ a
 $\wprov \wid \Gamma \rctx$ and $\wid\Gamma \wprov \wid A : \rtype$, and similarly for other judgments.
 
 \begin{itemize}
-\item[Case:]
+\item[Case:] Fiber type.
+\[
+\nar \Delta \nprov \nar \theta : \nar \Gamma
+\qquad
+\begin{prooftree}
+\ups\nar \Gamma \wprov \wid A : \wid\rtype \quad \nar \Gamma \nprov \nar M : \erase {\wid A}
+\justifies
+\nar \Gamma \nprov \pp {\nar M} {\wid A} : \nar\rtype
+\end{prooftree}\]
+Our goal is to show
+\[ \nar\Delta \nprov \nar\theta(\pp{\nar M}{\wid A}) : \nar\rtype\]
+which by the definition of substitution is
+\[ \nar\Delta \nprov \pp{\nar\theta\nar M}{(\ups\nar\theta)\wid A} : \nar\rtype\]
+By Lemma~\ref{lemma.operations.subst}, we have
+\[\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}\]
+Then by induction hypothesis and the definition of substitution, we know
+\[\ups{\nar\Delta} \wprov (\ups\nar\theta)\wid A : \wid\rtype\]
+\[\nar\Delta \nprov \nar\theta\nar M : \nar\theta\erase{\wid A}\]
+By Lemma~\ref{lemma.inclusion.erase.compat} we have
+\[\nar\Delta \nprov \nar\theta\nar M : \erase{(\ups\nar\theta)\wid A}\]
+so we can construct
+\[\begin{prooftree}
+\ups{\nar \Delta} \wprov (\ups\nar\theta)\wid A : \wid\rtype \quad
+\nar \Delta \nprov \nar\theta\nar M : \erase {(\ups\nar\theta)\wid A}
+\justifies
+\nar \Delta \nprov \pp {\nar\theta\nar M} {(\ups\nar\theta)\wid A} : \nar\rtype
+\end{prooftree}\]
+and we are done.
+
+\item[Case:] Fiber type introduction.
 \[
 \nar \Delta \nprov \nar \theta : \nar \Gamma
 \qquad
@@ -941,7 +970,7 @@ and therefore can construct
 By Lemma~\ref{lemma.inclusion.erase.compat} the type here is the same as $\pp{\nar\theta\erase{\wid M}}{(\ups\nar\theta)\wid A}$,
 and we are done.
 
-\item[Case:]
+\item[Case:] Fiber type elimination.
 \[
 \wid \Delta \wprov \wid \theta : \wid \Gamma
 \qquad
