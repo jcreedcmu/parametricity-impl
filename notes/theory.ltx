@@ -703,13 +703,94 @@ For example, here are the introduction and elimination rules for $\Pi$ types.
 \end{prooftree}
 \]
 
-\section{Better Substitution}
+\section{Substitution}
 \def\wsub#1{[#1]_{\wid \bullet}}
 \def\nsub#1{[#1]_{\nar \bullet}}
 
-We make definitions like
-\[\nsub{\wid P/x} \pp{\nar M}{\wid A} = \pp{\wsub{\wid P/x}\nar M} {\wsub{\wid P/x}\wid A}\]
-\[\wsub{\wid P/x} (\epair{\nar M}{\nar N}) = \epair{\nsub{\erase{\wid P}/x}\nar M}{\nsub{\wid P/x}\nar N}\]
+The definition of substitution is by mutual recursion over wide and narrow expressions.
+We write $\wsub\dash$ for substitution into a wide expression and $\nsub\dash$ for substitution into a narrow one.
+We also annotate the substitution with the annotation on the variable being substituted for.
+The available substitutions operations are:
+\[\begin{tabular}{rllll}
+$\nsub{\nar M/_{\div}x}$&for a& weak &variable in a&narrow expression\\
+$\nsub{\wid M/_{::}x}$&for a& strong &variable in a&narrow expression\\
+$\wsub{\nar M/_{\div}x}$&for a& weak &variable in a&wide expression\\
+$\wsub{\wid M/x}$&for a& ordinary &variable in a&wide expression\\
+$\wsub{\wid M/_{::}x}$&for a& strong &variable in a&wide expression\\
+\end{tabular}\]
+
+We write $\nar\theta$ to range over either of the two operations $\nsub\dash$,
+and $\wid\theta$ to range over any of the three operations $\wsub\dash$.
+
+On variables, substitution `does what the variable rules allow'. Specifically, a weak hypothesis cannot be used in
+a wide expression, so it is an invariant that $\wsub{\nar M/_{\div}x}$ is never applied to the variable $x$ in a well-typed
+term. A strong hypothesis used in a narrow expression results in an erased term. The definition of substitution on variables is:
+\[
+\begin{tabular}{rcl@{\qquad}rcl}
+$\wsub{\wid M/x}x$&$=$&$\wid M$&
+$\nsub{\nar M/_{\div}x}x$&$=$&$\nar M$\\
+$\wsub{\wid M/_{::}x}x$&$=$&$\wid M$&
+$\nsub{\wid M/_{::}x}x$&$=$&$\erase{\wid M}$\\
+$\wsub{\wid\theta}y$&$=$&$y$&
+$\nsub{\nar\theta}y$&$=$&$y$\\
+\end{tabular}
+\]
+where $y$ is any variable other than $x$.
+
+The constructors that stay within one level are structural.
+\[
+\begin{tabular}{rcl}
+$\wsub{\wid\theta}((y : \wid A) \to \wid B)$&$=$&$(y : \wsub{\wid\theta}\wid A) \to \wsub{\wid\theta}\wid B$\\
+$\wsub{\wid\theta}(\lambda y . \wid M)$&$=$&$\lambda y . \wsub{\wid\theta}\wid M$\\
+$\wsub{\wid\theta}(\wid M\ \wid N)$&$=$&$(\wsub{\wid\theta}\wid M)\ (\wsub{\wid\theta}\wid N)$\\
+$\wsub{\wid\theta}\wid\rtype$&$=$&$\wid\rtype$\\
+\end{tabular}
+\qquad
+\begin{tabular}{rcl}
+$\nsub{\nar\theta}((y : \nar A) \to \nar B)$&$=$&$(y : \nsub{\nar\theta}\nar A) \to \nsub{\nar\theta}\nar B$\\
+$\nsub{\nar\theta}(\lambda y . \nar M)$&$=$&$\lambda y . \nsub{\nar\theta}\nar M$\\
+$\nsub{\nar\theta}(\nar M\ \nar N)$&$=$&$(\nsub{\nar\theta}\nar M)\ (\nsub{\nar\theta}\nar N)$\\
+$\nsub{\nar\theta}\nar\rtype$&$=$&$\nar\rtype$\\
+\end{tabular}
+\]
+
+\subsection{Promotion, Demotion, Inclusion on Substitutions}
+\[\begin{array}{rcl}
+  \demote{[\wid M/x]} &=& [\erase{\wid M}/_{\div} x]\\
+  \demote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
+  \demote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+  \promote{[\wid M/x]} &=& [{\wid M}/_{::} x]\\
+  \promote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
+  \promote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+  \ups{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
+  \ups{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
+\end{array}
+\]
+
+The remaining cases cross between levels, and each one follows the premises of the rule that introduces the expression.
+Where a subexpression lives in a demoted context, the substitution is demoted as well, which erases an ordinary
+substituend; where it lives in a promoted or an included context, the substituend is left alone.
+We use here the operations $\demote\dash$, $\promote\dash$, and $\ups\dash$ on substitutions defined below.
+\[
+\begin{tabular}{rcl}
+$\wsub{\wid\theta}(\gg(y : \nar A).\nar B)$&$=$&$\gg(y : \nsub{\demote{\wid\theta}}\nar A).\nsub{\promote{\wid\theta}}\nar B$\\
+$\wsub{\wid\theta}(\bglue(\nar M, \nar N))$&$=$&$\bglue(\nsub{\demote{\wid\theta}}\nar M, \nsub{\promote{\wid\theta}}\nar N)$\\
+$\wsub{\wid\theta}(\epair{\nar M}{\nar N})$&$=$&$\epair{\nsub{\demote{\wid\theta}}\nar M}{\nsub{\promote{\wid\theta}}\nar N}$\\
+\end{tabular}
+\qquad
+\begin{tabular}{rcl}
+$\nsub{\nar\theta}\pp{\nar M}{\wid A}$&$=$&$\pp{\nsub{\nar\theta}\nar M}{\wsub{\ups{\nar\theta}}\wid A}$\\
+$\nsub{\nar\theta}\{\wid M\}$&$=$&$\{\wsub{\ups{\nar\theta}}\wid M\}$\\
+$\nsub{\nar\theta}(\bunglue \wid M)$&$=$&$\bunglue(\wsub{\ups{\nar\theta}}\wid M)$\\
+\end{tabular}
+\]
+
 
 \begin{lemma}
 \[\nsub{\erase{\wid P}/x}\erase{\wid A}  = \erase{\wsub{\wid P/x}\wid A} \]
@@ -818,24 +899,6 @@ we can infer
 \justifies
 \nar \Gamma \nprov [\wid M/_{::} x] : (\nar \Gamma, x :: \wid A)
 \end{prooftree}
-\]
-\subsection{Promotion, Demotion, Inclusion on Substitutions}
-\[\begin{array}{rcl}
-  \demote{[\wid M/x]} &=& [\erase{\wid M}/_{\div} x]\\
-  \demote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
-  \demote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
-\end{array}
-\qquad
-\begin{array}{rcl}
-  \promote{[\wid M/x]} &=& [{\wid M}/_{::} x]\\
-  \promote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
-  \promote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
-\end{array}
-\qquad
-\begin{array}{rcl}
-  \ups{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
-  \ups{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
-\end{array}
 \]
 \subsection{Substitution on Contexts}
 
