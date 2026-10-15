@@ -834,6 +834,58 @@ corresponding context formation rule.
 \end{prooftree}
 \]
 
+\subsection{Lemmas}
+
+\begin{lemma}[Term Indifference]
+\label{lemma.term.indifference}
+If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
+$\demote{\wid\Gamma} \nprov \nar M : \erase{\wid A}$, then
+$\demote{\wid\theta} \nar M = \promote{\wid\theta} \nar M$.
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+\begin{lemma}[Type Indifference]
+\label{lemma.type.indifference}
+If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
+$\wid\Gamma \wprov \wid A : \wid \rtype$, then
+$\wid\theta\wid A = \rpromote{\wid\theta}\wid A$.
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+
+\begin{lemma}[Demotion and Erasure are Compatible]
+\label{lemma.demotion.erase.compat}
+$ \demote{\wid\theta}|\wid A| = \erase{\wid\theta\wid A}$ and $ \demote{\wid\theta}|\wid M| = \erase{\wid\theta\wid M}$.
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+\begin{lemma}[Operations on Substitutions]
+\label{lemma.operations.subst}
+Operations applied to substitutions preserve typing in the following sense.
+  \begin{itemize}
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}$.
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}$.
+  \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$, then $\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}$.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+
 \subsection{Substitution Theorem}
 Let $\wid J$ range over any wide judgment ($\wid A : \wid \rtype$, $\wid M : \wid A$) and
 $\nar J$ over any narrow judgment ($\nar A : \nar \rtype$, $\nar M : \nar A$). Substitution into judgments so phrased
@@ -845,7 +897,51 @@ is the obvious thing: just apply the substitution to all its parts. Then
   \end{enumerate}
 \end{theorem}
 \begin{proof}
-?
+By induction on the derivation of the judgment being substituted into.
+For the purposes of this theorem, we treat $\wid\Gamma \wprov \wid M : \wid A$ as presupposing
+$\wprov \wid \Gamma \rctx$ and $\wid\Gamma \wprov \wid A : \rtype$, and similarly for other judgments.
+
+\begin{itemize}
+\item[Case:]
+\[
+\wid \Delta \wprov \wid \theta : \wid \Gamma
+\qquad
+\begin{prooftree}
+\demote{\wid\Gamma} \nprov \nar M : \erase{\wid A} \quad
+\promote{\wid\Gamma} \nprov \nar N : \pp{\nar M}{\wid A}
+\justifies
+\wid\Gamma \wprov \epair{\nar M}{\nar N} : \wid A
+\end{prooftree}\]
+Our goal is to show
+\[ \wid\Delta \wprov \wid\theta(\epair{\nar M}{\nar N}) : \wid\theta \wid A\]
+which by the definition of substitution is
+\[ \wid\Delta \wprov \epair{\demote{\wid\theta}\nar M}{\promote{\wid\theta}\nar N} : \wid\theta \wid A\]
+By Lemma~\ref{lemma.operations.subst}, we have
+\[\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}\]
+\[\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}\]
+Then by induction hypothesis and and the definition of substitution, we know
+\[\demote{\wid\Delta} \nprov \demote{\wid\theta} \nar M : \demote{\wid\theta}\erase{\wid A}\]
+\[\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \pp{\promote{\wid\theta} \nar M}{\rpromote{\wid\theta}\wid A}\]
+By Lemma~\ref{lemma.demotion.erase.compat} we have
+\[\demote{\wid\Delta} \nprov \demote{\wid\theta} \nar M : \erase{\wid\theta \wid A}\]
+and by \ref{lemma.term.indifference} and \ref{lemma.type.indifference}, we have
+\[\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \pp{\demote{\wid\theta} \nar M}{{\wid\theta}\wid A}\]
+so we can construct
+\[\begin{prooftree}
+\demote{\wid\Delta} \nprov \demote{\wid\theta}\nar M : \erase{\wid\theta \wid A} \quad
+\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \pp{\demote{\wid\theta}\nar M}{\wid\theta \wid A}
+\justifies
+\wid\Delta \wprov \epair{\demote{\wid\theta}\nar M}{\promote{\wid\theta}\nar N} : \wid\theta \wid A
+\end{prooftree}\]
+and we are done.
+\end{itemize}
+
+
+
+
+
+
+\cqed
 \end{proof}
 
 
@@ -858,55 +954,7 @@ is the obvious thing: just apply the substitution to all its parts. Then
 
 
 
-Old substitution proof?
-\begin{proof}\ %
-  \begin{itemize}
-  \item
-\[\begin{prooftree}
-\ups\nar \Gamma, x :: \wid B \wprov \wid A : \wid\rtype \quad \nar \Gamma, x :: \wid B \nprov \nar M : \erase {\wid A}
-\justifies
-\nar \Gamma, x :: \wid B \nprov \pp {\nar M} {\wid A} : \nar\rtype
-\end{prooftree}\]
-I.h. gives us
-\[\ups\nar \Gamma \wprov \wsub{\wid P/x} \wid A : \wid\rtype \quad \nar \Gamma \nprov \nsub{\wid P/x}\nar M : \nsub{\wid P/x}\erase {\wid A}\]
-so we derive (using previous lemma)
-\[\begin{prooftree}
-\ups\nar \Gamma \wprov \wsub{\wid P/x} \wid A : \wid\rtype \quad \nar \Gamma \nprov \nsub{\wid P/x}\nar M : \erase {\wsub{\wid P/x} \wid A}
-\justifies
-\nar \Gamma \nprov \pp {\nsub{\wid P/x}\nar M} {\wsub{\wid P/x} \wid A} : \nar\rtype
-\end{prooftree}\]
 
-
-\item
-\[\begin{prooftree}
-\demote{\wid\Gamma}, x \div \erase{\wid B} \nprov \nar M : \erase{\wid A} \quad
-\promote{\wid\Gamma}, x :: \wid B \nprov \nar N : \pp{\nar M}{\wid A}
-\justifies
-\wid\Gamma, x : \wid B \wprov \epair{\nar M}{\nar N} : \wid A
-\end{prooftree}\]
-We suppose $\wid \Gamma \prov \wid P : \wid B$. Therefore
-We suppose $\demote{\wid \Gamma} \prov \erase{\wid P} : \erase{\wid B}$ by some lemma,
-and $\promote{\wid \Gamma} \prov \wid P : \wid B$ by weakening. Therefore
-By i.h. we have
-\[\demote{\wid\Gamma} \nprov  \nsub{\erase{\wid P}/x}\nar M :  \nsub{\erase{\wid P}/x}\erase{\wid A} \qquad
-\promote{\wid\Gamma} \nprov \nsub{\wid P/x} \nar N : \nsub{\wid P/x} \pp{\nar M}{\wid A}\]
-
-Now we want to derive
-\[\begin{prooftree}
-\demote{\wid\Gamma} \nprov \nsub{\erase{\wid P}/x}\nar M : \erase{\wsub{\wid P/x}\wid A} \quad
-\promote{\wid\Gamma} \nprov \nsub{\wid P/x}\nar  N : \pp{\nsub{\erase{\wid P}/x}\nar M}{\wsub{\wid P/x}\wid A}
-\justifies
-\wid\Gamma \wprov \epair{\nsub{\erase{\wid P}/x}\nar M}{\nsub{\wid P/x}\nar N} : \wsub{\wid P/x}\wid A
-\end{prooftree}\]
-But to do this we must see
-\[\nsub{\wid P/x} \pp{\nar M}{\wid A} = \pp{\nsub{\erase{\wid P}/x}\nar M}{\wsub{\wid P/x}\wid A}\]
-We \textcolor{red}{XXX NEED SOME KIND OF LEMMA} to show us that since
-\[\demote{\wid\Gamma}, x \div \erase{\wid B} \nprov \nar M : \erase{\wid A} \]
-we can infer
-\[\nsub{\erase{\wid P}/x}\nar M \equiv \nsub{\wid P/x}\nar M\]
-
-  \end{itemize}
-\end{proof}
 
 
 
@@ -1827,15 +1875,7 @@ Lemma~\ref{demotion.weakening} and Lemma~\ref{promotion.weakening} to do
 \end{proof}
 
 
-\begin{lemma}
-\label{demotion.erase.compat}
-$ \demote{\wid\theta}|\wid A| = \erase{\wid\theta\wid A}$ and $ \demote{\wid\theta}|\wid M| = \erase{\wid\theta\wid M}$.
-\end{lemma}
 
-\begin{proof}
-
-\cqed
-\end{proof}
 
 \begin{lemma}\ %
 \label{operation.substitution.commute}
