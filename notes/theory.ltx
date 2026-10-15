@@ -872,6 +872,17 @@ $ \demote{\wid\theta}|\wid A| = \erase{\wid\theta\wid A}$ and $ \demote{\wid\the
 
 \cqed
 \end{proof}
+
+\begin{lemma}[Inclusion and Erasure are Compatible]
+\label{lemma.inclusion.erase.compat}
+$ \nar\theta\erase{\wid A} = \erase{(\ups\nar\theta)\wid A}$ and $ \nar\theta\erase{\wid M} = \erase{(\ups\nar\theta)\wid M}$.
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
 \begin{lemma}[Operations on Substitutions]
 \label{lemma.operations.subst}
 Operations applied to substitutions preserve typing in the following sense.
@@ -904,6 +915,32 @@ For the purposes of this theorem, we treat $\wid\Gamma \wprov \wid M : \wid A$ a
 $\wprov \wid \Gamma \rctx$ and $\wid\Gamma \wprov \wid A : \rtype$, and similarly for other judgments.
 
 \begin{itemize}
+\item[Case:]
+\[
+\nar \Delta \nprov \nar \theta : \nar \Gamma
+\qquad
+\begin{prooftree}
+\ups {\nar \Gamma} \wprov \wid M : \wid A
+\justifies
+\nar \Gamma \nprov \{\wid M\} : \pp  {\erase{\wid M}} {\wid A}
+\end{prooftree}\]
+Our goal is to show
+\[ \nar\Delta \nprov \nar\theta\{\wid M\} : \nar\theta(\pp{\erase{\wid M}}{\wid A})\]
+which by the definition of substitution is
+\[ \nar\Delta \nprov \{(\ups\nar\theta)\wid M\} : \pp{\nar\theta\erase{\wid M}}{(\ups\nar\theta)\wid A}\]
+By Lemma~\ref{lemma.operations.subst}, we have
+\[\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}\]
+so by induction hypothesis we know
+\[\ups{\nar\Delta} \wprov (\ups\nar\theta)\wid M : (\ups\nar\theta)\wid A\]
+and therefore can construct
+\[\begin{prooftree}
+\ups {\nar \Delta} \wprov (\ups\nar\theta)\wid M : (\ups\nar\theta)\wid A
+\justifies
+\nar \Delta \nprov \{(\ups\nar\theta)\wid M\} : \pp  {\erase{(\ups\nar\theta)\wid M}} {(\ups\nar\theta)\wid A}
+\end{prooftree}\]
+By Lemma~\ref{lemma.inclusion.erase.compat} the type here is the same as $\pp{\nar\theta\erase{\wid M}}{(\ups\nar\theta)\wid A}$,
+and we are done.
+
 \item[Case:]
 \[
 \wid \Delta \wprov \wid \theta : \wid \Gamma
@@ -1328,55 +1365,6 @@ then we construct (using Lemmas~\ref{demotion.weakening} and~\ref{promotion.weak
 %% \sem{\iblat M} &=& \pair {M^*} {\sem M}\\
 %% \sem{\eblat M} &=& \sem M.2\\
 %% \end{array}\]
-
-\subsection{The Erasure Type}
-
-
-\[
-\begin{prooftree}
-\ups{\nar\Gamma} \wprov \wid A : \wid \rtype
-\justifies
-\nar\Gamma \nprov \wipe \wid A : \nar\rtype
-\end{prooftree}
-\qquad
-\begin{prooftree}
-\ups{\nar\Gamma} \wprov \wid M : \wid A
-\justifies
-\nar\Gamma \nprov \berase(\wid M) : \wipe \wid A
-\end{prooftree}
-\qquad
-\begin{prooftree}
-{\nar\Gamma} \nprov \nar M : \erase{\wid A}
-\justifies
-\nar\Gamma \nprov \bmake(\nar M) : \wipe \wid A
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\nar\Gamma \nprov \nar M : \wipe \wid A
-\justifies
-\nar\Gamma \nprov \buse(\nar M) : |\wid A|
-\end{prooftree}
-\]
-Definitional equality works like this. If $\nar\Gamma \nprov \nar M : \wipe \wid A$, then
-\[
- \nar M \equiv_\eta \bmake(\buse(\nar M))
-\]
-and in general
-\[
-\buse(\bmake(\nar M)) \equiv_\beta \nar M\]
-\[
-\buse(\berase(\wid M)) \equiv_\beta \erase{\wid  M}
-\]
-Semantics:
-\[\begin{array}{rcl}
-{(\wipe \wid A)}^* &=& {\wid A}^*\\
-(\berase(\wid M))^* &=& {\wid M}^*\\
-(\bmake(\nar M))^* &=& {\nar M}^*\\
-(\buse(\nar M))^* &=& {\nar M}^*\\
-\end{array}
-\]
-
 
 
 %% \begin{lemma}[Substitution Demotion Compatibility]
