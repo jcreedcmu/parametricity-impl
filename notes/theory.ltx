@@ -262,6 +262,9 @@ boxrule=0pt,boxsep=0pt,breakable}
 \def\nU{\nar{\U}}
 \def\El{\mathsf{El}\,}
 \def\Set{\mathbf{Set}}
+\def\wsub#1{[#1]_{\wid \bullet}}
+\def\nsub#1{[#1]_{\nar \bullet}}
+
 
 \title{A Modal Type Theory with Internal Parametricity }
 \begin{document}
@@ -608,6 +611,7 @@ Here are the formation, introduction, and elimination rules for the fiber type.
 In the elimination rule, $\wid A$ is a type over $\wid\Gamma$; the second premise
 is well-formed because we can transport $\wid A$ to $\rpromote{\wid\Gamma}$ by
 Lemma~\ref{promotion.weakening} and transport $\nar M$ to $\promote{\wid\Gamma}$ by Lemma~\ref{narrow.weakening}.
+% XXX this forward reference is a bit too much. Decide what to do about it.
 
 We have a $\beta$ principle for definitional equality
 \[
@@ -633,7 +637,7 @@ Here are the formation, introduction, and elimination rules for the glue type.
 \qquad
 \begin{prooftree}
 \demote{\wid\Gamma} \nprov \nar M : \nar A \qquad
-\promote{\wid\Gamma} \nprov \nar N : [\nar M/_{\div}x]\nar B
+\promote{\wid\Gamma} \nprov \nar N : \nsub{\nar M/_{\div}x}\nar B
 \justifies
 \wid\Gamma \wprov \bglue(\nar M, \nar N) : \gg(x : \nar A).\nar B
 \end{prooftree}
@@ -642,10 +646,10 @@ Here are the formation, introduction, and elimination rules for the glue type.
 \begin{prooftree}
 \ups\nar\Gamma \wprov \wid M : \gg(x : \nar A).\nar B
 \justifies
-\nar\Gamma \nprov \bunglue \wid M : [\erase{\wid M}/_{\div}x]\nar B
+\nar\Gamma \nprov \bunglue \wid M : \nsub{\erase{\wid M}/_{\div}x}\nar B
 \end{prooftree}
 \]
-
+See below in Section~\ref{sec.substitution} for the exact meaning of the substitution operation used in the introduction and elimination rules.
 We have a $\beta$ principle for definitional equality
 \[
 \bunglue(\bglue(\nar M,\nar N)) \equiv_\beta \nar N
@@ -692,20 +696,21 @@ For example, here are the introduction and elimination rules for $\Pi$ types.
 \nar\Gamma \nprov \nar M : (x : \nar A) \to \nar B \qquad
 \nar\Gamma \nprov \nar N : \nar A
 \justifies
-\nar\Gamma \nprov \nar M\ \nar N : [\nar N/x]\nar B
+\nar\Gamma \nprov \nar M\ \nar N : \nsub{\nar N/_\div x}\nar B
 \end{prooftree}
 \qquad
 \begin{prooftree}
 \wid\Gamma \wprov \wid M : (x : \wid A) \to \wid B \qquad
 \wid\Gamma \wprov \wid N : \wid A
 \justifies
-\wid\Gamma \wprov \wid M\ \wid N : [\wid N/x]\wid B
+\wid\Gamma \wprov \wid M\ \wid N : \wsub{\wid N/x}\wid B
 \end{prooftree}
 \]
 
 \section{Substitution}
-\def\wsub#1{[#1]_{\wid \bullet}}
-\def\nsub#1{[#1]_{\nar \bullet}}
+
+\subsection{Definition of Substitution}
+\label{sec.substitution}
 
 The definition of substitution is by mutual recursion over wide and narrow expressions.
 We write $\wsub\dash$ for substitution into a wide expression and $\nsub\dash$ for substitution into a narrow one.
@@ -722,17 +727,17 @@ $\wsub{\wid M/_{::}x}$&for a& strong &variable in a&wide expression\\
 We write $\nar\theta$ to range over either of the two operations $\nsub\dash$,
 and $\wid\theta$ to range over any of the three operations $\wsub\dash$.
 
-On variables, substitution `does what the variable rules allow'. Specifically, a weak hypothesis cannot be used in
+On variables, substitution follows the variable typing rules. Specifically, a weak hypothesis cannot be used in
 a wide expression, so it is an invariant that $\wsub{\nar M/_{\div}x}$ is never applied to the variable $x$ in a well-typed
-term. A strong hypothesis used in a narrow expression results in an erased term. The definition of substitution on variables is:
+term. Substitution for a strong variable used in a narrow expression results in an erased term. The definition of substitution on variables is:
 \[
 \begin{tabular}{rcl@{\qquad}rcl}
 $\wsub{\wid M/x}x$&$=$&$\wid M$&
 $\nsub{\nar M/_{\div}x}x$&$=$&$\nar M$\\
 $\wsub{\wid M/_{::}x}x$&$=$&$\wid M$&
 $\nsub{\wid M/_{::}x}x$&$=$&$\erase{\wid M}$\\
-$\wsub{\wid\theta}y$&$=$&$y$&
-$\nsub{\nar\theta}y$&$=$&$y$\\
+$\wid\theta (y)$&$=$&$y$&
+$\nar\theta (y)$&$=$&$y$\\
 \end{tabular}
 \]
 where $y$ is any variable other than $x$.
@@ -740,78 +745,120 @@ where $y$ is any variable other than $x$.
 The constructors that stay within one level are structural.
 \[
 \begin{tabular}{rcl}
-$\wsub{\wid\theta}((y : \wid A) \to \wid B)$&$=$&$(y : \wsub{\wid\theta}\wid A) \to \wsub{\wid\theta}\wid B$\\
-$\wsub{\wid\theta}(\lambda y . \wid M)$&$=$&$\lambda y . \wsub{\wid\theta}\wid M$\\
-$\wsub{\wid\theta}(\wid M\ \wid N)$&$=$&$(\wsub{\wid\theta}\wid M)\ (\wsub{\wid\theta}\wid N)$\\
-$\wsub{\wid\theta}\wid\rtype$&$=$&$\wid\rtype$\\
+$\wid\theta((y : \wid A) \to \wid B)$&$=$&$(y : \wid\theta\wid A) \to \wid\theta\wid B$\\
+$\wid\theta(\lambda y . \wid M)$&$=$&$\lambda y . \wid\theta\wid M$\\
+$\wid\theta(\wid M\ \wid N)$&$=$&$(\wid\theta\wid M)\ (\wid\theta\wid N)$\\
+$\wid\theta(\wid\rtype)$&$=$&$\wid\rtype$\\
 \end{tabular}
 \qquad
 \begin{tabular}{rcl}
-$\nsub{\nar\theta}((y : \nar A) \to \nar B)$&$=$&$(y : \nsub{\nar\theta}\nar A) \to \nsub{\nar\theta}\nar B$\\
-$\nsub{\nar\theta}(\lambda y . \nar M)$&$=$&$\lambda y . \nsub{\nar\theta}\nar M$\\
-$\nsub{\nar\theta}(\nar M\ \nar N)$&$=$&$(\nsub{\nar\theta}\nar M)\ (\nsub{\nar\theta}\nar N)$\\
-$\nsub{\nar\theta}\nar\rtype$&$=$&$\nar\rtype$\\
+$\nar\theta((y : \nar A) \to \nar B)$&$=$&$(y : \nar\theta\nar A) \to \nar\theta\nar B$\\
+$\nar\theta(\lambda y . \nar M)$&$=$&$\lambda y . \nar\theta\nar M$\\
+$\nar\theta(\nar M\ \nar N)$&$=$&$(\nar\theta\nar M)\ (\nar\theta\nar N)$\\
+$\nar\theta(\nar\rtype)$&$=$&$\nar\rtype$\\
 \end{tabular}
-\]
-
-\subsection{Promotion, Demotion, Inclusion on Substitutions}
-\[\begin{array}{rcl}
-  \demote{[\wid M/x]} &=& [\erase{\wid M}/_{\div} x]\\
-  \demote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
-  \demote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
-\end{array}
-\qquad
-\begin{array}{rcl}
-  \promote{[\wid M/x]} &=& [{\wid M}/_{::} x]\\
-  \promote{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
-  \promote{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
-\end{array}
-\qquad
-\begin{array}{rcl}
-  \ups{[\nar M/_{\div} x]} &=& [{\nar M}/_{\div} x]\\
-  \ups{[\wid M/_{::} x]} &=& [{\wid M}/_{::} x]\\
-\end{array}
 \]
 
 The remaining cases cross between levels, and each one follows the premises of the rule that introduces the expression.
-Where a subexpression lives in a demoted context, the substitution is demoted as well, which erases an ordinary
-substituend; where it lives in a promoted or an included context, the substituend is left alone.
-We use here the operations $\demote\dash$, $\promote\dash$, and $\ups\dash$ on substitutions defined below.
+When a subexpression lives, according to the typing rules, in a demoted (resp. promoted, included) context, the corresponding
+ substitution is demoted (resp. promoted, included) as well.
+We define the operations $\demote\dash$, $\promote\dash$, and $\ups\dash$ on substitutions by
+\[\begin{array}{rcl}
+  \demote{(\wsub{\wid M/x})} &=& \nsub{\erase{\wid M}/_{\div} x}\\
+  \demote{(\wsub{\nar M/_{\div} x})} &=& \nsub{{\nar M}/_{\div} x}\\
+  \demote{(\wsub{\wid M/_{::} x})} &=& \nsub{{\wid M}/_{::} x}\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+  \promote{(\wsub{\wid M/x})} &=& \nsub{{\wid M}/_{::} x}\\
+  \promote{(\wsub{\nar M/_{\div} x})} &=& \nsub{{\nar M}/_{\div} x}\\
+  \promote{(\wsub{\wid M/_{::} x})} &=& \nsub{{\wid M}/_{::} x}\\
+\end{array}
+\qquad
+\begin{array}{rcl}
+  \ups{\nsub{\nar M/_{\div} x}} &=& \wsub{{\nar M}/_{\div} x}\\
+  \ups{\nsub{\wid M/_{::} x}} &=& \wsub{{\wid M}/_{::} x}\\
+\end{array}
+\]
+and then define substitution on level-crossing expressions by
 \[
 \begin{tabular}{rcl}
-$\wsub{\wid\theta}(\gg(y : \nar A).\nar B)$&$=$&$\gg(y : \nsub{\demote{\wid\theta}}\nar A).\nsub{\promote{\wid\theta}}\nar B$\\
-$\wsub{\wid\theta}(\bglue(\nar M, \nar N))$&$=$&$\bglue(\nsub{\demote{\wid\theta}}\nar M, \nsub{\promote{\wid\theta}}\nar N)$\\
-$\wsub{\wid\theta}(\epair{\nar M}{\nar N})$&$=$&$\epair{\nsub{\demote{\wid\theta}}\nar M}{\nsub{\promote{\wid\theta}}\nar N}$\\
+$\wid\theta(\gg(y : \nar A).\nar B)$&$=$&$\gg(y : \demote{\wid\theta}\nar A).\promote{\wid\theta}\nar B$\\
+$\wid\theta(\bglue(\nar M, \nar N))$&$=$&$\bglue({\demote{\wid\theta}}\nar M, {\promote{\wid\theta}}\nar N)$\\
+$\wid\theta(\epair{\nar M}{\nar N})$&$=$&$\epair{{\demote{\wid\theta}}\nar M}{{\promote{\wid\theta}}\nar N}$\\
 \end{tabular}
 \qquad
 \begin{tabular}{rcl}
-$\nsub{\nar\theta}\pp{\nar M}{\wid A}$&$=$&$\pp{\nsub{\nar\theta}\nar M}{\wsub{\ups{\nar\theta}}\wid A}$\\
-$\nsub{\nar\theta}\{\wid M\}$&$=$&$\{\wsub{\ups{\nar\theta}}\wid M\}$\\
-$\nsub{\nar\theta}(\bunglue \wid M)$&$=$&$\bunglue(\wsub{\ups{\nar\theta}}\wid M)$\\
+$\nar\theta\pp{\nar M}{\wid A}$&$=$&$\pp{\nar\theta\nar M}{(\ups{\nar\theta})\wid A}$\\
+$\nar\theta\{\wid M\}$&$=$&$\{(\ups{\nar\theta})\wid M\}$\\
+$\nar\theta(\bunglue \wid M)$&$=$&$\bunglue((\ups{\nar\theta})\wid M)$\\
 \end{tabular}
 \]
 
 
-\begin{lemma}
-\[\nsub{\erase{\wid P}/x}\erase{\wid A}  = \erase{\wsub{\wid P/x}\wid A} \]
+\subsection{Typing of Substitutions}
+We can define when substitutions are well-formed. In each case, it is when the replacement term is well-typed
+in the appropriate context, where the meaning of `appropriate' aligns with the context manipulations performed in the
+corresponding context formation rule.
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov \wsub{\wid M/ x} : (\wid \Gamma, x : \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\demote{\wid \Gamma} \nprov \nar M : \nar A
+\justifies
+\wid \Gamma \wprov \wsub{\nar M/_{\div} x} : (\wid \Gamma, x \div \nar A)
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\rdemote{\wid \Gamma} \wprov \wid M : \wid A
+\justifies
+\wid \Gamma \wprov \wsub{\wid M/_{::} x} : (\wid \Gamma, x :: \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar \Gamma \nprov \nar M : \nar A
+\justifies
+\nar \Gamma \nprov \nsub{\nar M/_{\div} x} : (\nar \Gamma, x \div \nar A)
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\ups \nar \Gamma \wprov \wid M : \wid A
+\justifies
+\nar \Gamma \nprov \nsub{\wid M/_{::} x} : (\nar \Gamma, x :: \wid A)
+\end{prooftree}
+\]
+
+\subsection{Substitution Theorem}
+Let $\wid J$ range over any wide judgment ($\wid A : \wid \rtype$, $\wid M : \wid A$) and
+$\nar J$ over any narrow judgment ($\nar A : \nar \rtype$, $\nar M : \nar A$). Substitution into judgments so phrased
+is the obvious thing: just apply the substitution to all its parts. Then
+\begin{theorem}[Substitution Theorem]\ %
+  \begin{enumerate}
+  \item $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and $\wid \Gamma \wprov  \wid J$, then $\wid \Delta \wprov \wid \theta \wid J$.
+  \item $\nar \Delta \nprov \nar \theta : \nar \Gamma$ and $\nar \Gamma \nprov  \nar J$, then $\nar \Delta \nprov \nar \theta \nar J$.
+  \end{enumerate}
+\end{theorem}
+\begin{proof}
+?
+\end{proof}
+
+
+
+\section{Older Substitution Material}
+\begin{lemma}[Erasure Substitution Interaction]
+\[\nsub{\erase{\wid M}/x}\erase{\wid A}  = \erase{\wsub{\wid M/x}\wid A} \]
 \end{lemma}
 
 
 
-\begin{theorem}[Substitution Theorem]\ %
-  \begin{enumerate}
-  \item $\wid \Gamma \wprov \wid M : \wid A$ and $\wid \Gamma, x : \wid A \wprov  \wid J$, then $\wid \Gamma \wprov \wsub{\wid M/x}\wid J$.
-  \item $\demote{\wid \Gamma} \nprov \nar M : \nar A$ and $\wid \Gamma, x \div \nar A \wprov  \wid J$,
-then $\wid \Gamma \wprov \wsub{\nar M/x}\wid J$.
-  \item $\rdemote{\wid \Gamma} \wprov \wid M : \wid A$ and $\wid \Gamma, x :: \wid A \wprov  \wid J$,
-then $\wid \Gamma \wprov \wsub{\wid M/x}\wid J$.
-  \item ${\nar \Gamma} \nprov \nar M : \nar A$ and $\nar \Gamma, x \div \nar A \nprov  \nar J$,
-then $\nar \Gamma \nprov \nsub{\nar M/x}\nar J$.
-  \item $\ups{\nar \Gamma} \wprov \wid M : \wid A$ and $\nar \Gamma, x :: \wid A \nprov  \nar J$,
-then $\nar \Gamma \nprov \nsub{\wid M/x}\nar J$.
-  \end{enumerate}
-\end{theorem}
 
+Old substitution proof?
 \begin{proof}\ %
   \begin{itemize}
   \item
@@ -864,54 +911,18 @@ we can infer
 
 
 
-\section{Substitution}
-\subsection{Typing of Substitutions}
+%% \subsection{Substitution on Contexts}
+%%%% Don't think I need this anymore?
+%% \[
+%% \begin{array}{rcl}
+%%   \wid\theta (\wid \Gamma, x : \wid A) &=&   (\wid\theta\wid \Gamma, x : \wid\theta\wid A)\\
+%%   \wid\theta (\wid \Gamma, x \div \nar A) &=&   (\wid\theta\wid \Gamma, x : \demote{\wid\theta}\nar A)\\
+%%   \wid\theta (\wid \Gamma, x :: \wid A) &=&   (\wid\theta\wid \Gamma, x :: \rdemote{\wid\theta}\wid A)\\
+%%   \nar\theta (\nar \Gamma, x \div \nar A) &=&   (\nar\theta\nar \Gamma, x : {\nar\theta}\nar A)\\
+%%   \nar\theta (\nar \Gamma, x :: \wid A) &=&   (\nar\theta\nar \Gamma, x :: (\ups{\nar\theta})\wid A)\\
 
-\[
-\begin{prooftree}
-\wid \Gamma \wprov \wid M : \wid A
-\justifies
-\wid \Gamma \wprov [\wid M/ x] : (\wid \Gamma, x : \wid A)
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\demote{\wid \Gamma} \nprov \nar M : \nar A
-\justifies
-\wid \Gamma \wprov [\nar M/_{\div} x] : (\wid \Gamma, x \div \nar A)
-\end{prooftree}
-\qquad
-\begin{prooftree}
-\rdemote{\wid \Gamma} \wprov \wid M : \wid A
-\justifies
-\wid \Gamma \wprov [\wid M/_{::} x] : (\wid \Gamma, x :: \wid A)
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\nar \Gamma \nprov \nar M : \nar A
-\justifies
-\nar \Gamma \nprov [\nar M/_{\div} x] : (\nar \Gamma, x \div \nar A)
-\end{prooftree}
-\qquad
-\begin{prooftree}
-\ups \nar \Gamma \wprov \wid M : \wid A
-\justifies
-\nar \Gamma \nprov [\wid M/_{::} x] : (\nar \Gamma, x :: \wid A)
-\end{prooftree}
-\]
-\subsection{Substitution on Contexts}
-
-\[
-\begin{array}{rcl}
-  \wid\theta (\wid \Gamma, x : \wid A) &=&   (\wid\theta\wid \Gamma, x : \wid\theta\wid A)\\
-  \wid\theta (\wid \Gamma, x \div \nar A) &=&   (\wid\theta\wid \Gamma, x : \demote{\wid\theta}\nar A)\\
-  \wid\theta (\wid \Gamma, x :: \wid A) &=&   (\wid\theta\wid \Gamma, x :: \rdemote{\wid\theta}\wid A)\\
-  \nar\theta (\nar \Gamma, x \div \nar A) &=&   (\nar\theta\nar \Gamma, x : {\nar\theta}\nar A)\\
-  \nar\theta (\nar \Gamma, x :: \wid A) &=&   (\nar\theta\nar \Gamma, x :: (\ups{\nar\theta})\wid A)\\
-
-\end{array}
-\]
+%% \end{array}
+%% \]
 
 
 
