@@ -843,176 +843,200 @@ We use the latter notation when the typing of the extended substitution is what 
 We define a weakening relation $\Gamma' \le \Gamma$ on contexts that says $\Gamma$ `can be weakened to' $\Gamma'$.
 This is ordered so that when we state the weakening lemma it looks like cutting out a $\Gamma$ in the middle:
 ``If $\Gamma' \le \Gamma$ and $\Gamma \prov J$, then $\Gamma' \prov J$''.
+
 We first of all have rules that correspond to context formation rules, which by themselves suffice to show reflexivity of
 weakening:
 \[
 \begin{prooftree}
 \justifies
-\wprov \cdot \le \cdot \rctx
+\cdot \le \cdot
 \end{prooftree}
 \qquad
 \begin{prooftree}
 \justifies
-\nprov \cdot \le \cdot \rctx
+ \cdot \le \cdot
 \end{prooftree}
 \qquad
 \begin{prooftree}
-\wprov {\wid\Gamma'} \le {\wid \Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+{\wid\Gamma'} \le {\wid \Gamma}
 \justifies
-\wprov ({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x : \wid A) \rctx
+({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x : \wid A)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+{\wid\Gamma'} \le {\wid\Gamma}
 \justifies
-\wprov ({\wid\Gamma'}, x \div \nar A) \le ({\wid\Gamma}, x \div \nar A)\rctx
+({\wid\Gamma'}, x \div \nar A) \le ({\wid\Gamma}, x \div \nar A)
 \end{prooftree}
 \qquad
 \begin{prooftree}
-\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+{\wid\Gamma'} \le {\wid\Gamma}
 \justifies
-\wprov ({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x :: \wid A)\rctx
+({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x :: \wid A)
 \end{prooftree}
 \]
-
-
 \[
 \begin{prooftree}
-\nprov {\nar\Gamma'} \le {\nar\Gamma} \rctx \qquad {\nar\Gamma} \nprov \nar A : \rtype
+ {\nar\Gamma'} \le {\nar\Gamma}
 \justifies
-\nprov ({\nar\Gamma'}, x \div \nar A) \le ({\nar\Gamma}, x \div \nar A)\rctx
+ ({\nar\Gamma'}, x \div \nar A) \le ({\nar\Gamma}, x \div \nar A)
 \end{prooftree}
 \qquad
 \begin{prooftree}
-\nprov {\nar\Gamma'} \le {\nar\Gamma} \rctx \qquad \ups {\nar\Gamma} \wprov \wid A : \rtype
+ {\nar\Gamma'} \le {\nar\Gamma}
 \justifies
-\nprov ({\nar\Gamma'}, x :: \wid A) \le ({\nar\Gamma}, x :: \wid A)\rctx
+ ({\nar\Gamma'}, x :: \wid A) \le ({\nar\Gamma}, x :: \wid A)
 \end{prooftree}
 \]
 
 And then furthermore we have rules that capture nontrivial weakening:
 \[
 \begin{prooftree}
-\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+{\wid\Gamma'} \le {\wid\Gamma}
 \justifies
-\wprov ({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x \div |\wid A|)\rctx
+({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x \div |\wid A|)
 \end{prooftree}
 \qquad
 \begin{prooftree}
-\nprov {\nar\Gamma'} \le {\nar\Gamma} \rctx \qquad \ups{\nar\Gamma} \nprov \wid A : \rtype
+ {\nar\Gamma'} \le {\nar\Gamma}
 \justifies
-\nprov ({\nar\Gamma'}, x :: \wid A) \le ({\nar\Gamma}, x \div |\wid A|)\rctx
+ ({\nar\Gamma'}, x :: \wid A) \le ({\nar\Gamma}, x \div |\wid A|)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+{\wid\Gamma'} \le {\wid\Gamma}
 \justifies
-\wprov ({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x : \wid A)\rctx
+({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x : \wid A)
 \end{prooftree}
 \qquad
 \begin{prooftree}
-\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+{\wid\Gamma'} \le {\wid\Gamma}
 \justifies
-\wprov ({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x \div |\wid A|)\rctx
-\end{prooftree}
-\]
-Then we have a similar relation $\Gamma \prov \theta' \le \theta : \Delta' \le \Delta$ for substitutions.
-As with contexts, we first have rules corresponding to the substitution typing rules, which by themselves suffice to show
-reflexivity.
-\[
-\begin{prooftree}
-\justifies
-\wid \Gamma \wprov \cdot \le \cdot : \cdot \le \cdot
-\end{prooftree}
-\qquad
-\begin{prooftree}
-\justifies
-\nar \Gamma \nprov \cdot \le \cdot : \cdot \le \cdot
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta' \wid A
-\justifies
-\wid \Gamma \wprov \wid\theta' \wsub{\wid M / x} \le \wid\theta \wsub{\wid M / x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x : \wid A)
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta'} \nar A
-\justifies
-\wid \Gamma \wprov \wid\theta'\wsub{\nar M /_{\div} x} \le \wid\theta\wsub{\nar M /_{\div} x} : (\wid \Delta', x \div \nar A) \le (\wid \Delta, x \div \nar A)
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta'} \wid A
-\justifies
-\wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M /_{::} x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x :: \wid A)
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta'} \nar A
-\justifies
-\nar \Gamma \nprov \nar\theta'\nsub{\nar M /_{\div} x} \le \nar\theta\nsub{\nar M /_{\div} x} : (\nar \Delta', x \div \nar A) \le (\nar \Delta, x \div \nar A)
-\end{prooftree}
-\]
-\[
-\begin{prooftree}
-\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta'} \wid A
-\justifies
-\nar \Gamma \nprov \nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\wid M /_{::} x} : (\nar \Delta', x :: \wid A) \le (\nar \Delta, x :: \wid A)
+({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x \div |\wid A|)
 \end{prooftree}
 \]
 
-And then furthermore we have rules that capture nontrivial weakening, one for each of the nontrivial context weakening rules.
+We do a similar thing for substitutions. First the boring rules that lookw like reflexivity:
+
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta'} \wid A
 \justifies
-\wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x \div |\wid A|)
+\wid\cdot \le \wid\cdot
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\justifies
+\nar\cdot \le \nar\cdot
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wid\theta' \le \wid\theta
+\justifies
+\wid\theta' \wsub{\wid M / x} \le \wid\theta \wsub{\wid M / x}
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta'} \wid A
+\wid\theta' \le \wid\theta
 \justifies
-\nar \Gamma \nprov \nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\erase{\wid M} /_{\div} x} : (\nar \Delta', x :: \wid A) \le (\nar \Delta, x \div |\wid A|)
+\wid\theta'\wsub{\nar M /_{\div} x} \le \wid\theta\wsub{\nar M /_{\div} x}
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wid\theta' \le \wid\theta
+\justifies
+\wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M /_{::} x}
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta'} \wid A
+\nar\theta' \le \nar\theta
 \justifies
-\wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M / x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x : \wid A)
+\nar\theta'\nsub{\nar M /_{\div} x} \le \nar\theta\nsub{\nar M /_{\div} x}
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\nar\theta' \le \nar\theta
+\justifies
+\nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\wid M /_{::} x}
+\end{prooftree}
+\]
+And then the rules that capture nontrivial weakening:
+\[
+\begin{prooftree}
+\wid\theta' \le \wid\theta
+\justifies
+\wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x}
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\nar\theta' \le \nar\theta
+\justifies
+\nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\erase{\wid M} /_{\div} x}
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M : \wid\theta' \wid A
+\wid\theta' \le \wid\theta
 \justifies
-\wid \Gamma \wprov \wid\theta'\wsub{\wid M / x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x \div |\wid A|)
+\wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M / x}
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wid\theta' \le \wid\theta
+\justifies
+\wid\theta'\wsub{\wid M / x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x}
 \end{prooftree}
 \]
+
+\begin{lemma}[Monotonicity of Operations]
+\label{lemma.monotonicity.operations}\ %
+\begin{itemize}
+\item If $\wid \Gamma_1 \le \wid \Gamma_2$, then  $\demote{\wid \Gamma_1} \le \demote{\wid \Gamma_2}$.
+\item If $\wid \Gamma_1 \le \wid \Gamma_2$, then  $\promote{\wid \Gamma_1} \le \promote{\wid \Gamma_2}$.
+\item If $\nar \Gamma_1 \le \nar \Gamma_2$, then  $\ups{\nar \Gamma_1} \le \ups{\nar \Gamma_2}$.
+\item If $\wid \theta_1 \le \wid \theta_2$, then  $\demote{\wid \theta_1} \le \demote{\wid \theta_2}$.
+\item If $\wid \theta_1 \le \wid \theta_2$, then  $\promote{\wid \theta_1} \le \promote{\wid \theta_2}$.
+\item If $\nar \theta_1 \le \nar \theta_2$, then  $\ups{\nar \theta_1} \le \ups{\nar \theta_2}$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+By induction.
+\cqed
+\end{proof}
 
 \begin{lemma}[Weakening]
 \label{lemma.weakening}\ %
 \begin{itemize}
-\item If $\wprov \wid \Delta' \le \wid \Delta \rctx$ and $\wid \Delta \wprov \wid J$, then $\wid \Delta' \wprov \wid J$.
-\item If $\nprov \nar \Delta' \le \nar \Delta \rctx$ and $\nar \Delta \nprov \nar J$, then $\nar \Delta' \nprov \nar J$.
+\item Suppose $\wprov \wid \Delta_i \rctx$ and
+$\wid\Delta_1 \le \wid\Delta_2$ and
+$\wid \Delta_2 \wprov \wid J$.
+Then $\wid \Delta_1 \wprov \wid J$.
+\item Suppose $\nprov \nar \Delta_i \rctx$ and
+$\nar\Delta_1 \le \nar\Delta_2$ and
+$\nar \Delta_2 \nprov \nar J$.
+Then $\nar \Delta_1 \nprov \nar J$.
 \end{itemize}
 \end{lemma}
 
 \begin{lemma}[Indifference]
 \label{lemma.indifference}\ %
 \begin{itemize}
-\item If  $\wid \Gamma \prov \wid \theta' \le \wid \theta : \wid \Delta' \le \wid \Delta $ and $\wid \Delta \wprov \wid J$,
-then $\wid \theta' \wid J = \wid \theta \wid J$.
-\item If  $\nar \Gamma \prov \nar \theta' \le \nar \theta : \nar \Delta' \le \nar \Delta $ and $\nar \Delta \nprov \nar J$,
-then $\nar \theta' \nar J = \nar \theta \nar J$.
+\item Suppose $\wprov \wid \Delta_i \rctx$ and
+$\wid \Gamma \wprov \wid \theta_i : \wid \Delta_i$ and
+$\wid\Delta_1 \le \wid\Delta_2$ and
+$\wid\theta_1 \le \wid\theta_2$ and
+$\wid \Delta_2 \wprov \wid J$.
+Then $\wid \theta_1 \wid J = \wid \theta_2 \wid J$.
+\item Suppose $\nprov \nar \Delta_i \rctx$ and
+$\nar \Gamma \nprov \nar \theta_i : \nar \Delta_i$ and
+$\nar\Delta_1 \le \nar\Delta_2$ and
+$\nar\theta_1 \le \nar\theta_2$ and
+$\nar \Delta_2 \nprov \nar J$.
+Then $\nar \theta_1 \nar J = \nar \theta_2 \nar J$.
 \end{itemize}
 \end{lemma}
 
