@@ -934,35 +934,35 @@ reflexivity.
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta \wid A
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta' \wid A
 \justifies
 \wid \Gamma \wprov \wid\theta' \wsub{\wid M / x} \le \wid\theta \wsub{\wid M / x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x : \wid A)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta'} \nar A
 \justifies
 \wid \Gamma \wprov \wid\theta'\wsub{\nar M /_{\div} x} \le \wid\theta\wsub{\nar M /_{\div} x} : (\wid \Delta', x \div \nar A) \le (\wid \Delta, x \div \nar A)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta'} \wid A
 \justifies
 \wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M /_{::} x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x :: \wid A)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta} \nar A
+\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta'} \nar A
 \justifies
 \nar \Gamma \nprov \nar\theta'\nsub{\nar M /_{\div} x} \le \nar\theta\nsub{\nar M /_{\div} x} : (\nar \Delta', x \div \nar A) \le (\nar \Delta, x \div \nar A)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta'} \wid A
 \justifies
 \nar \Gamma \nprov \nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\wid M /_{::} x} : (\nar \Delta', x :: \wid A) \le (\nar \Delta, x :: \wid A)
 \end{prooftree}
@@ -971,28 +971,28 @@ reflexivity.
 And then furthermore we have rules that capture nontrivial weakening, one for each of the nontrivial context weakening rules.
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta'} \wid A
 \justifies
 \wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x \div |\wid A|)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta'} \wid A
 \justifies
 \nar \Gamma \nprov \nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\erase{\wid M} /_{\div} x} : (\nar \Delta', x :: \wid A) \le (\nar \Delta, x \div |\wid A|)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta'} \wid A
 \justifies
 \wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M / x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x : \wid A)
 \end{prooftree}
 \]
 \[
 \begin{prooftree}
-\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M : \wid\theta \wid A
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M : \wid\theta' \wid A
 \justifies
 \wid \Gamma \wprov \wid\theta'\wsub{\wid M / x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x \div |\wid A|)
 \end{prooftree}
