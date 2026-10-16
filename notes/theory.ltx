@@ -918,8 +918,87 @@ And then furthermore we have rules that capture nontrivial weakening:
 \wprov ({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x \div |\wid A|)\rctx
 \end{prooftree}
 \]
-Then we have a similar relation $\Gamma \prov \theta' \le \theta : \Delta' \le \Delta$ for substitutions:
-XXX FILL IN XXX
+Then we have a similar relation $\Gamma \prov \theta' \le \theta : \Delta' \le \Delta$ for substitutions.
+As with contexts, we first have rules corresponding to the substitution typing rules, which by themselves suffice to show
+reflexivity.
+\[
+\begin{prooftree}
+\justifies
+\wid \Gamma \wprov \cdot \le \cdot : \cdot \le \cdot
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\justifies
+\nar \Gamma \nprov \cdot \le \cdot : \cdot \le \cdot
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta' \wsub{\wid M / x} \le \wid\theta \wsub{\wid M / x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x : \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A
+\justifies
+\wid \Gamma \wprov \wid\theta'\wsub{\nar M /_{\div} x} \le \wid\theta\wsub{\nar M /_{\div} x} : (\wid \Delta', x \div \nar A) \le (\wid \Delta, x \div \nar A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M /_{::} x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x :: \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta} \nar A
+\justifies
+\nar \Gamma \nprov \nar\theta'\nsub{\nar M /_{\div} x} \le \nar\theta\nsub{\nar M /_{\div} x} : (\nar \Delta', x \div \nar A) \le (\nar \Delta, x \div \nar A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+\justifies
+\nar \Gamma \nprov \nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\wid M /_{::} x} : (\nar \Delta', x :: \wid A) \le (\nar \Delta, x :: \wid A)
+\end{prooftree}
+\]
+
+And then furthermore we have rules that capture nontrivial weakening, one for each of the nontrivial context weakening rules.
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x \div |\wid A|)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\nar \Gamma \nprov \nar\theta' \le \nar\theta : \nar \Delta' \le \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+\justifies
+\nar \Gamma \nprov \nar\theta'\nsub{\wid M /_{::} x} \le \nar\theta\nsub{\erase{\wid M} /_{\div} x} : (\nar \Delta', x :: \wid A) \le (\nar \Delta, x \div |\wid A|)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta'\wsub{\wid M /_{::} x} \le \wid\theta\wsub{\wid M / x} : (\wid \Delta', x :: \wid A) \le (\wid \Delta, x : \wid A)
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta' \le \wid\theta : \wid \Delta' \le \wid \Delta \qquad \wid \Gamma \wprov \wid M : \wid\theta \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta'\wsub{\wid M / x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x \div |\wid A|)
+\end{prooftree}
+\]
+In every one of these rules the two substitutions carry the same substituend. What varies is the kind of slot it is
+recorded at, and erasure is applied exactly when that slot is weak and the substituend is wide.
 
 \subsection{Lemmas}
 
