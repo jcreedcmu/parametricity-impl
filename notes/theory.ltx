@@ -1004,10 +1004,54 @@ And then the rules that capture nontrivial weakening:
 \end{lemma}
 
 \begin{proof}
-By induction.
+By induction on the derivation of the weakening relation.
+The rules that behave the same way on both sides are easy.
+An example of a more interesting case:
+
+\begin{itemize}
+\item[Case:] Demotion applied to strong-for-ordinary context weakening.
+We have
+\[
+\begin{prooftree}
+{\wid\Gamma_1'} \le {\wid\Gamma_2'}
+\justifies
+({\wid\Gamma_1'}, x :: \wid A) \le ({\wid\Gamma_2'}, x : \wid A)
+\end{prooftree}
+\]
+Our goal is to show
+\[\demote{({\wid\Gamma_1'}, x :: \wid A)} \le \demote{({\wid\Gamma_2'}, x : \wid A)}\]
+which by the definition of demotion is
+\[(\demote{\wid\Gamma_1'}, x :: \wid A) \le (\demote{\wid\Gamma_2'}, x \div \erase{\wid A})\]
+By induction hypothesis we have $\demote{\wid\Gamma_1'} \le \demote{\wid\Gamma_2'}$, so we can construct
+\[
+\begin{prooftree}
+\demote{\wid\Gamma_1'} \le \demote{\wid\Gamma_2'}
+\justifies
+(\demote{\wid\Gamma_1'}, x :: \wid A) \le (\demote{\wid\Gamma_2'}, x \div \erase{\wid A})
+\end{prooftree}
+\]
+and we are done.
+\end{itemize}
 \cqed
 \end{proof}
 
+\begin{lemma}[Weakening on Variables]
+\label{lemma.weakening.variables}\ %
+\begin{itemize}
+\item Suppose $\wprov \wid \Delta_i \rctx$ and
+$\wid\Delta_1 \le \wid\Delta_2$ and
+$\wid \Delta_2 \wprov x : \wid A$.
+Then $\wid \Delta_1 \wprov x : \wid A$.
+\item Suppose $\nprov \nar \Delta_i \rctx$ and
+$\nar\Delta_1 \le \nar\Delta_2$ and
+$\nar \Delta_2 \nprov x : \nar A$.
+Then $\nar \Delta_1 \nprov x : \nar A$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+By case analysis of the possible ways a variable can be well-typed and the ways
+a context can be weakened.  \cqed
+\end{proof}
 \begin{lemma}[Weakening]
 \label{lemma.weakening}\ %
 \begin{itemize}
@@ -1021,6 +1065,88 @@ $\nar \Delta_2 \nprov \nar J$.
 Then $\nar \Delta_1 \nprov \nar J$.
 \end{itemize}
 \end{lemma}
+
+\begin{proof}
+By induction on the derivation of the judgment being weakened.
+The context formation hypotheses are maintained by Lemmas~\ref{demote.pres} and~\ref{promote.pres}
+together with the premises of the rule being analyzed.
+The cases for the level-changing constructors follow the premises of their rules, using
+Lemma~\ref{lemma.monotonicity.operations}. We give glue type formation as a representative.
+
+\begin{itemize}
+
+\item[Case:] Glue type formation.
+\[
+\wid\Delta_1 \le \wid\Delta_2
+\qquad
+\begin{prooftree}
+\demote{\wid\Delta_2} \nprov \nar A : \nar\rtype \qquad
+\promote{\wid\Delta_2}, x \div \nar A \nprov \nar B : \nar\rtype
+\justifies
+\wid\Delta_2 \wprov \gg(x : \nar A).\nar B : \wid\rtype
+\end{prooftree}
+\]
+Our goal is to show
+\[\wid\Delta_1 \wprov \gg(x : \nar A).\nar B : \wid\rtype\]
+By Lemma~\ref{lemma.monotonicity.operations}, we have
+\[\demote{\wid \Delta_1} \le \demote{\wid \Delta_2}\]
+\[\promote{\wid \Delta_1} \le \promote{\wid \Delta_2}\]
+and the latter extends by the weakening rule for weak hypotheses to
+\[(\promote{\wid \Delta_1}, x \div \nar A) \le (\promote{\wid \Delta_2}, x \div \nar A)\]
+Then by induction hypothesis we know
+\[\demote{\wid\Delta_1} \nprov \nar A : \nar\rtype\]
+\[\promote{\wid\Delta_1}, x \div \nar A \nprov \nar B : \nar\rtype\]
+so we can construct
+\[
+\begin{prooftree}
+\demote{\wid\Delta_1} \nprov \nar A : \nar\rtype \qquad
+\promote{\wid\Delta_1}, x \div \nar A \nprov \nar B : \nar\rtype
+\justifies
+\wid\Delta_1 \wprov \gg(x : \nar A).\nar B : \wid\rtype
+\end{prooftree}
+\]
+and we are done.
+\end{itemize}
+\cqed
+\end{proof}
+
+\begin{lemma}[Operations on Substitutions]
+\label{lemma.operations.subst}
+Operations applied to substitutions preserve typing in the following sense.
+  \begin{itemize}
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}$.
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}$.
+  \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$, then $\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}$.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+\begin{lemma}[Indifference on Variables]
+\label{lemma.indifference.variables}\ %
+\begin{itemize}
+\item If $\wprov \wid \Delta_i \rctx$ and
+$\wid \Gamma \wprov \wid \theta_i : \wid \Delta_i$ and
+$\wid\Delta_1 \le \wid\Delta_2$ and
+$\wid\theta_1 \le \wid\theta_2$ and
+$\wid \Delta_2 \wprov x : \wid A$,
+then $\wid \theta_1(x) = \wid \theta_2(x)$.
+\item If $\nprov \nar \Delta_i \rctx$ and
+$\nar \Gamma \nprov \nar \theta_i : \nar \Delta_i$ and
+$\nar\Delta_1 \le \nar\Delta_2$ and
+$\nar\theta_1 \le \nar\theta_2$ and
+$\nar \Delta_2 \nprov x : \nar A$,
+then $\nar \theta_1 (x) = \nar \theta_2(x)$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+By case analysis of the possible ways a variable can be well-typed and the ways
+a substitution can be weakened.  \cqed
+\end{proof}
+
 
 \begin{lemma}[Indifference]
 \label{lemma.indifference}\ %
@@ -1040,6 +1166,16 @@ Then $\nar \theta_1 \nar J = \nar \theta_2 \nar J$.
 \end{itemize}
 \end{lemma}
 
+\begin{proof}
+By induction.
+The previous lemma takes care of the variable case.
+In all other cases, the two substitutions are pushed into the subexpressions by the
+same clause of the definition of substitution, and the induction hypothesis applies to each
+subexpression; at the level-crossing subexpressions, the hypotheses of the induction hypothesis are
+supplied by Lemma~\ref{lemma.monotonicity.operations} and Lemma~\ref{lemma.operations.subst}.
+\cqed
+\end{proof}
+
 \begin{corollary}
 \label{corollary.indifference}\ %
 \begin{itemize}
@@ -1058,10 +1194,10 @@ $\demote{\wid\theta} \nar A = \promote{\wid\theta} \nar A$.
   $\wid\Gamma \wprov \wid A : \wid \rtype$, then
   $\wid\theta\wid A = \rpromote{\wid\theta}\wid A$.
 \end{itemize}
-\end{lemma}
+\end{corollary}
 
 \begin{proof}
-
+All four parts are instances of Lemma~\ref{lemma.indifference}.
 \cqed
 \end{proof}
 
@@ -1112,20 +1248,6 @@ $ \nar\theta\erase{\wid A} = \erase{(\ups\nar\theta)\wid A}$ and $ \nar\theta\er
 \cqed
 \end{proof}
 
-\begin{lemma}[Operations on Substitutions]
-\label{lemma.operations.subst}
-Operations applied to substitutions preserve typing in the following sense.
-  \begin{itemize}
-  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}$.
-  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}$.
-  \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$, then $\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}$.
-  \end{itemize}
-\end{lemma}
-
-\begin{proof}
-
-\cqed
-\end{proof}
 
 \begin{lemma}[Substitution Extension]
 \label{lemma.subst.extension}
