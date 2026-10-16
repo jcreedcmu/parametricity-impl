@@ -839,7 +839,91 @@ the bound variable $y$ is assumed fresh for $\nar\theta$, so that $\nar\theta$ a
 Equivalently, the right-hand side could be written $\lambda y . (\nar\theta\nsub{y/_\div y})\nar M$.
 We use the latter notation when the typing of the extended substitution is what is at issue.
 
+\subsection{Weakening}
+We define a weakening relation $\Gamma' \le \Gamma$ on contexts that says $\Gamma$ `can be weakened to' $\Gamma'$.
+This is ordered so that when we state the weakening lemma it looks like cutting out a $\Gamma$ in the middle:
+``If $\Gamma' \le \Gamma$ and $\Gamma \prov J$, then $\Gamma' \prov J$''.
+We first of all have rules that correspond to context formation rules, which by themselves suffice to show reflexivity of
+weakening:
+\[
+\begin{prooftree}
+\justifies
+\wprov \cdot \le \cdot \rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\justifies
+\nprov \cdot \le \cdot \rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wprov {\wid\Gamma'} \le {\wid \Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x : \wid A) \rctx
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wprov ({\wid\Gamma'}, x \div \nar A) \le ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+
+
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma'} \le {\nar\Gamma} \rctx \qquad {\nar\Gamma} \nprov \nar A : \rtype
+\justifies
+\nprov ({\nar\Gamma'}, x \div \nar A) \le ({\nar\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\nprov {\nar\Gamma'} \le {\nar\Gamma} \rctx \qquad \ups {\nar\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\nar\Gamma'}, x :: \wid A) \le ({\nar\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+
+And then furthermore we have rules that capture nontrivial weakening:
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x \div |\wid A|)\rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\nprov {\nar\Gamma'} \le {\nar\Gamma} \rctx \qquad \ups{\nar\Gamma} \nprov \wid A : \rtype
+\justifies
+\nprov ({\nar\Gamma'}, x :: \wid A) \le ({\nar\Gamma}, x \div |\wid A|)\rctx
+\end{prooftree}
+\]
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma'}, x :: \wid A) \le ({\wid\Gamma}, x : \wid A)\rctx
+\end{prooftree}
+\qquad
+\begin{prooftree}
+\wprov {\wid\Gamma'} \le {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma'}, x : \wid A) \le ({\wid\Gamma}, x \div |\wid A|)\rctx
+\end{prooftree}
+\]
+Then we have a similar relation $\Gamma \prov \theta' \le \theta : \Delta' \le \Delta$ for substitutions:
+XXX FILL IN XXX
+
 \subsection{Lemmas}
+
+
 
 \begin{lemma}[Indifference]
 \label{lemma.indifference}\ %
