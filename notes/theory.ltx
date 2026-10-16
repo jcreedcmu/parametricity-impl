@@ -997,15 +997,27 @@ And then furthermore we have rules that capture nontrivial weakening, one for ea
 \wid \Gamma \wprov \wid\theta'\wsub{\wid M / x} \le \wid\theta\wsub{\erase{\wid M} /_{\div} x} : (\wid \Delta', x : \wid A) \le (\wid \Delta, x \div |\wid A|)
 \end{prooftree}
 \]
-In every one of these rules the two substitutions carry the same substituend. What varies is the kind of slot it is
-recorded at, and erasure is applied exactly when that slot is weak and the substituend is wide.
 
-\subsection{Lemmas}
-
-
+\begin{lemma}[Weakening]
+\label{lemma.weakening}\ %
+\begin{itemize}
+\item If $\wprov \wid \Delta' \le \wid \Delta \rctx$ and $\wid \Delta \wprov \wid J$, then $\wid \Delta' \wprov \wid J$.
+\item If $\nprov \nar \Delta' \le \nar \Delta \rctx$ and $\nar \Delta \nprov \nar J$, then $\nar \Delta' \nprov \nar J$.
+\end{itemize}
+\end{lemma}
 
 \begin{lemma}[Indifference]
 \label{lemma.indifference}\ %
+\begin{itemize}
+\item If  $\wid \Gamma \prov \wid \theta' \le \wid \theta : \wid \Delta' \le \wid \Delta $ and $\wid \Delta \wprov \wid J$,
+then $\wid \theta' \wid J = \wid \theta \wid J$.
+\item If  $\nar \Gamma \prov \nar \theta' \le \nar \theta : \nar \Delta' \le \nar \Delta $ and $\nar \Delta \nprov \nar J$,
+then $\nar \theta' \nar J = \nar \theta \nar J$.
+\end{itemize}
+\end{lemma}
+
+\begin{corollary}
+\label{corollary.indifference}\ %
 \begin{itemize}
 \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
 $\demote{\wid\Gamma} \nprov \nar M : \nar A$, then
@@ -1028,6 +1040,12 @@ $\demote{\wid\theta} \nar A = \promote{\wid\theta} \nar A$.
 
 \cqed
 \end{proof}
+
+
+
+\subsection{Lemmas}
+
+
 
 
 
