@@ -1232,7 +1232,7 @@ Then by induction hypothesis and and the definition of substitution, we know
 \[\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \pp{\promote{\wid\theta} \nar M}{\rpromote{\wid\theta}\wid A}\]
 By Lemma~\ref{lemma.demotion.erase.compat} we have
 \[\demote{\wid\Delta} \nprov \demote{\wid\theta} \nar M : \erase{\wid\theta \wid A}\]
-and by \ref{lemma.indifference}, we have
+and by Corollary~\ref{corollary.indifference}, we have
 \[\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \pp{\demote{\wid\theta} \nar M}{{\wid\theta}\wid A}\]
 so we can construct
 \[\begin{prooftree}
@@ -1265,7 +1265,7 @@ and by Lemma~\ref{lemma.subst.extension} the latter extends to
 Then by induction hypothesis we know
 \[\demote{\wid\Delta} \nprov \demote{\wid\theta}\nar A : \nar\rtype\]
 \[\promote{\wid\Delta}, x \div \promote{\wid\theta}\nar A \nprov \promote{\wid\theta}\nar B : \nar\rtype\]
-By Lemma~\ref{lemma.indifference} applied to the first premise, $\promote{\wid\theta}\nar A = \demote{\wid\theta}\nar A$, so
+By Corollary~\ref{corollary.indifference} applied to the first premise, $\promote{\wid\theta}\nar A = \demote{\wid\theta}\nar A$, so
 \[\promote{\wid\Delta}, x \div \demote{\wid\theta}\nar A \nprov \promote{\wid\theta}\nar B : \nar\rtype\]
 so we can construct
 \[\begin{prooftree}
@@ -1298,7 +1298,7 @@ Then by induction hypothesis we know
 \[\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \promote{\wid\theta}(\nsub{\nar M/_{\div}x}\nar B)\]
 By Lemma~\ref{lemma.subst.commutation}, the type in the second of these is
 $\nsub{\promote{\wid\theta}\nar M/_{\div}x}(\promote{\wid\theta}\nar B)$, and by
-Lemma~\ref{lemma.indifference} applied to the first premise we may rewrite
+Corollary~\ref{corollary.indifference} applied to the first premise we may rewrite
 $\promote{\wid\theta}\nar M$ as $\demote{\wid\theta}\nar M$, giving
 \[\promote{\wid\Delta} \nprov \promote{\wid\theta}\nar N : \nsub{\demote{\wid\theta}\nar M/_{\div}x}(\promote{\wid\theta}\nar B)\]
 so we can construct
