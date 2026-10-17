@@ -849,12 +849,12 @@ weakening:
 \[
 \begin{prooftree}
 \justifies
-\cdot \le \cdot
+\wid \cdot \le \wid \cdot
 \end{prooftree}
 \qquad
 \begin{prooftree}
 \justifies
- \cdot \le \cdot
+\nar \cdot \le \nar \cdot
 \end{prooftree}
 \qquad
 \begin{prooftree}
@@ -918,7 +918,7 @@ And then furthermore we have rules that capture nontrivial weakening:
 \end{prooftree}
 \]
 
-We do a similar thing for substitutions. First the boring rules that lookw like reflexivity:
+We do a similar thing for substitutions. First the uninteresting rules that look like reflexivity:
 
 \[
 \begin{prooftree}
@@ -1038,12 +1038,10 @@ and we are done.
 \begin{lemma}[Weakening on Variables]
 \label{lemma.weakening.variables}\ %
 \begin{itemize}
-\item Suppose $\wprov \wid \Delta_i \rctx$ and
-$\wid\Delta_1 \le \wid\Delta_2$ and
+\item Suppose $\wid\Delta_1 \le \wid\Delta_2$ and
 $\wid \Delta_2 \wprov x : \wid A$.
 Then $\wid \Delta_1 \wprov x : \wid A$.
-\item Suppose $\nprov \nar \Delta_i \rctx$ and
-$\nar\Delta_1 \le \nar\Delta_2$ and
+\item Suppose $\nar\Delta_1 \le \nar\Delta_2$ and
 $\nar \Delta_2 \nprov x : \nar A$.
 Then $\nar \Delta_1 \nprov x : \nar A$.
 \end{itemize}
@@ -1055,12 +1053,10 @@ a context can be weakened.  \cqed
 \begin{lemma}[Weakening]
 \label{lemma.weakening}\ %
 \begin{itemize}
-\item Suppose $\wprov \wid \Delta_i \rctx$ and
-$\wid\Delta_1 \le \wid\Delta_2$ and
+\item Suppose $\wid\Delta_1 \le \wid\Delta_2$ and
 $\wid \Delta_2 \wprov \wid J$.
 Then $\wid \Delta_1 \wprov \wid J$.
-\item Suppose $\nprov \nar \Delta_i \rctx$ and
-$\nar\Delta_1 \le \nar\Delta_2$ and
+\item Suppose $\nar\Delta_1 \le \nar\Delta_2$ and
 $\nar \Delta_2 \nprov \nar J$.
 Then $\nar \Delta_1 \nprov \nar J$.
 \end{itemize}
@@ -1068,8 +1064,6 @@ Then $\nar \Delta_1 \nprov \nar J$.
 
 \begin{proof}
 By induction on the derivation of the judgment being weakened.
-The context formation hypotheses are maintained by Lemmas~\ref{demote.pres} and~\ref{promote.pres}
-together with the premises of the rule being analyzed.
 The cases for the level-changing constructors follow the premises of their rules, using
 Lemma~\ref{lemma.monotonicity.operations}. We give glue type formation as a representative.
 
@@ -1128,14 +1122,12 @@ Operations applied to substitutions preserve typing in the following sense.
 \begin{lemma}[Indifference on Variables]
 \label{lemma.indifference.variables}\ %
 \begin{itemize}
-\item If $\wprov \wid \Delta_i \rctx$ and
-$\wid \Gamma \wprov \wid \theta_i : \wid \Delta_i$ and
+\item If $\wid \Gamma \wprov \wid \theta_i : \wid \Delta_i$ and
 $\wid\Delta_1 \le \wid\Delta_2$ and
 $\wid\theta_1 \le \wid\theta_2$ and
 $\wid \Delta_2 \wprov x : \wid A$,
 then $\wid \theta_1(x) = \wid \theta_2(x)$.
-\item If $\nprov \nar \Delta_i \rctx$ and
-$\nar \Gamma \nprov \nar \theta_i : \nar \Delta_i$ and
+\item If $\nar \Gamma \nprov \nar \theta_i : \nar \Delta_i$ and
 $\nar\Delta_1 \le \nar\Delta_2$ and
 $\nar\theta_1 \le \nar\theta_2$ and
 $\nar \Delta_2 \nprov x : \nar A$,
@@ -1151,14 +1143,12 @@ a substitution can be weakened.  \cqed
 \begin{lemma}[Indifference]
 \label{lemma.indifference}\ %
 \begin{itemize}
-\item Suppose $\wprov \wid \Delta_i \rctx$ and
-$\wid \Gamma \wprov \wid \theta_i : \wid \Delta_i$ and
+\item Suppose $\wid \Gamma \wprov \wid \theta_i : \wid \Delta_i$ and
 $\wid\Delta_1 \le \wid\Delta_2$ and
 $\wid\theta_1 \le \wid\theta_2$ and
 $\wid \Delta_2 \wprov \wid J$.
 Then $\wid \theta_1 \wid J = \wid \theta_2 \wid J$.
-\item Suppose $\nprov \nar \Delta_i \rctx$ and
-$\nar \Gamma \nprov \nar \theta_i : \nar \Delta_i$ and
+\item Suppose $\nar \Gamma \nprov \nar \theta_i : \nar \Delta_i$ and
 $\nar\Delta_1 \le \nar\Delta_2$ and
 $\nar\theta_1 \le \nar\theta_2$ and
 $\nar \Delta_2 \nprov \nar J$.
