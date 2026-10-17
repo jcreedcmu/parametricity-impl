@@ -1457,9 +1457,18 @@ and Lemma~\ref{lemma.indifference} to obtain our goal.
 \end{prooftree}
 \]
 If we're doing demotion, then we need to show
-
+\[\demote{\wid\Gamma}\nprov \demote{\wid\theta}[\wid M/_{::} x] : (\demote{\wid\Delta}, x :: \wid A)\]
+which means we need to show
+ $\ups \demote{\wid \Gamma} \wprov \wid M : \ups\demote{\wid\theta} \wid A $,
+which we have by assumption.
 
 If we're doing promotion, then we need to show
+\[\promote{\wid\Gamma}\nprov \promote{\wid\theta}[\wid M/_{::} x] : (\promote{\wid\Delta}, x :: \wid A)\]
+which means we need to show
+ $\ups \promote{\wid \Gamma} \wprov \wid M : \ups\promote{\wid\theta} \wid A $.
+We can use Lemma~\ref{lemma.weakening} and Lemma~\ref{lemma.weakening.operations} to obtain
+\[\rpromote {\wid \Gamma} \wprov \wid M :  \rdemote{\wid\theta} \wid A\]
+and Lemma~\ref{lemma.indifference} to obtain our goal.
 
 \item[Case:]
 \[\begin{prooftree}
@@ -1467,10 +1476,19 @@ If we're doing promotion, then we need to show
 \justifies
 \wid \Gamma \wprov \wid\theta\wsub{\nar M /_{\div} x} : (\wid \Delta, x \div \nar A)
 \end{prooftree}\]
-If we're doing demotion, then we need to show $\cdots$ % XXX
+If we're doing demotion, then we need to show
+\[\demote{\wid\Gamma}\nprov \demote{\wid\theta}[\nar M/_{\div} x] : (\demote{\wid\Delta}, x \div \nar A)\]
+which means we need to show
+ $\demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A $,
+which we already have by assumption.
 
-
-If we're doing promotion, then we need to show $\cdots$ % XXX
+If we're doing promotion, then we need to show
+\[\promote{\wid\Gamma}\nprov \promote{\wid\theta}[\nar M/_{\div} x] : (\promote{\wid\Delta}, x \div \nar A)\]
+which means we need to show
+ $\promote{\wid \Gamma} \nprov \nar M : \promote{\wid\theta} \nar A $.
+We can use our assumption and Lemma~\ref{lemma.weakening} and Lemma~\ref{lemma.weakening.operations} to obtain
+\[\promote {\wid \Gamma} \nprov \nar M :  \demote{\wid\theta} \nar A\]
+and Lemma~\ref{lemma.indifference} to obtain our goal.
 
 \item[Case:]
 
@@ -1479,14 +1497,25 @@ If we're doing promotion, then we need to show $\cdots$ % XXX
 \justifies
 \nar \Gamma \nprov \nar\theta\nsub{\wid M /_{::} x} : (\nar \Delta, x :: \wid A)
 \end{prooftree}\]
-We're doing inclusion, and we must show $\cdots$ % XXX
+We're doing inclusion, and we must show
+\[\ups{\nar\Gamma}\wprov (\ups{\nar\theta})[\wid M/_{::} x] : (\ups{\nar\Delta}, x :: \wid A)\]
+which means we need to show
+ $\rdemote{(\ups \nar \Gamma)} \wprov \wid M : \rdemote{(\ups \nar\theta)} \wid A $.
+By definition this is $\ups \demote{(\ups \nar \Gamma)} \wprov \wid M : \ups \demote{(\ups \nar\theta)} \wid A $.
+By Lemma~\ref{lemma.operation.identities}, this is
+$\ups  \nar \Gamma \wprov \wid M : \ups{\nar\theta} \wid A$, which we have by assumption.
 \item[Case:]
 \[\begin{prooftree}
 \nar \Gamma \nprov \nar\theta : \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta} \nar A
 \justifies
 \nar \Gamma \nprov \nar\theta\nsub{\nar M /_{\div} x} : (\nar \Delta, x \div \nar A)
 \end{prooftree}\]
-We're doing inclusion, and we must show $\cdots$ % XXX
+We're doing inclusion, and we must show
+\[\ups{\nar\Gamma}\wprov (\ups{\nar\theta})[\nar M/_{\div} x] : (\ups{\nar\Delta}, x \div \nar A)\]
+which means we need to show
+ $\demote{(\ups \nar \Gamma)} \nprov \nar M : \demote{(\ups \nar\theta)} \nar A $.
+By Lemma~\ref{lemma.operation.identities}, this is
+$\nar \Gamma \nprov \nar M : \nar\theta \nar A$, which we have by assumption.
 \end{itemize}
 
 \cqed
