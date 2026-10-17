@@ -707,9 +707,7 @@ For example, here are the introduction and elimination rules for $\Pi$ types.
 \end{prooftree}
 \]
 
-\section{Substitution}
-
-\subsection{Definition of Substitution}
+\subsection{Substitutions}
 We have syntactic forms for simultaneous substitutions at both the wide and narrow levels.
 
 \[\begin{tabular}{rccl}
@@ -838,6 +836,10 @@ Substitution is capture-avoiding. In a clause such as $\nar\theta(\lambda y . \n
 the bound variable $y$ is assumed fresh for $\nar\theta$, so that $\nar\theta$ acts as the identity on it.
 Equivalently, the right-hand side could be written $\lambda y . (\nar\theta\nsub{y/_\div y})\nar M$.
 We use the latter notation when the typing of the extended substitution is what is at issue.
+
+
+\section{Metatheory}
+
 
 \subsection{Weakening}
 We define a weakening relation $\Gamma' \le \Gamma$ on contexts that says $\Gamma$ `can be weakened to' $\Gamma'$.
@@ -1156,17 +1158,158 @@ and we are done.
 \cqed
 \end{proof}
 
-\begin{lemma}[Operations Preserve Typing]
-\label{lemma.operations.subst}
-Operations applied to substitutions preserve typing in the following sense.
+\subsection{Intermediate Lemmas}
+
+\begin{lemma}[Erasure Preserves Typing]
+\label{lemma.erasure.typing}\ %
+\begin{itemize}
+\item If $\wid \Gamma \wprov \wid M : \wid A$, then
+ $\demote{\wid \Gamma} \nprov \erase{\wid M} : \erase{\wid A} $.
+\item If $\wid \Gamma \wprov \wid A : \rtype$, then
+ $\demote{\wid \Gamma} \nprov \erase{\wid A} : \rtype$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+\begin{lemma}[Operation Identities]\ %
+\label{lemma.operation.identities}
+\begin{itemize}
+\item $\demote{(\ups\nar\Gamma)} = \nar\Gamma$
+and $\promote{(\ups\nar\Gamma)} = \nar\Gamma$.
+\item $\demote{(\ups\nar\theta)} = \nar\theta$
+and $\promote{(\ups\nar\theta)} = \nar\theta$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+\begin{lemma}[Weakening Relationship of Operations]\ %
+\label{lemma.weakening.operations}
+  \begin{itemize}
+  \item $\promote{\wid \Gamma} \le \demote{\wid \Gamma} $
+  \item $\rpromote{\wid \Gamma} \le \wid \Gamma $
+  \item $\wid \Gamma \le \rdemote{\wid \Gamma} $
+  \item $\promote{\wid \theta} \le \demote{\wid \theta} $
+  \item $\rpromote{\wid \theta} \le \wid \theta $
+  \item $\wid \theta \le \rdemote{\wid \theta} $
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
+
+\begin{lemma}[Operations Preserve Contexts]\ %
+\label{lemma.operations.ctx}
   \begin{itemize}
   \item If $\wprov \wid \Delta \rctx$, then $\nprov \demote{\wid \Delta} \rctx$
   \item If $\wprov \wid \Delta \rctx$, then $\nprov \promote{\wid \Delta} \rctx$
   \item If $\nprov \nar \Delta \rctx$, then $\wprov \ups{\nar \Delta} \rctx$
-  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}$.
-  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}$.
-  \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$, then $\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}$.
   \end{itemize}
+\end{lemma}
+
+\begin{proof}
+By induction on the derivation of context formation. If we have a wide context, then we treat promotion and demotion,
+and if we have a narrow context, we treat inclusion.
+
+\begin{itemize}
+\item[Case:]
+\[\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad {\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x : \wid A)\rctx
+\end{prooftree}
+\]
+If we're doing demotion, then we need to show
+\[\nprov (\demote{\wid\Gamma}, x \div |\wid A|)\rctx\]
+which means we need to show $\demote{\wid \Gamma} \prov |\wid A| : \rtype$.
+This follows from the assumption by Lemma~\ref{lemma.erasure.typing}.
+
+If we're doing promotion, then we need to show
+\[\nprov (\promote{\wid\Gamma}, x :: \wid A)\rctx\]
+which means we need to show $\ups{(\promote {\wid \Gamma})} \prov \wid A : \rtype$.
+This follows from the assumption by Lemma~\ref{lemma.weakening} and Lemma~\ref{lemma.weakening.operations}.
+\item[Case:]
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \demote {\wid \Gamma} \nprov \nar A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+If we're doing demotion, then we need to show
+\[\nprov (\demote{\wid\Gamma}, x \div \nar A)\rctx\]
+which means we need $\demote {\wid \Gamma} \nprov \nar A : \rtype$ which we already have by assumption.
+
+If we're doing promotion, then we need to show
+\[\nprov (\promote{\wid\Gamma}, x \div \nar A)\rctx\]
+which means we need $\promote {\wid \Gamma} \nprov \nar A : \rtype$. This follows from the assumption by
+ Lemma~\ref{lemma.weakening} and Lemma~\ref{lemma.weakening.operations}.
+\item[Case:]
+\[
+\begin{prooftree}
+\wprov {\wid\Gamma} \rctx \qquad \rdemote{\wid\Gamma} \wprov \wid A : \rtype
+\justifies
+\wprov ({\wid\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+If we're doing demotion, then we need to show
+\[\nprov (\demote{\wid\Gamma}, x :: \wid A)\rctx\]
+which means we need $\ups(\demote {\wid \Gamma}) \wprov \wid A : \rtype$ which we already have by assumption.
+
+If we're doing promotion, then we need to show
+\[\nprov (\promote{\wid\Gamma}, x :: \wid A)\rctx\]
+which means we need $\ups(\promote {\wid \Gamma}) \wprov \wid A : \rtype$.
+This follows from the assumption by
+ Lemma~\ref{lemma.weakening} and Lemma~\ref{lemma.weakening.operations}.
+\item[Case:]
+
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad {\nar\Gamma} \nprov \nar A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x \div \nar A)\rctx
+\end{prooftree}
+\]
+We're doing inclusion, and we must show $\wprov (\ups \nar \Gamma, x \div \nar A) \rctx$.
+For this we need $\demote{(\ups \nar \Gamma)} \nprov \nar A : \rtype$.
+This follows by Lemma~\ref{lemma.operation.identities}.
+\item[Case:]
+\[
+\begin{prooftree}
+\nprov {\nar\Gamma} \rctx \qquad \ups {\nar\Gamma} \wprov \wid A : \rtype
+\justifies
+\nprov ({\nar\Gamma}, x :: \wid A)\rctx
+\end{prooftree}
+\]
+We're doing inclusion, and we must show $\wprov (\ups \nar \Gamma, x :: \wid A) \rctx$.
+For this we need $\rdemote{(\ups \nar \Gamma)} \wprov \wid A : \rtype$.
+By definition this is $\ups \demote{(\ups \nar \Gamma)} \wprov \wid A : \rtype$.
+By Lemma~\ref{lemma.operation.identities}, this is
+$\ups  \nar \Gamma \wprov \wid A : \rtype$, which we have by assumption.
+\end{itemize}
+
+
+
+\cqed
+\end{proof}
+
+\begin{lemma}[Demotion and Erasure are Compatible]\ %
+\label{lemma.demotion.erase.compat}
+\begin{itemize}
+\item  $ \demote{\wid\theta}|\wid M| = \erase{\wid\theta\wid M}$.
+\item  $ \demote{\wid\theta}|\wid A| = \erase{\wid\theta\wid A}$.
+\end{itemize}
+
 \end{lemma}
 
 \begin{proof}
@@ -1262,6 +1405,94 @@ $    \nar\Delta_1 \nprov x : |\wid A|$ as required.
   \cqed
 \end{proof}
 
+Note that the next two lemmas are mutually recursive with one another.
+We give them separate names for clarity. Observe that they only invoke
+one another on smaller derivations.
+
+\begin{lemma}[Operations Preserve Substitution Typing]\ %
+\label{lemma.operations.subst}
+  \begin{itemize}
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}$.
+  \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}$.
+  \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$, then $\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}$.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+By induction on the derivation of substitution formation. If we have a wide substitution, then we treat promotion and demotion,
+and if we have a narrow substitution, we treat inclusion.
+
+\begin{itemize}
+\item[Case:]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \wid \Gamma \wprov \wid M :  \wid\theta \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta \wsub{\wid M / x} : (\wid \Delta, x : \wid A)
+\end{prooftree}
+\]
+If we're doing demotion, then we need to show
+\[\demote{\wid\Gamma}\nprov \demote{\wid\theta}[|\wid M|/_{\div} x] : (\demote{\wid\Delta}, x \div |\wid A|)\]
+which means we need to show
+ $\demote{\wid \Gamma} \nprov |\wid M| : \demote{\wid\theta}|\wid A| $.
+Using Lemma~\ref{lemma.erasure.typing} on our assumption gives
+\[\demote{\wid \Gamma} \nprov |\wid M| :  |\wid\theta \wid A|\]
+By Lemma~\ref{lemma.demotion.erase.compat}, this is the same as our goal.
+
+If we're doing promotion, then we need to show
+\[\promote{\wid\Gamma}\nprov \promote{\wid\theta}[\wid M/_{::} x] : (\promote{\wid\Delta}, x :: \wid A)\]
+
+which means we need to show
+ $\ups \promote{\wid \Gamma} \wprov \wid M : \ups\promote{\wid\theta} \wid A $.
+We can use our assumption and Lemma~\ref{lemma.weakening} and Lemma~\ref{lemma.weakening.operations} to obtain
+\[\rpromote {\wid \Gamma} \wprov \wid M :  \wid\theta \wid A\]
+and Lemma~\ref{lemma.indifference} to obtain our goal.
+
+\item[Case:]
+\[
+\begin{prooftree}
+\wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \rdemote{\wid \Gamma} \wprov \wid M : \rdemote{\wid\theta} \wid A
+\justifies
+\wid \Gamma \wprov \wid\theta\wsub{\wid M /_{::} x} : (\wid \Delta, x :: \wid A)
+\end{prooftree}
+\]
+If we're doing demotion, then we need to show
+
+
+If we're doing promotion, then we need to show
+
+\item[Case:]
+\[\begin{prooftree}
+\wid \Gamma \wprov \wid\theta : \wid \Delta \qquad \demote{\wid \Gamma} \nprov \nar M : \demote{\wid\theta} \nar A
+\justifies
+\wid \Gamma \wprov \wid\theta\wsub{\nar M /_{\div} x} : (\wid \Delta, x \div \nar A)
+\end{prooftree}\]
+If we're doing demotion, then we need to show $\cdots$ % XXX
+
+
+If we're doing promotion, then we need to show $\cdots$ % XXX
+
+\item[Case:]
+
+\[\begin{prooftree}
+\nar \Gamma \nprov \nar\theta : \nar \Delta \qquad \ups{\nar \Gamma} \wprov \wid M : \ups{\nar\theta} \wid A
+\justifies
+\nar \Gamma \nprov \nar\theta\nsub{\wid M /_{::} x} : (\nar \Delta, x :: \wid A)
+\end{prooftree}\]
+We're doing inclusion, and we must show $\cdots$ % XXX
+\item[Case:]
+\[\begin{prooftree}
+\nar \Gamma \nprov \nar\theta : \nar \Delta \qquad {\nar \Gamma} \nprov \nar M : {\nar\theta} \nar A
+\justifies
+\nar \Gamma \nprov \nar\theta\nsub{\nar M /_{\div} x} : (\nar \Delta, x \div \nar A)
+\end{prooftree}\]
+We're doing inclusion, and we must show $\cdots$ % XXX
+\end{itemize}
+
+\cqed
+\end{proof}
+
+
 
 \begin{lemma}[Indifference]
 \label{lemma.indifference}\ %
@@ -1289,22 +1520,6 @@ supplied by Lemma~\ref{lemma.monotonicity.operations} and Lemma~\ref{lemma.opera
 \cqed
 \end{proof}
 
-\begin{lemma}[Weakening Relationship of Operations]\ %
-\label{lemma.weakening.operations}
-  \begin{itemize}
-  \item $\promote{\wid \Gamma} \le \demote{\wid \Gamma} $
-  \item $\rpromote{\wid \Gamma} \le \wid \Gamma $
-  \item $\wid \Gamma \le \rdemote{\wid \Gamma} $
-  \item $\promote{\wid \theta} \le \demote{\wid \theta} $
-  \item $\rpromote{\wid \theta} \le \wid \theta $
-  \item $\wid \theta \le \rdemote{\wid \theta} $
-  \end{itemize}
-\end{lemma}
-
-\begin{proof}
-
-\cqed
-\end{proof}
 
 \begin{corollary}
 \label{corollary.indifference}\ %
@@ -1339,34 +1554,7 @@ Use Lemma~\ref{lemma.indifference} and Lemma~\ref{lemma.weakening.operations}.
 
 
 
-\begin{lemma}[Demotion and Erasure are Compatible]\ %
-\label{lemma.demotion.erase.compat}
-\begin{itemize}
-\item  $ \demote{\wid\theta}|\wid M| = \erase{\wid\theta\wid M}$.
-\item  $ \demote{\wid\theta}|\wid A| = \erase{\wid\theta\wid A}$.
-\end{itemize}
 
-\end{lemma}
-
-\begin{proof}
-
-\cqed
-\end{proof}
-
-\begin{lemma}[Operation Identities]\ %
-\label{lemma.operation.identities}
-\begin{itemize}
-\item $\demote{(\ups\nar\Gamma)} = \nar\Gamma$
-and $\promote{(\ups\nar\Gamma)} = \nar\Gamma$.
-\item $\demote{(\ups\nar\theta)} = \nar\theta$
-and $\promote{(\ups\nar\theta)} = \nar\theta$.
-\end{itemize}
-\end{lemma}
-
-\begin{proof}
-
-\cqed
-\end{proof}
 
 \begin{lemma}[Inclusion and Erasure are Compatible]
 \label{lemma.inclusion.erase.compat}
@@ -1638,18 +1826,6 @@ and we are done.
 %% \]
 
 Everything in this section and below might be invalid.
-\begin{lemma}
-\label{erase.type}
-If $\wid \Gamma \wprov \wid A : \rtype$, then
- $\demote{\wid \Gamma} \nprov \erase{\wid A} : \rtype$.
-\end{lemma}
-
-\begin{lemma}
-\label{erase.term}
-If $\wid \Gamma \wprov \wid M : \wid A$, then
- $\demote{\wid \Gamma} \nprov \erase{\wid M} : \erase{\wid A} $.
-\end{lemma}
-
 
 
 
