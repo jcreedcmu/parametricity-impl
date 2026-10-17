@@ -991,7 +991,8 @@ And then the rules that capture nontrivial weakening:
 \end{prooftree}
 \]
 
-\begin{lemma}[Monotonicity of Operations]
+\begin{lemma}[Operations are Monotone]
+The demotion, promotion, and inclusion operators are monotone with respect to weakening.
 \label{lemma.monotonicity.operations}\ %
 \begin{itemize}
 \item If $\wid \Gamma_1 \le \wid \Gamma_2$, then  $\demote{\wid \Gamma_1} \le \demote{\wid \Gamma_2}$.
@@ -1047,8 +1048,59 @@ Then $\nar \Delta_1 \nprov x : \nar A$.
 \end{itemize}
 \end{lemma}
 \begin{proof}
-By case analysis of the possible ways a variable can be well-typed and the ways
-a context can be weakened.  \cqed
+Split cases on the proof that $x$ is well-typed.
+\begin{itemize}
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x : \wid A \in  \wid\Delta_2
+    \justifies
+    \wid\Delta_2 \wprov x : \wid A
+  \end{prooftree}
+  \]
+$\wid \Delta_1 \le \wid\Delta_2$ means that either
+$x : \wid A \in  \wid\Delta_1$
+or $x :: \wid A \in  \wid\Delta_1$.
+In both cases,
+$\wid\Delta_1 \wprov x : \wid A$ as required.
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x :: \wid A \in  \wid\Delta_2
+    \justifies
+    \wid\Delta_2 \wprov x : \wid A
+  \end{prooftree}
+  \]
+$\wid \Delta_1 \le \wid\Delta_2$ means
+$x :: \wid A \in  \wid\Delta_1$, hence
+$    \wid\Delta_1 \wprov x : \wid A$ as required.
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x \div \nar A \in  \nar\Delta_2
+    \justifies
+    \nar\Delta_2 \nprov x : \nar A
+  \end{prooftree}
+  \]
+$\nar \Delta_1 \le \nar\Delta_2$ means that either
+Either $x \div \nar A \in  \nar\Delta_1$
+or else $x :: \wid A \in  \nar\Delta_1$ for some $\wid A$ such
+that $|\wid A| = \nar A$.
+In both cases,
+$\nar\Delta_1 \nprov x : \nar A$ as required.
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x :: \wid A \in  \nar\Delta_2
+    \justifies
+    \nar\Delta_2 \nprov x :  \erase {\wid A}
+  \end{prooftree}
+  \]
+$\nar \Delta_1 \le \nar\Delta_2$ means
+$x :: \wid A \in  \nar\Delta_1$, hence
+$    \nar\Delta_1 \nprov x : |\wid A|$ as required.
+\end{itemize}
+ \cqed
 \end{proof}
 \begin{lemma}[Weakening]
 \label{lemma.weakening}\ %
@@ -1104,10 +1156,13 @@ and we are done.
 \cqed
 \end{proof}
 
-\begin{lemma}[Operations on Substitutions]
+\begin{lemma}[Operations Preserve Typing]
 \label{lemma.operations.subst}
 Operations applied to substitutions preserve typing in the following sense.
   \begin{itemize}
+  \item If $\wprov \wid \Delta \rctx$, then $\nprov \demote{\wid \Delta} \rctx$
+  \item If $\wprov \wid \Delta \rctx$, then $\nprov \promote{\wid \Delta} \rctx$
+  \item If $\nprov \nar \Delta \rctx$, then $\wprov \ups{\nar \Delta} \rctx$
   \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\demote{\wid \Delta} \nprov \demote{\wid \theta} : \demote{\wid \Gamma}$.
   \item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$, then $\promote{\wid \Delta} \nprov \promote{\wid \theta} : \promote{\wid \Gamma}$.
   \item If $\nar \Delta \nprov \nar \theta : \nar \Gamma$, then $\ups{\nar \Delta} \wprov \ups{\nar \theta} : \ups{\nar \Gamma}$.
@@ -1135,8 +1190,76 @@ then $\nar \theta_1 (x) = \nar \theta_2(x)$.
 \end{itemize}
 \end{lemma}
 \begin{proof}
-By case analysis of the possible ways a variable can be well-typed and the ways
-a substitution can be weakened.  \cqed
+Split cases on the proof that $x$ is well-typed.
+\begin{itemize}
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x : \wid A \in  \wid\Delta_2
+    \justifies
+    \wid\Delta_2 \wprov x : \wid A
+  \end{prooftree}
+  \]
+We know $[\wid M/x] \in \wid \theta_2$ for some $\wid M$.
+$\wid \Delta_1 \le \wid\Delta_2$ means that either
+$x : \wid A \in  \wid\Delta_1$
+or $x :: \wid A \in  \wid\Delta_1$.
+By $\wid \theta_1 \le \wid\theta_2$, either
+$[\wid M/x] \in \wid \theta_1$ or
+$[\wid M/_{::}x] \in \wid \theta_1$.
+In either case,
+$\wid \theta_1(x) =  \wid M = \wid \theta_2(x)$ as required.
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x :: \wid A \in  \wid\Delta_2
+    \justifies
+    \wid\Delta_2 \wprov x : \wid A
+  \end{prooftree}
+  \]
+We know $[\wid M/x] \in \wid \theta_2$ for some $\wid M$.
+$\wid \Delta_1 \le \wid\Delta_2$ means
+$x :: \wid A \in  \wid\Delta_1$.
+By $\wid \theta_1 \le \wid\theta_2$, we have $[\wid M/x] \in \wid \theta_1$.
+Hence $\wid \theta_1(x) = \wid \theta_2(x)$ as required.
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x \div \nar A \in  \nar\Delta_2
+    \justifies
+    \nar\Delta_2 \nprov x : \nar A
+  \end{prooftree}
+  \]
+We know $[\nar M/x] \in \nar \theta_2$ for some $\nar M$.
+$\nar \Delta_1 \le \nar\Delta_2$ means that either
+$x \div \nar A \in  \nar\Delta_1$
+or $x :: \wid A \in  \nar\Delta_1$ for some $\wid A$
+such that $|\wid A| = \nar A$. Let's take these cases one at a time.
+
+If $x : \nar A \in  \nar\Delta_1$, then $\nar \theta_1 \le \nar\theta_2$
+means $[\nar M/x] \in \nar\theta_1$, and
+$\nar \theta_1(x) =  \nar M = \nar \theta_2(x)$ as required.
+
+Otherwise, $x :: \wid A \in  \nar\Delta_1$. By
+$\nar \theta_1 \le \nar\theta_2$ we infer that
+$[\wid M/_{::}x] \in \nar\theta_1$ for some $\wid M$ such that
+$|\wid M| = \nar M$. Then
+$\nar \theta_1(x) =  |\wid M| = \nar M$,
+and $\nar \theta_2(x) = \nar M$, as required.
+
+\item[Case:]
+  \[
+  \begin{prooftree}
+    x :: \wid A \in  \nar\Delta_2
+    \justifies
+    \nar\Delta_2 \nprov x :  \erase {\wid A}
+  \end{prooftree}
+  \]
+$\nar \Delta_1 \le \nar\Delta_2$ means
+$x :: \wid A \in  \nar\Delta_1$, hence
+$    \nar\Delta_1 \nprov x : |\wid A|$ as required.
+\end{itemize}
+  \cqed
 \end{proof}
 
 
@@ -1166,28 +1289,45 @@ supplied by Lemma~\ref{lemma.monotonicity.operations} and Lemma~\ref{lemma.opera
 \cqed
 \end{proof}
 
+\begin{lemma}[Weakening Relationship of Operations]\ %
+\label{lemma.weakening.operations}
+  \begin{itemize}
+  \item $\promote{\wid \Gamma} \le \demote{\wid \Gamma} $
+  \item $\rpromote{\wid \Gamma} \le \wid \Gamma $
+  \item $\wid \Gamma \le \rdemote{\wid \Gamma} $
+  \item $\promote{\wid \theta} \le \demote{\wid \theta} $
+  \item $\rpromote{\wid \theta} \le \wid \theta $
+  \item $\wid \theta \le \rdemote{\wid \theta} $
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+\cqed
+\end{proof}
+
 \begin{corollary}
 \label{corollary.indifference}\ %
 \begin{itemize}
-\item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
-$\demote{\wid\Gamma} \nprov \nar M : \nar A$, then
+\item If $\wid \Gamma \wprov \wid \theta : \wid \Delta$ and
+$\demote{\wid\Delta} \nprov \nar M : \nar A$, then
 $\demote{\wid\theta} \nar M = \promote{\wid\theta} \nar M$.
-\item If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
-$\demote{\wid\Gamma} \nprov \nar A : \nar \rtype$, then
+\item If $\wid \Gamma \wprov \wid \theta : \wid \Delta$ and
+$\demote{\wid\Delta} \nprov \nar A : \nar \rtype$, then
 $\demote{\wid\theta} \nar A = \promote{\wid\theta} \nar A$.
 \item
-  If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
-  $\wid\Gamma \wprov \wid M : \wid A$, then
+  If $\wid \Gamma \wprov \wid \theta : \wid \Delta$ and
+  $\wid\Delta \wprov \wid M : \wid A$, then
   $\wid\theta\wid M = \rpromote{\wid\theta}\wid M$.
 \item
-  If $\wid \Delta \wprov \wid \theta : \wid \Gamma$ and
-  $\wid\Gamma \wprov \wid A : \wid \rtype$, then
+  If $\wid \Gamma \wprov \wid \theta : \wid \Delta$ and
+  $\wid\Delta \wprov \wid A : \wid \rtype$, then
   $\wid\theta\wid A = \rpromote{\wid\theta}\wid A$.
 \end{itemize}
 \end{corollary}
 
 \begin{proof}
-All four parts are instances of Lemma~\ref{lemma.indifference}.
+Use Lemma~\ref{lemma.indifference} and Lemma~\ref{lemma.weakening.operations}.
 \cqed
 \end{proof}
 
